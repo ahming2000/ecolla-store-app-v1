@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>购物篮 | Ecolla e口乐</title>
+        <title>购物篮 | Ecolla ε口乐</title>
     </head>
     <body>
         <!-- Important Class Declaration -->

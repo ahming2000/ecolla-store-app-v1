@@ -8,7 +8,16 @@
         private $properties;
         private $imgPaths;
 
-        function __contruct($name, $barcode, $price, $weight, $properties, $imgPaths){
+        function __contruct(){
+            $arguments = func_get_args();
+            $numberOfArguments = func_num_args();
+
+            if (method_exists($this, $function = '__construct'.$numberOfArguments)) {
+                call_user_func_array(array($this, $function), $arguments);
+            }
+        }
+
+        function __contruct1($name, $barcode, $price, $weight, $properties, $imgPaths){
             $this->$name = $name;
             $this->$barcode = $barcode;
             $this->$price = $price;
@@ -73,7 +82,7 @@
         private $note;
         private $subPrice;
 
-        function __contruct($name, $price, $barcode, $weight, $properties, $imgPaths, $quantity, $note, $subPrice){
+        function __contruct2($name, $price, $barcode, $weight, $properties, $imgPaths, $quantity, $note, $subPrice){
             $this->$name = $name;
             $this->$barcode = $barcode;
             $this->$price = $price;
@@ -85,7 +94,7 @@
             $this->$subPrice = $subPrice;
         }
 
-        function __contruct($cart, $quantity, $note, $subPrice){
+        function __contruct3($cart, $quantity, $note, $subPrice){
             $this->$name = $cart->$name;
             $this->$barcode = $cart->$barcode;
             $this->$price = $cart->$price;
@@ -129,12 +138,14 @@
         private $subtotal;
         private $shippingFee;
 
-        function __contruct($cartCount){
+        function __contruct(){
             $cartItems = array();
-            $this->$cartCount = $cartCount;
+            $subtotal = 0;
+            $shippingFee = 0;
+
             if($cartCount != 0){
                 //To-do: Get Cart item from database and save it into object
-                calculateSubtotal();
+                //calculateSubtotal();
             }else{
                 $cartCount = 0;
             }
@@ -143,7 +154,7 @@
         function calculateSubtotal(){
             $total = 0;
             foreach ($this->$cartItems as $CartItem) {
-                total += $cartItem->$subPrice;
+                $total += $cartItem->$subPrice;
             }
             return $total + $shippingFee;
         }
@@ -153,11 +164,10 @@
         }
 
         function removeCartItem($barcode){
-            foreach($this->$cartItems as $cartItem){
-                if($cartItem->$barcode == $barcode){
-                    unset($cartItems[$cartItem]);
-                    //Need to do experiment on unset item from array to confirm
-                    //The arranging function is needed for the array or not
+            for($i = 0; i < sizeof($this->$cartItems); $i++){
+                if($this->$cartItems[$i]->$barcode == $barcode){
+                    $this->$cartItems = array_diff($this->$cartItems, $cartItems[$i]);
+                    array_splice($this->$cartItems, $i, length($this->cartItems), array_slice($this->$cartItems, $i + 1, length($this->cartItems)));
                 }
             }
         }
@@ -196,6 +206,6 @@
 
     }
 
-    static $cart = new Cart(); //Only declare once
+    //2$cart = new Cart(); //Only declare once
 
  ?>
