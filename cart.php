@@ -2,15 +2,17 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Ecolla e口乐 官网</title>
+        <title>购物篮 | Ecolla e口乐</title>
     </head>
     <body>
         <!-- Important Class Declaration -->
         <?php //include "class.php"; ?>
 
         <?php include "navigation-bar.php"; ?>
-        <?php include "advertisement-block.php"; ?>
-        <div class="item-block"></div>
+        <div>
+            <div class="cart-list"></div>
+            <?php include "order-summary.php";//This will be a form that submit with cartItem Object ?>
+        </div>
         <?php include "footer.php"; ?>
 
     </body>
