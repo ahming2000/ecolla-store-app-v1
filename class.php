@@ -129,8 +129,15 @@
         private $subtotal;
         private $shippingFee;
 
-        function __contruct(){
+        function __contruct($cartCount){
             $cartItems = array();
+            $this->$cartCount = $cartCount;
+            if($cartCount != 0){
+                //To-do: Get Cart item from database and save it into object
+                calculateSubtotal();
+            }else{
+                $cartCount = 0;
+            }
         }
 
         function calculateSubtotal(){
@@ -149,6 +156,8 @@
             foreach($this->$cartItems as $cartItem){
                 if($cartItem->$barcode == $barcode){
                     unset($cartItems[$cartItem]);
+                    //Need to do experiment on unset item from array to confirm
+                    //The arranging function is needed for the array or not
                 }
             }
         }
@@ -169,14 +178,24 @@
             return $this->shippingFee;
         }
 
-        function setCartItem($cartItem){
-            
+        function setCartItems($cartItems){
+            $this->$cartItems = $cartItems;
         }
 
         function setCartCount($cartCount){
             $this->$cartCount = $cartCount;
         }
 
+        function setSubTotal($subtotal){
+            $this->$subtotal = $subtotal;
+        }
+
+        function setShippingFee($shippingFee){
+            $this->$shippingFee = $shippingFee;
+        }
+
     }
+
+    static $cart = new Cart(); //Only declare once
 
  ?>
