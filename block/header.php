@@ -18,3 +18,25 @@
         </div>
     </div>
 </nav>
+
+<script>
+    $(document).ready(function(){
+
+        function getCurentFileName(){
+            var pagePathName = $(location).attr('href');
+            var fileName = pagePathName.substring(pagePathName.lastIndexOf("/") + 1);
+            return fileName;
+        }
+                
+        if(getCurentFileName() === "index.php"){
+            $(".navbar-nav li:nth-child(1)").addClass("active");
+        } else if(getCurentFileName() === "item-list.php"){
+            $(".navbar-nav li:nth-child(2)").addClass("active");
+        } else if(getCurentFileName() === "payment-method.php"){
+            $(".navbar-nav li:nth-child(3)").addClass("active");
+        } else if(getCurentFileName() === "about-us.php"){
+            $(".navbar-nav li:nth-child(4)").addClass("active");
+        }
+        
+    });
+</script>
