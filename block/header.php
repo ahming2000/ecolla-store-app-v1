@@ -4,7 +4,8 @@
             <img src="../assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
             ε口乐
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -20,23 +21,23 @@
 </nav>
 
 <script>
-    $(document).ready(function(){
+$(document).ready(function() {
 
-        function getCurentFileName(){
-            var pagePathName = $(location).attr('href');
-            var fileName = pagePathName.substring(pagePathName.lastIndexOf("/") + 1);
-            return fileName;
-        }
-                
-        if(getCurentFileName() === "index.php"){
-            $(".navbar-nav li:nth-child(1)").addClass("active");
-        } else if(getCurentFileName() === "item-list.php"){
-            $(".navbar-nav li:nth-child(2)").addClass("active");
-        } else if(getCurentFileName() === "payment-method.php"){
-            $(".navbar-nav li:nth-child(3)").addClass("active");
-        } else if(getCurentFileName() === "about-us.php"){
-            $(".navbar-nav li:nth-child(4)").addClass("active");
-        }
-        
-    });
+    function getCurentFileName() {
+        var pagePathName = $(location).attr('href');
+        var fileName = pagePathName.substring(pagePathName.lastIndexOf("/") + 1);
+        return fileName;
+    }
+
+    if (getCurentFileName() === "index.php") {
+        $(".navbar-nav li:nth-child(1)").addClass("active");
+    } else if (getCurentFileName() === "item-list.php") {
+        $(".navbar-nav li:nth-child(2)").addClass("active");
+    } else if (getCurentFileName() === "payment-method.php") {
+        $(".navbar-nav li:nth-child(3)").addClass("active");
+    } else if (getCurentFileName() === "about-us.php") {
+        $(".navbar-nav li:nth-child(4)").addClass("active");
+    }
+
+});
 </script>
