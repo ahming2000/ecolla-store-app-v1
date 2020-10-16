@@ -10,11 +10,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="#">主页</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">所有商品列表</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">付款方式</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">关于我们</a></li>
-                <li class="nav-item"><a class="nav-link" href="#"><i class="icofont-shopping-cart mx-1"></i><span id="cartCount"></span></a></li>
+                <li class="nav-item"><a class="nav-link" href="index.php">主页</a></li>
+                <li class="nav-item"><a class="nav-link" href="item-list.php">所有商品列表</a></li>
+                <li class="nav-item"><a class="nav-link" href="payment-method.php">付款方式</a></li>
+                <li class="nav-item"><a class="nav-link" href="about-us.php">关于我们</a></li>
+                <li class="nav-item"><a class="nav-link" href="cart.php"><i class="icofont-shopping-cart mx-1"></i><span id="cartCount"></span></a></li>
             </ul>
         </div>
     </div>
