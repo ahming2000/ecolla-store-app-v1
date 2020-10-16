@@ -6,6 +6,7 @@
         <title>Ecolla ε口乐零食店官网</title>
         <link rel="stylesheet" href="assets/vendor/bootstrap-4.5.2-dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/vendor/icofont/icofont.min.css">
+        <link rel="shortcut icon" href="assets/images/icon/ecollafavicon.ico">
     </head>
     <body>
         <!-- Important Class Declaration -->
