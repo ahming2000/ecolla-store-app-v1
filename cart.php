@@ -11,10 +11,43 @@
         <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>        
         <?php include "assets/php/classes.php"; ?>
 
-        <?php include "navigation-bar.php"; ?>
-        <div>
-            <div class="cart-list"></div>
-            <?php include "order-summary.php";//This will be a form that submit with cartItem Object ?>
+        <?php include "header.php"; ?>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <?php
+                                $cartList = array();
+                                
+                                for($i = 0; $i < sizeof($cartList); $i++){
+                                    $cartItem = $cartList[$i];
+                                    include "block/cart-item-block";
+                                }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="cart-body">
+                            <!-- Delivery Description -->
+                        </div>
+                    </div>
+
+                </div>           
+                <div class="col-lg-4">
+                    <div class="card mb-3">
+                        <div class="cart-body">
+                            <?php include "order-summary-block.php"; ?>
+                            <form action="check-out.php" method="post">
+                                <input class="btn btn-primary btn-block" type="submit" value="前往付款">
+                            </form>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
         </div>
         <?php include "footer.php"; ?>
 
