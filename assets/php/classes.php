@@ -7,6 +7,7 @@
         private $weight;
         private $properties;
         private $imgPaths;
+        private $catogory;
 
         function __contruct(){
             $arguments = func_get_args();
@@ -17,13 +18,14 @@
             }
         }
 
-        function __contruct1($name, $barcode, $price, $weight, $properties, $imgPaths){
+        function __contruct1($name, $barcode, $price, $weight, $properties, $imgPaths, $catogory){
             $this->$name = $name;
             $this->$barcode = $barcode;
             $this->$price = $price;
             $this->$weight = $weight;
             $this->$properties = $properties;
             $this->$imgPaths = $imgPaths;
+            $this->$catogory = $catogory;
         }
 
         function getName(){
@@ -50,6 +52,10 @@
             return $this->$imgPaths;
         }
 
+        function getCatogory(){
+            return $this->$catogory;
+        }
+
         function setName($name){
             $this->$name = $name;
         }
@@ -74,6 +80,10 @@
             $this->$imgPaths = $imgPaths;
         }
 
+        function setCatogory($catogory){
+            $this->$catogory = $catogory;
+        }
+
     }
 
     class CartItem extends Item{
@@ -82,25 +92,27 @@
         private $note;
         private $subPrice;
 
-        function __contruct2($name, $price, $barcode, $weight, $properties, $imgPaths, $quantity, $note, $subPrice){
+        function __contruct2($name, $price, $barcode, $weight, $properties, $imgPaths, $catogory, $quantity, $note, $subPrice){
             $this->$name = $name;
             $this->$barcode = $barcode;
             $this->$price = $price;
             $this->$weight = $weight;
             $this->$properties = $properties;
             $this->$imgPaths = $imgPaths;
+            $this->$catogory = $catogory;
             $this->$quantity = $quantity;
             $this->$note = $note;
             $this->$subPrice = $subPrice;
         }
 
-        function __contruct3($cart, $quantity, $note, $subPrice){
-            $this->$name = $cart->$name;
-            $this->$barcode = $cart->$barcode;
-            $this->$price = $cart->$price;
-            $this->$weight = $cart->$weight;
-            $this->$properties = $cart->$properties;
-            $this->$imgPaths = $cart->$imgPaths;
+        function __contruct3($item, $quantity, $note, $subPrice){
+            $this->$name = $item->$name;
+            $this->$barcode = $item->$barcode;
+            $this->$price = $item->$price;
+            $this->$weight = $item->$weight;
+            $this->$properties = $item->$properties;
+            $this->$imgPaths = $item->$imgPaths;
+            $this->$catogory = $item->$catogory;
             $this->$quantity = $quantity;
             $this->$note = $note;
             $this->$subPrice = $subPrice;
@@ -206,6 +218,6 @@
 
     }
 
-    //2$cart = new Cart(); //Only declare once
+    //$cart = new Cart(); //Only declare once
 
  ?>
