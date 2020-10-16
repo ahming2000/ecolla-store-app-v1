@@ -49,8 +49,13 @@
             <!-- Show Items with same catogory -->
             
             <?php
-                $itemList = array();
-                include "../block/item-block.php";
+                $itemList = array(); //Important!! Need to take the data from the database!!!
+                
+                for($i = 0; $i < sizeof($itemList); $i++){
+                    $item = $itemList[$i];
+                    include "../block/item-block.php";    
+                }
+                
             ?>
         </div>
     </div>
