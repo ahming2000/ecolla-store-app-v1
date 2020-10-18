@@ -28,7 +28,7 @@
         
         <!-- Hot Sells Items -->
         <div class="container my-3">
-            
+            <p>Hi</p>
         </div>
 
         <?php include "block/footer.php"; ?>
