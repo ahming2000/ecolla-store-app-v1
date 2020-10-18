@@ -50,12 +50,12 @@
     }
 
     class Item {
-        private $name; //String
+        public $name; //String
         private $catogory; //String
         private $imgPaths; //Array
         private $variousList; //Array
 
-        function __contruct($name, $catogory, $imgPaths){
+        function __construct($name, $catogory, $imgPaths){
             $this->name = $name;
             $this->catogory = $catogory;
             $this->imgPaths = $imgPaths;
@@ -68,6 +68,11 @@
 
         function removeVarious($index){
             UsefulFunction::removeArrayElementI($this->various, $index);
+        }
+
+        
+        function __toString(){
+            return (string)$this->name;
         }
 
         function getName(){
@@ -104,7 +109,7 @@
         private $variousIndex; //Only one various can be selected in this class
         private $note;
 
-        function __contruct($item, $variousProperties, $quantity, $subPrice, $note){
+        function __construct($item, $variousProperties, $quantity, $subPrice, $note){
             $this->item = $item;
             $this->variousIndex = getVariousIndex($variousProperties);
             if($variousIndex === 1000) die("Various Index has error!!!");
@@ -157,7 +162,7 @@
         private $subtotal;
         private $shippingFee;
 
-        function __contruct(){
+        function __construct(){
             $cartItems = array();
             $subtotal = 0;
             $shippingFee = 0;
