@@ -98,7 +98,7 @@
 
     class CartItem{
         
-        final private $item;
+        private $item;
         private $quantity;
         private $subPrice;
         private $variousIndex; //Only one various can be selected in this class
@@ -263,6 +263,11 @@
             array_splice($array, $index, length($array), $arrayAfterElement);
             return $array; //To do (Debug): if the array do not change by using array_splice(), need to address the result using return
         }
+
+        public static function startsWith ($string, $startString) { 
+            $len = strlen($startString); 
+            return (substr($string, 0, $len) === $startString); 
+        } 
     }
 
     //$cart = new Cart(); //Only declare once
