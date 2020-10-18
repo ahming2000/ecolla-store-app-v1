@@ -8,43 +8,43 @@
         private $barcode; //int
 
         function getProperties(){
-            return $this->$properties;
+            return $this->properties;
         }
 
         function getPrice(){
-            return $this->$price;
+            return $this->price;
         }
 
         function getWeight(){
-            return $this->$weight;
+            return $this->weight;
         }
 
         function getWeightUnit(){
-            return $this->$weightUnit;
+            return $this->weightUnit;
         }
 
         function getBarcode(){
-            return $this->$barcode;
+            return $this->barcode;
         }
 
         function setProperties($properties){
-            $this->$properties = $properties;
+            $this->properties = $properties;
         }
 
         function setPrice($price){
-            $this->$price = $price;
+            $this->price = $price;
         }
 
         function setWeight($weight){
-            $this->$weight = $weight;
+            $this->weight = $weight;
         }
 
         function setWeightUnit($weightUnit){
-            $this->$weightUnit = $weightUnit;
+            $this->weightUnit = $weightUnit;
         }
 
         function setBarcode($barcode){
-            $this->$barcode = $barcode;
+            $this->barcode = $barcode;
         }
 
     }
@@ -56,42 +56,42 @@
         private $variousList; //Array
 
         function __contruct($name, $catogory, $imgPaths){
-            $this->$name = $name;
-            $this->$catogory = $catogory;
-            $this->$imgPaths = $imgPaths;
-            $this->$variousList = array();
+            $this->name = $name;
+            $this->catogory = $catogory;
+            $this->imgPaths = $imgPaths;
+            $this->variousList = array();
         }
 
         function addVarious($various){
-            $this->$variousList.push($various);
+            $this->variousList.push($various);
         }
 
         function removeVarious($index){
-            UsefulFunction::removeArrayElementI($this->$various, $index);
+            UsefulFunction::removeArrayElementI($this->various, $index);
         }
 
         function getName(){
-            return $this->$name;
+            return $this->name;
         }
 
         function getCatogory(){
-            return $this->$catogory;
+            return $this->catogory;
         }
 
         function getImgPath(){
-            return $this->$imgPaths;
+            return $this->imgPaths;
         }
 
         function setName($name){
-            $this->$name = $name;
+            $this->name = $name;
         }
 
         function setImgPath($imgPaths){
-            $this->$imgPaths = $imgPaths;
+            $this->imgPaths = $imgPaths;
         }
 
         function setCatogory($catogory){
-            $this->$catogory = $catogory;
+            $this->catogory = $catogory;
         }
 
     }
@@ -105,16 +105,16 @@
         private $note;
 
         function __contruct($item, $variousProperties, $quantity, $subPrice, $note){
-            $this->$item = $item;
-            $this->$variousIndex = getVariousIndex($variousProperties);
+            $this->item = $item;
+            $this->variousIndex = getVariousIndex($variousProperties);
             if($variousIndex === 1000) die("Various Index has error!!!");
-            $this->$quantity = $quantity;
-            $this->$subPrice = $subPrice;
-            $this->$note = $note;
+            $this->quantity = $quantity;
+            $this->subPrice = $subPrice;
+            $this->note = $note;
         }
 
         private function getVariousIndex($properties){
-            for($i = 0; $i < sizeof($item->$variousList); $i++){
+            for($i = 0; $i < sizeof($item->variousList); $i++){
                 if($variousList[$i] === $item){
                     return $i;
                 }
@@ -123,31 +123,31 @@
         }
 
         function getItem(){
-            return $this->$item;
+            return $this->item;
         }
 
         function getQuantity(){
-            return $this->$quantity;
+            return $this->quantity;
         }
 
         function getSubPrice(){
-            return $this->$subPrice;
+            return $this->subPrice;
         }
 
         function getNote(){
-            return $this->$note;
+            return $this->note;
         }
 
         function setQuantity($quantity){
-            $this->$quantity = $quantity;
+            $this->quantity = $quantity;
         }
 
         function setSubPrice($subPrice){
-            $this->$subPrice = $subPrice;
+            $this->subPrice = $subPrice;
         }
 
         function setNote($note){
-            $this->$note = $note;
+            $this->note = $note;
         }
     }
 
@@ -173,21 +173,21 @@
         function calculateSubtotal(){
             $total = 0;
             foreach ($this->$cartItems as $CartItem) {
-                $total += $cartItem->$subPrice;
+                $total += $cartItem->subPrice;
             }
             return $total + $shippingFee;
         }
 
         function addCartItem($cartItem){
-            array_push($this->$cartItems, $cartItem);
-            $this->$cartCount++;
+            array_push($this->cartItems, $cartItem);
+            $this->cartCount++;
         }
 
         function removeCartItem($barcode){
             for($i = 0; i < sizeof($this->$cartItems); $i++){
-                if($this->$cartItems[$i]->$barcode == $barcode){
-                    UsefulFunction::removeArrayElementE($this->$cartItems, $this->$cartItems[$i]);
-                    $this->$cartCount--;
+                if($this->cartItems[$i]->barcode == $barcode){
+                    UsefulFunction::removeArrayElementE($this->cartItems, $this->cartItems[$i]);
+                    $this->cartCount--;
                     return true;
                 }
             }
@@ -195,13 +195,13 @@
         }
 
         function clearCart(){
-            for($i = 0; $i < sizeof($this->$cartItems); $i++){
-                unset($this->$cartItems[$i]);
+            for($i = 0; $i < sizeof($this->cartItems); $i++){
+                unset($this->cartItems[$i]);
             }
         }
 
         function getCartItems(){
-            return $this->$cartItems;
+            return $this->cartItems;
         }
 
         function getCartCount(){
@@ -217,19 +217,19 @@
         }
 
         function setCartItems($cartItems){
-            $this->$cartItems = $cartItems;
+            $this->cartItems = $cartItems;
         }
 
         function setCartCount($cartCount){
-            $this->$cartCount = $cartCount;
+            $this->cartCount = $cartCount;
         }
 
         function setSubTotal($subtotal){
-            $this->$subtotal = $subtotal;
+            $this->subtotal = $subtotal;
         }
 
         function setShippingFee($shippingFee){
-            $this->$shippingFee = $shippingFee;
+            $this->shippingFee = $shippingFee;
         }
 
     }
