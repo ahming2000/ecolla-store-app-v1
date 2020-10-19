@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
     <div class="container">
         <a class="navbar-brand" href="index.php">
-        <img src="assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+        <img src="../assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
             ε口乐
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -19,6 +19,10 @@
         </div>
     </div>
 </nav>
+
+<div style="margin-top: 56px;"></div><!-- To create a margin on the top of the content -->
+
+<?php if($isItemPage) include "../block/breadcrumb-block.php"; ?>
 
 <script>
 $(document).ready(function() {

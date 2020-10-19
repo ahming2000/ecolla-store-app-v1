@@ -18,17 +18,22 @@
         <?php include "block/header.php"; ?>
 
         <!-- Advertisement -->
-        <div class="container my-3">
+        <section class="my-3">
             <?php
                 // ***1920 x 540 pixels picture is needed for advertisement!!!***
                 $imgList = array("assets/images/ads/ads1.jpg", "assets/images/ads/ads2.jpg", "assets/images/ads/ads3.jpg", "assets/images/ads/ads4.jpg");
                 include "block/carousel-block.php"; 
             ?>
-        </div>
+        </section>
+
         
         <!-- Hot Sells Items -->
         <div class="container my-3">
-            <p>Hi</p>
+        <div class="card">
+        <div class="card-body"><p>Hi</p></div>
+        
+        </div>
+            
         </div>
 
         <?php include "block/footer.php"; ?>
