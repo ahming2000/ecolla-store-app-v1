@@ -29,17 +29,17 @@
    width: 100%;
 }
 
-/* ensure equal card height inside carousel */
+/* control card display, prevent jump to next row */
 .carousel-inner>.row-equal.active, 
 .carousel-inner>.row-equal.next, 
 .carousel-inner>.row-equal.prev {
     display: flex;
 }
 
-/* prevent flicker during transition */
+/* improve transition */
 .carousel-inner>.row-equal.active.left, 
 .carousel-inner>.row-equal.active.right {
-    opacity: 0.5;
+    opacity: 0.1;
     display: flex;
 }
 
