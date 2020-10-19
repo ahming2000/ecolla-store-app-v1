@@ -1,0 +1,20 @@
+/*header.php*/
+.navbar{
+    background-color:#3c3e44;
+    transition: background-color 0.5s;
+}
+.navbar.change{
+    background-color:transparent ;
+    transition: background-color 0.5s;
+}
+
+/*index.php*/
+.ads-carousel{
+    padding-top:56px ;
+}
+.hotsell{
+    text-align: center;
+    padding-top: 30px;
+    color:orangered;
+    text-shadow: -1px -1px 0 orange, 1px -1px 0 orange, -1px 1px 0 orange, 1px 0 orange;
+}

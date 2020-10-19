@@ -6,6 +6,7 @@
         <title>Ecolla ε口乐零食店官网</title>
         <link rel="stylesheet" href="assets/vendor/bootstrap-4.5.2-dist/css/bootstrap.min.css">
         <link rel="stylesheet" href="assets/vendor/icofont/icofont.min.css">
+        <link rel="stylesheet" href="deco.css">
         <link rel="shortcut icon" href="assets/images/icon/ecollafavicon.ico">
     </head>
     <body>
@@ -18,17 +19,17 @@
         <?php include "block/header.php"; ?>
 
         <!-- Advertisement -->
-        <div class="container my-3">
+        <section class="ads-carousel">
             <?php
                 // ***1920 x 540 pixels picture is needed for advertisement!!!***
                 $imgList = array("assets/images/ads/ads1.jpg", "assets/images/ads/ads2.jpg", "assets/images/ads/ads3.jpg", "assets/images/ads/ads4.jpg");
                 include "block/carousel-block.php"; 
             ?>
-        </div>
+        </section>
         
         <!-- Hot Sells Items -->
-        <div class="container my-3">
-            <p>Hi</p>
+        <div class="container">
+            <h1 class="hotsell">热卖中</h1>
         </div>
 
         <?php include "block/footer.php"; ?>
@@ -40,6 +41,18 @@
 
                 $("#cartCount").html("0");
 
+            });
+
+            $(document).ready(function() {
+            // Transition effect for navbar 
+            $(window).scroll(function() {
+                if($(this).scrollTop() > 100) { 
+                    $('.navbar').addClass('change');
+                    } 
+                else {
+              $('.navbar').removeClass('change');
+              }
+                });
             });
         </script>
     
