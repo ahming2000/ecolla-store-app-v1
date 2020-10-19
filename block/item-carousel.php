@@ -1,6 +1,6 @@
 <div id="itemslide" class="carousel slide" data-ride="carousel">
-    <div class="carousel-inner">
-        <div class="row carousel-item active">
+    <div class="container carousel-inner">
+        <div class="row row-equal carousel-item active">
              <!--card start-->
             <div class="col-md-4">
                 <div class="card">
@@ -35,7 +35,7 @@
                 </div>
             </div>
 </div>
-<div class="row carousel-item">
+<div class="row row-equal carousel-item">
         <!-- Item 4 -->
             <div class="col-md-4">
                 <div class="card">
@@ -47,6 +47,29 @@
                         </div>
                 </div>
             </div>
+        <!-- Item 5 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <img class="card-img-top img-fluid" src="assets/images/ads/displayitem.jpg" alt="Card image">
+                        <div class="card-body">
+                            <h4 class="card-title">Item 5</h4>
+                            <p class="card-text">Item description</p>
+                            <p class="card-text"><small class="text-muted">RM 0.00</small></p>
+                        </div>
+                </div>
+            </div>
+        <!-- Item 6 -->
+            <div class="col-md-4">
+                <div class="card">
+                    <img class="card-img-top img-fluid" src="assets/images/ads/displayitem.jpg" alt="Card image">
+                        <div class="card-body">
+                            <h4 class="card-title">Item 6</h4>
+                            <p class="card-text">Item description</p>
+                            <p class="card-text"><small class="text-muted">RM 0.00</small></p>
+                        </div>
+                </div>
+            </div>
+
         </div> 
     </div>
 
