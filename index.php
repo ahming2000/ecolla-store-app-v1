@@ -13,10 +13,14 @@
         <!-- Important Thing To Declare -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-        <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>        
+        <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+            
         <?php include "assets/php/classes.php"; ?>
-
+        
+        <section>
         <?php include "block/header.php"; ?>
+        </section>
 
         <!-- Advertisement -->
         <section class="ads-carousel">
@@ -28,10 +32,12 @@
         </section>
         
         <!-- Hot Sells Items -->
-        <div class="container">
+        <section class="section-itemcarousel">
+            <div class="container rounded item-carousel">
             <h1 class="hotsell">热卖中</h1>
             <?php include "block/item-carousel.php"?>
-        </div>
+            </div>
+        </section>
 
         <?php include "block/footer.php"; ?>
 
@@ -47,7 +53,7 @@
             $(document).ready(function() {
             // Transition effect for navbar 
             $(window).scroll(function() {
-                if($(this).scrollTop() > 100) { 
+                if($(this).scrollTop() > 50) { 
                     $('.navbar').addClass('change');
                     } 
                 else {

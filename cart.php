@@ -5,7 +5,8 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
          <link rel="shortcut icon" href="assets/images/icon/ecollafavicon.ico">
          <link rel="stylesheet" href="assets/vendor/bootstrap-4.5.2-dist/css/bootstrap.min.css">
-        <title>购物车 | Ecolla ε口乐</title>
+         <link rel="stylesheet" href="deco.css">
+         <title>购物车 | Ecolla ε口乐</title>
     </head>
     <body>
         <!-- Important Thing To Declare -->
