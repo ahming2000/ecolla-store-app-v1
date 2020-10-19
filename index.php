@@ -30,6 +30,7 @@
         <!-- Hot Sells Items -->
         <div class="container">
             <h1 class="hotsell">热卖中</h1>
+            <?php include "block/item-carousel.php"?>
         </div>
 
         <?php include "block/footer.php"; ?>

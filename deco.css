@@ -18,3 +18,9 @@
     color:orangered;
     text-shadow: -1px -1px 0 orange, 1px -1px 0 orange, -1px 1px 0 orange, 1px 0 orange;
 }
+
+/*item-carousel,php*/
+.card{
+    width: 100%;
+}
+  
