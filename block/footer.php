@@ -1,4 +1,4 @@
-<footer class="page-footer unique-color-dark">
+<footer class="page-footer pt-5 unique-color-dark">
 <div style="background-color:#3c3e44;">
     <div class="container">
         <div class="row">
