@@ -1,5 +1,7 @@
 <?php
 
+/* */
+
 class Various{
     private $properties; //string //Flavour or type
     private $price; //double //In Malaysia Riggit

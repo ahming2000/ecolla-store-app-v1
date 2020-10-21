@@ -1,4 +1,4 @@
-<?php include "assets/php/includes/autoloader.inc.php"; //Auto include all the classes. ?>
+<?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
 <!DOCTYPE html>
 <html>
     <head>
