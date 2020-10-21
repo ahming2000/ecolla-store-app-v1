@@ -18,10 +18,9 @@
         <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
         <script src='https://kit.fontawesome.com/a076d05399.js'></script>
             
-        <section>
+        <?php include "assets/php/classes.php"; ?>
         <?php include "block/header.php"; ?>
-        </section>
-
+       
         <!-- Advertisement -->
         <section class="ads-carousel">
             <?php
@@ -33,7 +32,7 @@
         
         <!-- Hot Sells Items -->
         <section class="section-itemcarousel">
-            <div class="container rounded item-carousel">
+            <div class="container rounded">
             <h1 class="hotsell">热卖中</h1>
             <?php include "block/item-carousel.php"?>
             </div>
@@ -48,18 +47,6 @@
 
                 $("#cartCount").html("0");
 
-            });
-
-            $(document).ready(function() {
-            // Transition effect for navbar 
-            $(window).scroll(function() {
-                if($(this).scrollTop() > 50) { 
-                    $('.navbar').addClass('change');
-                    } 
-                else {
-              $('.navbar').removeClass('change');
-              }
-                });
             });
         </script>
     

@@ -6,7 +6,7 @@
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <span class="fa fa-bars"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
@@ -44,4 +44,19 @@ $(document).ready(function() {
     }
 
 });
+
+        $(document).ready(function() {
+            $('.navbar').addClass('navbar-custom');
+            // Transition effect for navbar 
+            $(window).scroll(function() {
+                if($(this).scrollTop() > 50) { 
+                    $('.navbar').addClass('navbar-change');
+                    $('.navbar').removeClass('navbar-custom');
+                    } 
+                else {
+              $('.navbar').addClass('navbar-custom');
+              $('.navbar').removeClass('navbar-change');
+              }
+                });
+            });
 </script>

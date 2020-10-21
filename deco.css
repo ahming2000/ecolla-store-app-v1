@@ -1,12 +1,40 @@
 /*header.php*/
 .navbar{
-    background-color:#3c3e44;
+    background-color:transparent;
     transition: background-color 0.5s;
 }
-.change{
-    background-color:transparent ;
+.navbar-change{
+    background-color: #3c3e44;
     transition: background-color 0.5s;
 }
+.navbar-custom .navbar-brand{
+    color: black;
+}
+.navbar-custom .navbar-nav .nav-link {
+    color: black;
+}
+.navbar .nav-item.active .nav-link,
+.navbar .nav-item:hover .nav-link,
+.navbar a.navbar-brand:hover{
+    color: hotpink;
+}
+.fa-bars{
+    color: black;
+}
+@media (max-width: 992px) {
+    nav.navbar {
+      background: #3c3e44;
+    }
+    .navbar-custom .navbar-brand{
+        color: white;
+    }
+    .navbar-custom .navbar-nav .nav-link {
+        color: white;
+    }
+    .fa-bars{
+        color: white;
+    }
+  }
 /*footer.php*/
 .font-color{
     color: white;
