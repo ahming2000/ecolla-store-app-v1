@@ -18,7 +18,6 @@
         <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
         <script src='https://kit.fontawesome.com/a076d05399.js'></script>
             
-        <?php include "assets/php/classes.php"; ?>
         <?php include "block/header.php"; ?>
        
         <!-- Advertisement -->
