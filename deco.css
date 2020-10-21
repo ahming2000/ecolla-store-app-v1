@@ -53,3 +53,140 @@
 .fa-chevron-circle-left,.fa-chevron-circle-right{
     color: blue;
 }
+
+/*-----------------------------------------------------------------------------------------------------------------
+    code by Iatek LLC 2018 - CC 2.0 License - Attribution required
+    code customized by Azmind.com
+*/
+@media (min-width: 768px) and (max-width: 991px) {
+    /* Show 4th slide on md if col-md-4*/
+    .item-slide .active.col-md-4.display-item + .display-item + .display-item + .display-item {
+        position: absolute;
+        top: 0;
+        right: -33.3333%;  /*change this with javascript in the future*/
+        z-index: -1;
+        display: block;
+        visibility: visible;
+    }
+}
+@media (min-width: 576px) and (max-width: 768px) {
+    /* Show 3rd slide on sm if col-sm-6*/
+    .item-slide .active.col-sm-6.display-item + .display-item + .display-item {
+        position: absolute;
+        top: 0;
+        right: -50%;  /*change this with javascript in the future*/
+        z-index: -1;
+        display: block;
+        visibility: visible;
+    }
+}
+@media (min-width: 576px) {
+    .display-item {
+        margin-right: 0;
+    }
+    /* show 2 items */
+    .item-slide .active + .display-item {
+        display: block;
+    }
+    .item-slide .display-item.active:not(.display-item-right):not(.display-item-left),
+    .item-slide .display-item.active:not(.display-item-right):not(.display-item-left) + .display-item {
+        transition: none;
+    }
+    .item-slide .display-item-next {
+        position: relative;
+        transform: translate3d(0, 0, 0);
+    }
+    /* left or forward direction */
+    .active.display-item-left + .display-item-next.display-item-left,
+    .display-item-next.display-item-left + .display-item,
+    .display-item-next.display-item-left + .display-item + .display-item {
+        position: relative;
+        transform: translate3d(-100%, 0, 0);
+        visibility: visible;
+    }
+    /* farthest right hidden item must be also positioned for animations */
+    .item-slide .display-item-prev.display-item-right {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        display: block;
+        visibility: visible;
+    }
+    /* right or prev direction */
+    .active.display-item-right + .display-item-prev.display-item-right,
+    .display-item-prev.display-item-right + .display-item,
+    .display-item-prev.display-item-right + .display-item + .display-item {
+        position: relative;
+        transform: translate3d(100%, 0, 0);
+        visibility: visible;
+        display: block;
+        visibility: visible;
+    }
+}
+/* MD */
+@media (min-width: 768px) {
+    /* show 3rd of 3 item slide */
+    .item-slide .active + .display-item + .display-item {
+        display: block;
+    }
+    .item-slide .display-item.active:not(.display-item-right):not(.display-item-left) +
+     .display-item + .display-item {
+        transition: none;
+    }
+    .item-slide .display-item-next {
+        position: relative;
+        transform: translate3d(0, 0, 0);
+    }
+    /* left or forward direction */
+    .display-item-next.display-item-left + .display-item + .display-item + .display-item {
+        position: relative;
+        transform: translate3d(-100%, 0, 0);
+        visibility: visible;
+    }
+    /* right or prev direction */
+    .display-item-prev.display-item-right + .display-item + .display-item + .display-item {
+        position: relative;
+        transform: translate3d(100%, 0, 0);
+        visibility: visible;
+        display: block;
+        visibility: visible;
+    }
+}
+/* LG */
+@media (min-width: 991px) {
+    /* show 4th item */
+    .item-slide .active + .display-item + .display-item + .display-item {
+        display: block;
+    }
+    .item-slide .display-item.active:not(.display-item-right):not(.display-item-left) + 
+    .display-item + .display-item + .display-item {
+        transition: none;
+    }
+    /* Show 5th slide on lg if col-lg-3 */
+    .item-slide .active.col-lg-3.display-item + .display-item + .display-item + .display-item + 
+    .display-item {
+        position: absolute;
+        top: 0;
+        right: -25%;  /*change this with javascript in the future*/
+        z-index: -1;
+        display: block;
+        visibility: visible;
+    }
+    /* left or forward direction */
+    .display-item-next.display-item-left + .display-item + .display-item + .display-item + 
+    .display-item {
+        position: relative;
+        transform: translate3d(-100%, 0, 0);
+        visibility: visible;
+    }
+    /* right or prev direction //t - previous slide direction last item animation fix */
+    .display-item-prev.display-item-right + .display-item + .display-item + .display-item + 
+    .display-item {
+        position: relative;
+        transform: translate3d(100%, 0, 0);
+        visibility: visible;
+        display: block;
+        visibility: visible;
+    }
+}

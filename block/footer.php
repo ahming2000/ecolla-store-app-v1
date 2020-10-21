@@ -4,6 +4,7 @@
         <div class="row mt-3">
             <div class="col-md-3 col-lg-4 col-xl-3 mb-4 mx-auto">
             <h4 class='font-color font-weight-bold'>Contact Us</h4>
+            <hr class="footer-hr">
                 <p class="text-uppercase font-color"><i class="fas fa-home"></i>jln123, perak</p>
                 <p class="font-color"><i class="fas fa-phone"></i>012-3456789</p>
                 <p class="font-color"><i class="fab fa-facebook-square">Ecolla e口乐</i></p>
