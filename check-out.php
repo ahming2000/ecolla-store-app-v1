@@ -1,3 +1,4 @@
+<?php include "assets/php/includes/autoloader.inc.php"; //Auto include all the classes. ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -9,8 +10,7 @@
         <title>结账 | Ecolla e口乐</title>
     </head>
     <body>
-        <!-- Important Class Declaration -->
-        <?php //include "class.php"; ?>
+        
 
         <!-- To-do: check out form -->
 
