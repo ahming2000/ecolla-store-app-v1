@@ -134,9 +134,9 @@
   </div> <!--carousel-inner-->
 
   <a class="carousel-control-prev" href="#itemslide" data-slide="prev">
-  <i style="font-size: 60px" class="fas fa-arrow-alt-circle-left"></i>
+  <i style="font-size: 30px" class="fas fa-chevron-circle-left"></i>
   </a>
   <a class="carousel-control-next" href="#itemslide" data-slide="next">
-  <i style="font-size: 60px" class="fas fa-arrow-alt-circle-right"></i>
+  <i style="font-size: 30px" class="fas fa-chevron-circle-right"></i>
   </a>
 </div>

@@ -22,3 +22,6 @@
 }
 
 /*item-carousel,php*/
+.fa-chevron-circle-left,.fa-chevron-circle-right{
+    color: blue;
+}
