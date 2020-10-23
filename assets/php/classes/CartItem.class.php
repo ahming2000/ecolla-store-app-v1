@@ -1,58 +1,55 @@
 <?php
 
-/* */
-
 class CartItem{
         
     private $item;
     private $quantity;
     private $subPrice;
-    private $variousIndex; //Only one various can be selected in this class
+    private $varietyIndex; //Only one various can be selected in this class
     private $note;
 
-    function __construct($item, $variousProperties, $quantity, $subPrice, $note){
+    public function __construct($item, $quantity, $subPrice, $varietyProperty, $note){
         $this->item = $item;
-        $this->variousIndex = getVariousIndex($variousProperties);
-        if($variousIndex === 1000) die("Various Index has error!!!");
         $this->quantity = $quantity;
         $this->subPrice = $subPrice;
+        $this->varietyIndex = getVarietyIndex($varietyProperty);
         $this->note = $note;
     }
 
-    private function getVariousIndex($properties){
-        for($i = 0; $i < sizeof($item->variousList); $i++){
-            if($variousList[$i] === $item){
+    private function getVarietyIndex($itemProperty){
+        for($i = 0; $i < sizeof($this->item->varieties); $i++){
+            if($this->item->varieties[$i] === $itemProperty){
                 return $i;
             }
         }
-        return 1000;
+        die("Error! No variery index in this item!");
     }
 
-    function getItem(){
+    public function getItem(){
         return $this->item;
     }
 
-    function getQuantity(){
+    public function getQuantity(){
         return $this->quantity;
     }
 
-    function getSubPrice(){
+    public function getSubPrice(){
         return $this->subPrice;
     }
 
-    function getNote(){
+    public function getNote(){
         return $this->note;
     }
 
-    function setQuantity($quantity){
+    public function setQuantity($quantity){
         $this->quantity = $quantity;
     }
 
-    function setSubPrice($subPrice){
+    public function setSubPrice($subPrice){
         $this->subPrice = $subPrice;
     }
 
-    function setNote($note){
+    public function setNote($note){
         $this->note = $note;
     }
 }

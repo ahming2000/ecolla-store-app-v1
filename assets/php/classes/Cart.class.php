@@ -1,14 +1,12 @@
 <?php
 
-/* */
-
 class Cart{
     private $cartItems;
     private $cartCount;
     private $subtotal;
     private $shippingFee;
 
-    function __construct(){
+    public function __construct(){
         $cartItems = array();
         $subtotal = 0;
         $shippingFee = 0;
@@ -21,7 +19,7 @@ class Cart{
         }
     }
 
-    function calculateSubtotal(){
+    public function calculateSubtotal(){
         $total = 0;
         foreach ($this->$cartItems as $CartItem) {
             $total += $cartItem->subPrice;
@@ -29,12 +27,12 @@ class Cart{
         return $total + $shippingFee;
     }
 
-    function addCartItem($cartItem){
+    public function addCartItem($cartItem){
         array_push($this->cartItems, $cartItem);
         $this->cartCount++;
     }
 
-    function removeCartItem($barcode){
+    public function removeCartItem($barcode){
         for($i = 0; i < sizeof($this->$cartItems); $i++){
             if($this->cartItems[$i]->barcode == $barcode){
                 UsefulFunction::removeArrayElementE($this->cartItems, $this->cartItems[$i]);
@@ -45,44 +43,43 @@ class Cart{
         return false; //If fail to remove item
     }
 
-    function clearCart(){
+    public function clearCart(){
         for($i = 0; $i < sizeof($this->cartItems); $i++){
             unset($this->cartItems[$i]);
         }
     }
 
-    function getCartItems(){
+    public function getCartItems(){
         return $this->cartItems;
     }
 
-    function getCartCount(){
+    public function getCartCount(){
         return $this->cartCount;
     }
 
-    function getSubtotal(){
+    public function getSubtotal(){
         return $this->subtotal;
     }
 
-    function getShippingFee(){
+    public function getShippingFee(){
         return $this->shippingFee;
     }
 
-    function setCartItems($cartItems){
+    public function setCartItems($cartItems){
         $this->cartItems = $cartItems;
     }
 
-    function setCartCount($cartCount){
+    public function setCartCount($cartCount){
         $this->cartCount = $cartCount;
     }
 
-    function setSubTotal($subtotal){
+    public function setSubTotal($subtotal){
         $this->subtotal = $subtotal;
     }
 
-    function setShippingFee($shippingFee){
+    public function setShippingFee($shippingFee){
         $this->shippingFee = $shippingFee;
     }
-
 }
 
 ?>

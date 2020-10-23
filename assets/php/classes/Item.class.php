@@ -1,57 +1,69 @@
 <?php
 
-/* */
-
 class Item {
     public $name; //String
     private $catogory; //String
+    private $brand; //String
+    private $country; //String
     private $imgPaths; //Array
-    private $variousList; //Array
+    private $varieties; //Array
 
-    function __construct($name, $catogory, $imgPaths){
+    public function __construct($name, $catogory, $brand, $country, $imgPaths){
         $this->name = $name;
         $this->catogory = $catogory;
+        $this->brand = $brand;
+        $this->country = $country;
         $this->imgPaths = $imgPaths;
-        $this->variousList = array();
+        $this->varieties = array();
     }
 
-    function addVarious($various){
-        $this->variousList.push($various);
+    public function addVarious($variety){
+        $this->varieties.push($variety);
     }
 
-    function removeVarious($index){
-        UsefulFunction::removeArrayElementI($this->various, $index);
+    public function removeVarious($index){
+        UsefulFunction::removeArrayElementI($this->varieties, $index);
     }
 
-    
-    function __toString(){
-        return (string)$this->name;
-    }
-
-    function getName(){
+    public function getName(){
         return $this->name;
     }
 
-    function getCatogory(){
+    public function getCatogory(){
         return $this->catogory;
     }
 
-    function getImgPath(){
+    public function getBrand(){
+        return $this->brand;
+    }
+
+    public function getCountry(){
+        return $this->country;
+    }
+
+    public function getImgPath(){
         return $this->imgPaths;
     }
 
-    function setName($name){
+    public function setName($name){
         $this->name = $name;
     }
 
-    function setImgPath($imgPaths){
-        $this->imgPaths = $imgPaths;
-    }
-
-    function setCatogory($catogory){
+    public function setCatogory($catogory){
         $this->catogory = $catogory;
     }
 
+    public function setBrand($brand){
+        $this->brand = $brand;
+    }
+
+    public function setCountry($country){
+        $this->country = $country;
+    }
+
+    public function setImgPath($imgPaths){
+        $this->imgPaths = $imgPaths;
+    }
 }
 
 ?>

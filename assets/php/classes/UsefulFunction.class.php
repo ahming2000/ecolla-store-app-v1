@@ -1,7 +1,5 @@
 <?php
 
-/* */
-
 class UsefulFunction{
     public static function removeArrayElementE($array, $element){
         //Get the index of the element that require to remove
