@@ -1,14 +1,23 @@
 <?php
 
 class Variety {
+    private $barcode; //int
     private $property; //string //Flavour or type
+    private $propertyType; //String //Type of describe way on propertys
     private $price; //double //In Malaysia Riggit
     private $weight; //double
     private $weightUnit; //string //Gram or others
-    private $barcode; //int
+
+    public function getBarcode(){
+        return $this->barcode;
+    }
 
     public function getProperty(){
         return $this->property;
+    }
+
+    public function getPropertyType(){
+        return $this->propertyType;
     }
 
     public function getPrice(){
@@ -23,12 +32,16 @@ class Variety {
         return $this->weightUnit;
     }
 
-    public function getBarcode(){
-        return $this->barcode;
+    public function setBarcode($barcode){
+        $this->barcode = $barcode;
     }
 
     public function setProperty($property){
         $this->property = $property;
+    }
+
+    public function setPropertyType($propertyType){
+        $this->propertyType = $propertyType;
     }
 
     public function setPrice($price){
@@ -42,11 +55,6 @@ class Variety {
     public function setWeightUnit($weightUnit){
         $this->weightUnit = $weightUnit;
     }
-
-    public function setBarcode($barcode){
-        $this->barcode = $barcode;
-    }
-
 }
 
 ?>
