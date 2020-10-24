@@ -39,6 +39,16 @@
 .font-color{
     color: white;
 }
+.footer-hr{
+    border: 0;
+    border-top: 2px solid hotpink;
+    width: 90px;
+    margin: 0;
+    margin-bottom: 20px;
+}
+.logo-bt{
+    background-color:#303136;
+}
 
 /*index.php*/
 .hotsell{
