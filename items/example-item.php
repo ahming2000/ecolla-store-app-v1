@@ -9,10 +9,11 @@
     <link rel="stylesheet" href="../assets/vendor/icofont/icofont.min.css">
     <link rel="stylesheet" href="../deco.css">
 </head>
+
 <body>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-    <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
+    <script src="../assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>        
     
     <?php include __DIR__."\\..\\block\\header.php"; ?>
@@ -20,10 +21,7 @@
     <wrapper class="d-flex flex-column">
     <main class="flex-fill"> <!--put content-->
 
-    <section class="mb-5">
-    
-    </section>
-    <div class="container">
+    <div class="container mt-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="#">商品列表</a></li>
@@ -34,28 +32,71 @@
             </ol>
 
         </nav>
-
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4">
-                <div class="col-xs-0 col-sm-0 col-md-0 col-lg-12">
-                    <?php
-                        $imgList = array("");
-                        include "../block/carousel-block.php";
-                    ?>
-                </div>
-            </div>
-            
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
-            </div>
         </div>
 
-        <div class="col-12">
-        </div>
+        <div class="container">
+ <!--Grid row-->
+ <div class="row">
 
-        <div class="row">
-        </div>
+<!--Grid column-->
+<div class="col-md-6 mb-4">
+    
+<?php
+// ***1920 x 540 pixels picture is needed for advertisement!!!***
+$imgList = array("../assets/images/ads/item-example-1.jpg", "../assets/images/ads/item-example-2.jpg", "../assets/images/ads/item-example-3.jpg");
+include "../block/carousel-block.php"; 
+?>
+
+</div>
+<!--Grid column-->
+
+<!--Grid column-->
+<div class="col-md-6 mb-4">
+
+  <!--Content-->
+  <div class="p-4">
+
+    <div class="mb-3">
+      <a href="">
+        <span class="badge purple mr-1">Category 2</span>
+      </a>
+      <a href="">
+        <span class="badge blue mr-1">New</span>
+      </a>
+      <a href="">
+        <span class="badge red mr-1">Bestseller</span>
+      </a>
     </div>
 
+    <p class="lead">
+      <span class="mr-1  font-weight-bold">
+        <del>RM 3.00</del>
+      </span>
+      <span class="font-weight-bold" style="color:red;">RM 2.00</span>
+    </p>
+
+    <p class="lead font-weight-bold">卫龙 小辣棒</p>
+
+    <p>这里什么都没有</p>
+
+    <form class="d-flex justify-content-left">
+      <!-- Default input -->
+      <input type="number" value="1" aria-label="Search" class="form-control" style="width: 100px">
+      <button class="btn btn-md my-0 p ml-1" style="color:white; background-color: #3c3e44;" type="submit">Add to cart
+        <i class="fas fa-shopping-cart ml-1"></i>
+      </button>
+
+    </form>
+
+  </div>
+  <!--Content-->
+
+</div>
+<!--Grid column-->
+
+</div>
+<!--Grid row-->
+</div>
     </main>
 
     <?php include "../block/footer.php"; ?>

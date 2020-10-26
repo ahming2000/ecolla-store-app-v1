@@ -22,7 +22,7 @@
 
 <div style="margin-top: 56px;"></div><!-- To create a margin on the top of the content -->
 
-<?php if($isItemPage) include "../block/breadcrumb-block.php"; ?>
+<?php if($isItemPage=false) include "../block/breadcrumb-block.php"; ?>
 
 <script>
 $(document).ready(function() {
