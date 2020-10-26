@@ -1,28 +1,43 @@
 <?php
 
 class Item {
-    public $name; //String
+    private $id; //Unique //Generate after insert into database
+    private $name; //String
     private $catogory; //String
     private $brand; //String
     private $country; //String
-    private $imgPaths; //Array
-    private $varieties; //Array
 
-    public function __construct($name, $catogory, $brand, $country, $imgPaths){
+    private $varieties; //Array
+    private $imgPaths; //Array
+
+    public function __construct($name, $catogory, $brand, $country){
         $this->name = $name;
         $this->catogory = $catogory;
         $this->brand = $brand;
         $this->country = $country;
-        $this->imgPaths = $imgPaths;
+        
         $this->varieties = array();
+        $this->imgPaths = array();
     }
 
-    public function addVarious($variety){
+    public function addVariety($variety){
         $this->varieties.push($variety);
     }
 
-    public function removeVarious($index){
+    public function removeVariety($index){
         UsefulFunction::removeArrayElementI($this->varieties, $index);
+    }
+
+    public function addImgPath($imgPath){
+        $this->imgPaths.push($imgPath);
+    }
+
+    public function removeImgPath($index){
+        UsefulFunction::removeArrayElementI($this->imgPaths, $index);
+    }
+
+    public function getID(){
+        return $this->id;
     }
 
     public function getName(){
@@ -41,8 +56,8 @@ class Item {
         return $this->country;
     }
 
-    public function getImgPath(){
-        return $this->imgPaths;
+    public function setID($id){
+        $this->id = $id;
     }
 
     public function setName($name){
@@ -61,9 +76,6 @@ class Item {
         $this->country = $country;
     }
 
-    public function setImgPath($imgPaths){
-        $this->imgPaths = $imgPaths;
-    }
 }
 
 ?>
