@@ -49,7 +49,7 @@ $(document).ready(function() {
             $('.navbar').addClass('navbar-custom');
             // Transition effect for navbar 
             $(window).scroll(function() {
-                if($(this).scrollTop() > 50) { 
+                if($(this).scrollTop() > 1) { 
                     $('.navbar').addClass('navbar-change');
                     $('.navbar').removeClass('navbar-custom');
                     } 

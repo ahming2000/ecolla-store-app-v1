@@ -20,6 +20,9 @@
             
         <?php include "block/header.php"; ?>
        
+    <wrapper class="d-flex flex-column">
+    <main class="flex-fill"> <!--put content-->
+
         <!-- Advertisement -->
         <section class="ads-carousel">
             <?php
@@ -37,10 +40,12 @@
             </div>
         </section>
 
+    </main>
+
+        <section>
         <?php include "block/footer.php"; ?>
-
+        </section>
         
-
         <script>
             $(document).ready(function(){
 
@@ -49,5 +54,6 @@
             });
         </script>
     
+    </wrapper>
     </body>
 </html>

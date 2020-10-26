@@ -1,5 +1,5 @@
 <div id="itemslide" class="carousel slide carousel-multi-item" data-interval="false">
-  <div class= "carousel-inner item-slide row" role="listbox">
+  <div class= "carousel-inner item-slide row w-100 mx-auto" role="listbox">
   <!--first page-->
         <div class="carousel-item col-12 col-sm-6 col-md-4 col-lg-3 display-item active">
             <div class="card mb-2 shadow">
@@ -118,18 +118,18 @@ var $e = $(e.relatedTarget);
 var idx = $e.index();
 console.log("IDX :  " + idx);
 
-var itemsPerSlide = $('.display-item').length;
-var totalItems = $('.display-item').length;
+var itemsPerSlide = $('#itemslide .carousel-item').length;
+var totalItems = $('#itemslide .carousel-item').length;
 
 if (idx >= totalItems-(itemsPerSlide-1)) {
     var it = itemsPerSlide - (totalItems - idx);
     for (var i=0; i<it; i++) {
         // append slides to end
         if (e.direction=="left") {
-            $('.display-item').eq(i).appendTo('.item-slide');
+            $('#itemslide .carousel-item').eq(i).appendTo('#itemslide .carousel-inner');
         }
         else {
-            $('.display-item').eq(0).appendTo('.item-slide');
+            $('#itemslide .carousel-item').eq(0).appendTo('#itemslide .carousel-inner');
         }
     }
 }

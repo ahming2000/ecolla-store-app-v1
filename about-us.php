@@ -18,5 +18,16 @@
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
     <?php include "block/header.php"; ?>
+    <wrapper class="d-flex flex-column">
+
+    <main class="flex-fill"> <!--put content-->
+
+    </main>
+
+    <section>
+        <?php include "block/footer.php"; ?>
+    </section>
+
+    </wrapper>
     </body>
 </html>

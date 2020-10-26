@@ -4,9 +4,10 @@
     <head>
         <meta charset="utf-8">
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
-         <link rel="shortcut icon" href="assets/images/icon/ecollafavicon.ico">
-         <link rel="stylesheet" href="assets/vendor/bootstrap-4.5.2-dist/css/bootstrap.min.css">
-         <link rel="stylesheet" href="deco.css">
+        <link rel="stylesheet" href="assets/vendor/bootstrap-4.5.2-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/vendor/icofont/icofont.min.css">
+        <link rel="stylesheet" href="deco.css">
+        <link rel="shortcut icon" href="assets/images/icon/ecollafavicon.ico">
          <title>购物车 | Ecolla ε口乐</title>
     </head>
     <body>
@@ -17,6 +18,9 @@
         <script src='https://kit.fontawesome.com/a076d05399.js'></script>      
 
         <?php include "block/header.php"; ?>
+
+    <wrapper class="d-flex flex-column">
+    <main class="flex-fill"> <!--put content-->
 
         <div class="container">
             <div class="row">
@@ -54,7 +58,11 @@
             </div>
             
         </div>
+
+    </main>
+
         <?php include "block/footer.php"; ?>
 
+    </wrapper>
     </body>
 </html>
