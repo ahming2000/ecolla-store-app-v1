@@ -67,6 +67,9 @@ class Model extends Dbh{
     }
 
     protected function updateVarietyAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
+        if($attrToUpdate === "v_barcode"){
+            die("Barcode is only allow to delete, cannot modify!");
+        }
         $sql = "UPDATE varieties SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
