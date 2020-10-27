@@ -4,14 +4,10 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 
 class Controller extends Model{
 
-    public function getItemID($item){
-        return $this->selectItemAttr("i_id", "i_name", $item->getName());
-    }
-
-    public function createNewItem($item){
+    public function insertNewItem($item){
         $this->insertItem($item->getName(), $item->getCatogory(), $item->getBrand(), $item->getCountry());
 
-        $item->setID($this->getItemID($item));
+        $item->setID($this->selectItemAttr("i_id", "i_name", $item->getName()));
 
         foreach($item->getVarieties() as $variety){
             $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyType(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit());
@@ -29,7 +25,7 @@ class Controller extends Model{
         $this->updateItemAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch);
     }
 
-    public function replaceItemDetail($orgItem, $newItem){
+    public function replaceAllItemDetail($orgItem, $newItem){
         $this->updateItemAttr("i_name", $newItem->getName(), "i_id", $orgItem->getID());
         $this->updateItemAttr("i_catogory", $newItem->getCatogory(), "i_id", $orgItem->getID());
         $this->updateItemAttr("i_brand", $newItem->getBrand(), "i_id", $orgItem->getID());

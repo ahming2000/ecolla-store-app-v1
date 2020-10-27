@@ -20,8 +20,8 @@ class View extends Model{
         return $this->selectVarietyAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
     }
 
-    public function getSpecificationAttr($v_barcode, $i_id){
-        return $this->insertSpecification($v_barcode, $i_id);
+    public function getSpecificationAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
+        return $this->selectSpecificationAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
     }
 
     public function getItemImgsAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
