@@ -5,13 +5,31 @@ require_once __DIR__."\\Dbh.class.php";
 class Model extends Dbh{
 
     //Item
+
+    protected function selectCount($tableName){
+        $sql = "SELECT COUNT(*) AS num FROM ".$tableName;
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetch();
+        return $results['num'];
+    }
+
     protected function insertItem($name, $catogory, $brand, $country){
         $sql = "INSERT INTO items(i_name, i_catogory, i_brand, i_country) VALUE(?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$name, $catogory, $brand, $country]);
     }
 
-    protected function selectAllItems($attrToSearch, $attrContentToSearch){
+    protected function selectAllItems(){
+        $sql = "SELECT * FROM items";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectItem($attrToSearch, $attrContentToSearch){
         $sql = "SELECT * FROM items WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToSearch]);
@@ -48,7 +66,16 @@ class Model extends Dbh{
         $stmt->execute([$barcode, $property, $propertyType, $price, $weight, $weightUnit]);
     }
 
-    protected function selectAllVarieties($attrToSearch, $attrContentToSearch){
+    protected function selectAllVarieties(){
+        $sql = "SELECT * FROM varieties";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectVariety($attrToSearch, $attrContentToSearch){
         $sql = "SELECT * FROM varieties WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToSearch]);
@@ -88,7 +115,16 @@ class Model extends Dbh{
         $stmt->execute([$v_barcode, $i_id]);
     }
 
-    protected function selectAllSpecifications($attrToSearch, $attrContentToSearch){
+    protected function selectAllSpecifications(){
+        $sql = "SELECT * FROM specifications";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectSpecification($attrToSearch, $attrContentToSearch){
         $sql = "SELECT * FROM specifications WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrToSearch, $attrContentToSearch]);
@@ -125,7 +161,16 @@ class Model extends Dbh{
         $stmt->execute([$i_id, $imgPath]);
     }
 
-    protected function selectAllItemImgs($attrToSearch, $attrContentToSearch){
+    protected function selectAllItemImgs(){
+        $sql = "SELECT * FROM item_imgs";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectItemImg($attrToSearch, $attrContentToSearch){
         $sql = "SELECT * FROM item_imgs WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrToSearch, $attrContentToSearch]);
