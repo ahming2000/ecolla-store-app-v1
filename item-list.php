@@ -20,17 +20,18 @@
         <?php include "block/header.php"; ?>
         
     <wrapper class="d-flex flex-column">
-    <main class="flex-fill"> <!--put content-->
+    <main class="flex-fill">
 
         <div class="container">
             <div class="row">
             
                 <?php
-                    $itemList = array(); //Important!! Need to take the data from the database!!!
+                    $view = new View();
+                    $itemList = $view->getAllItems(); //Important!! Need to take the data from the database!!!
                     
-                    for($i = 0; $i < sizeof($itemList); $i++){
-                        $item = $itemList[$i];
-                        include "../block/item-block.php";    
+                    foreach($itemList as $i){
+                        $item = $i;
+                        include "block/item-block.php";    
                     }
                     
                 ?>
@@ -47,7 +48,7 @@
         <script>
             $(document).ready(function(){
 
-                $("#cartCount").html("0"); //Temporary, Need to retrieve from the database
+                $("#cartCount").html("0"); //Temporary, Need to retrieve from the php session
 
             });
         </script>
