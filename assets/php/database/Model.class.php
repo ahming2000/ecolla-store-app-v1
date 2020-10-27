@@ -1,6 +1,8 @@
 <?php
 
-class Items extends Dbh{
+require_once __DIR__."\\Dbh.class.php";
+
+class Model extends Dbh{
 
     //Item
     protected function insertItem($name, $catogory, $brand, $country){
@@ -10,33 +12,33 @@ class Items extends Dbh{
     }
 
     protected function selectAllItems($attrToSearch, $attrContentToSearch){
-        $sql = "SELECT * FROM items WHERE ? = ?";
+        $sql = "SELECT * FROM items WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSearch, $attrContentToSearch]);
-
+        $stmt->execute([$attrContentToSearch]);
         $results = $stmt->fetchAll();
-        return $result;
+
+        return $results;
     }
 
     protected function selectItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        $sql = "SELECT ? FROM items WHERE ? = ?";
+        $sql = "SELECT ".$attrToSelect." FROM items WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSelect, $attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $result[0][$attrToSearch];
+        return $results[0][$attrToSelect];
     }
 
     protected function updateItemAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
-        $sql = "UPDATE items SET ? = ? WHERE ? = ?";
+        $sql = "UPDATE items SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
     }
 
     protected function deleteItemAttr($attrToSearch, $attrContentToSearch){
-        $sql = "DELETE FROM items WHERE ? = ?";
+        $sql = "DELETE FROM items WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
     }
 
     //Variety
@@ -47,33 +49,33 @@ class Items extends Dbh{
     }
 
     protected function selectAllVarieties($attrToSearch, $attrContentToSearch){
-        $sql = "SELECT * FROM varieties WHERE ? = ?";
+        $sql = "SELECT * FROM varieties WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $result;
+        return $results;
     }
 
     protected function selectVarietyAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        $sql = "SELECT ? FROM varieties WHERE ? = ?";
+        $sql = "SELECT ".$attrToSelect." FROM varieties WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSelect, $attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $result[0][$attrToSearch];
+        return $results[0][$attrToSearch];
     }
 
     protected function updateVarietyAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
-        $sql = "UPDATE varieties SET ? = ? WHERE ? = ?";
+        $sql = "UPDATE varieties SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
     }
 
     protected function deleteVarietyAttr($attrToSearch, $attrContentToSearch){
-        $sql = "DELETE FROM varieties WHERE ? = ?";
+        $sql = "DELETE FROM varieties WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
     }
 
     //Specification
@@ -84,33 +86,33 @@ class Items extends Dbh{
     }
 
     protected function selectAllSpecifications($attrToSearch, $attrContentToSearch){
-        $sql = "SELECT * FROM specifications WHERE ? = ?";
+        $sql = "SELECT * FROM specifications WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrToSearch, $attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $result;
+        return $results;
     }
 
     protected function selectSpecificationAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        $sql = "SELECT ? FROM specifications WHERE ? = ?";
+        $sql = "SELECT ".$attrToSearch." FROM specifications WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSelect, $attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $result[0][$attrToSearch];
+        return $results[0][$attrToSearch];
     }
 
     protected function updateSpecificationAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
-        $sql = "UPDATE specifications SET ? = ? WHERE ? = ?";
+        $sql = "UPDATE specifications SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
     }
 
     protected function deleteSpecificationAttr($attrToSearch, $attrContentToSearch){
-        $sql = "DELETE FROM specifications WHERE ? = ?";
+        $sql = "DELETE FROM specifications WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
     }
 
     //ItemImg
@@ -121,33 +123,33 @@ class Items extends Dbh{
     }
 
     protected function selectAllItemImgs($attrToSearch, $attrContentToSearch){
-        $sql = "SELECT * FROM item_imgs WHERE ? = ?";
+        $sql = "SELECT * FROM item_imgs WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrToSearch, $attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $result;
+        return $results;
     }
 
     protected function selectItemImgAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        $sql = "SELECT ? FROM item_imgs WHERE ? = ?";
+        $sql = "SELECT ".$attrToSelect." FROM item_imgs WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSelect, $attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $result[0][$attrToSearch];
+        return $results[0][$attrToSearch];
     }
 
     protected function updateItemImgAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
-        $sql = "UPDATE item_imgs SET ? = ? WHERE ? = ?";
+        $sql = "UPDATE item_imgs SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
     }
 
     protected function deleteItemImgAttr($attrToSearch, $attrContentToSearch){
-        $sql = "DELETE FROM item_imgs WHERE ? = ?";
+        $sql = "DELETE FROM item_imgs WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
     }
 
 }

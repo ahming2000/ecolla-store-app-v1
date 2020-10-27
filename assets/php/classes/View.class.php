@@ -1,32 +1,31 @@
 <?php
 
-include "assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed.
-require_once "../database/Model.php";
+require_once __DIR__."\\..\\database\\Model.class.php";
 
 class View extends Model{
 
-    public function getAllItems(){
-
+    public function getAllItems($attrToSearch, $attrContentToSearch){
+        return $this->selectAllItems($attrToSearch, $attrContentToSearch);
     }
 
-    public function getItemAttr(){
-
+    public function getItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
+        return $this->selectItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
     }
 
-    public function getAllVarieties(){
-
+    public function getAllVarieties($attrToSearch, $attrContentToSearch){
+        return $this->selectAllVarieties($attrToSearch, $attrContentToSearch);
     }
 
-    public function getVarietyAttr(){
-
+    public function getVarietyAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
+        return $this->selectVarietyAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
     }
 
-    public function getSpecificationAttr(){
-
+    public function getSpecificationAttr($v_barcode, $i_id){
+        return $this->insertSpecification($v_barcode, $i_id);
     }
 
-    public function getItemImgsAttr(){
-        
+    public function getItemImgsAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
+        return $this->selectItemImgAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
     }
 
 }

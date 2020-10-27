@@ -1,7 +1,6 @@
 <?php
 
-include "assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed.
-require_once "../database/Model.php";
+require_once __DIR__."\\..\\database\\Model.class.php";
 
 class Controller extends Model{
 
@@ -12,7 +11,7 @@ class Controller extends Model{
     public function createNewItem($item){
         $this->insertItem($item->getName(), $item->getCatogory(), $item->getBrand(), $item->getCountry());
 
-        $item->setID(getItemID($item));
+        $item->setID($this->getItemID($item));
 
         foreach($item->getVarieties() as $variety){
             $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyType(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit());
@@ -31,10 +30,10 @@ class Controller extends Model{
     }
 
     public function replaceItemDetail($orgItem, $newItem){
-        $this->updateItemAttr("i_name", $newItem->getName(), "items_id", $orgItem->getID());
-        $this->updateItemAttr("i_catogory", $newItem->getCatogory(), "items_id", $orgItem->getID());
-        $this->updateItemAttr("i_brand", $newItem->getBrand(), "items_id", $orgItem->getID());
-        $this->updateItemAttr("i_country", $newItem->getCountry(), "items_id", $orgItem->getID());
+        $this->updateItemAttr("i_name", $newItem->getName(), "i_id", $orgItem->getID());
+        $this->updateItemAttr("i_catogory", $newItem->getCatogory(), "i_id", $orgItem->getID());
+        $this->updateItemAttr("i_brand", $newItem->getBrand(), "i_id", $orgItem->getID());
+        $this->updateItemAttr("i_country", $newItem->getCountry(), "i_id", $orgItem->getID());
 
         $newItem->setID($orgItem->getID());
 
@@ -51,6 +50,13 @@ class Controller extends Model{
         }
     }
 
+    public function deleteItem($item){
+        $this->deleteItemAttr("i_id", $item->getID());
+        foreach($item->getVarieties() as $variety){
+            $this->deleteVarietyAttr("v_barcode", $variety->getBarcode());
+        }
+        //To-do: delete the img file from the directory
+    }
 }
 
 ?>

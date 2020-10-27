@@ -21,7 +21,7 @@ class Item {
     }
 
     public function addVariety($variety){
-        $this->varieties.push($variety);
+        array_push($this->varieties, $variety);
     }
 
     public function removeVariety($index){
@@ -29,7 +29,7 @@ class Item {
     }
 
     public function addImgPath($imgPath){
-        $this->imgPaths.push($imgPath);
+        array_push($this->imgPaths, $imgPath);
     }
 
     public function removeImgPath($index){
@@ -54,6 +54,14 @@ class Item {
 
     public function getCountry(){
         return $this->country;
+    }
+
+    public function getVarieties(){
+        return $this->varieties;
+    }
+
+    public function getImgPaths(){
+        return $this->imgPaths;
     }
 
     public function setID($id){
