@@ -127,19 +127,19 @@ class Model extends Dbh{
     protected function selectSpecification($attrToSearch, $attrContentToSearch){
         $sql = "SELECT * FROM specifications WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
         return $results;
     }
 
     protected function selectSpecificationAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        $sql = "SELECT ".$attrToSearch." FROM specifications WHERE ".$attrToSearch." = ?";
+        $sql = "SELECT ".$attrToSelect." FROM specifications WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $results[0][$attrToSearch];
+        return $results[0][$attrToSelect];
     }
 
     protected function updateSpecificationAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
@@ -173,7 +173,7 @@ class Model extends Dbh{
     protected function selectItemImg($attrToSearch, $attrContentToSearch){
         $sql = "SELECT * FROM item_imgs WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$attrToSearch, $attrContentToSearch]);
+        $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
         return $results;

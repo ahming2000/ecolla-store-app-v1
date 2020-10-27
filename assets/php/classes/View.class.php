@@ -7,17 +7,19 @@ class View extends Model{
     public function getAllItems(){
         $items = array();
         $_i = $this->selectAllItems();
-        $_v = $this->selectAllVarieties();
         foreach($_i as $items_array){
-            $item = new Items($items_array['i_name'], $items_array['i_catogory'], $items_array['brand'], $items_array['country']);
+            $item = new Item($items_array['i_name'], $items_array['i_catogory'], $items_array['i_brand'], $items_array['i_country']);
             $item->setID($items_array['i_id']);
 
-            $varieties_array = $this->selectSpecification("i_id", $items_array['i_id']);
-            foreach($varieties_array as $variety){
-                $item->addVariety(new Variety($variety['v_barcode'], $variety['proprety'], $variety['propretyType'], $variety['price'], $variety['weight'], $variety['weightUnit']));
+            $barcode_array = $this->selectSpecification("i_id", $items_array['i_id']);
+            foreach($barcode_array as $barcode){
+                $varieties_array = $this->selectVariety("v_barcode", $barcode["v_barcode"]);
+                foreach($varieties_array as $variety){
+                    $item->addVariety(new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyType'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit']));
+                }
             }
 
-            $imgPaths_array = $this->selectItemImg("i_id", $item_array["i_id"]);
+            $imgPaths_array = $this->selectItemImg("i_id", $items_array["i_id"]);
             foreach($imgPaths_array as $imgPaths){
                 $item->addImgPath($imgPaths['imgPath']);
             }
