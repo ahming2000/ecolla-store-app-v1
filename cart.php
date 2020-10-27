@@ -22,14 +22,14 @@
     <wrapper class="d-flex flex-column">
     <main class="flex-fill"> <!--put content-->
 
-        <div class="container">
+        <div class="container mt-4">
             <div class="row">
                 <div class="col-lg-8">
-                    <div class="card mb-3">
+                    <div class="card mb-2">
                         <div class="card-body">
                             <?php
                                 $cartList = array();
-                                
+        
                                 for($i = 0; $i < sizeof($cartList); $i++){
                                     $cartItem = $cartList[$i];
                                     include "block/cart-item-block";
@@ -38,15 +38,17 @@
                         </div>
                     </div>
                     <div class="card mb-3">
-                        <div class="cart-body">
+                        <div class="card-body bg-warning">
                             <!-- Delivery Description -->
+                            <h5>Delivery Service</h5>
+                            <p class="text-muted">We only deliver within Kampar.</p>
                         </div>
                     </div>
 
                 </div>           
                 <div class="col-lg-4">
                     <div class="card mb-3">
-                        <div class="cart-body">
+                        <div class="card-body">
                             <?php include "block/order-summary-block.php"; ?>
                             <form action="check-out.php" method="post">
                                 <input class="btn btn-primary btn-block" type="submit" value="前往付款">
