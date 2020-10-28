@@ -10,7 +10,7 @@ class Controller extends Model{
         $item->setID($this->selectItemAttr("i_id", "i_name", $item->getName()));
 
         foreach($item->getVarieties() as $variety){
-            $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyType(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit());
+            $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyType(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getInventory());
             $this->insertSpecification($variety->getBarcode(), $item->getID());
         }
 
@@ -39,6 +39,8 @@ class Controller extends Model{
             $this->updateVarietyAttr("v_price", $variety->getPrice(), "v_barcode" , $variety->getBarcode());
             $this->updateVarietyAttr("v_weight", $variety->getWeight(), "v_barcode" , $variety->getBarcode());
             $this->updateVarietyAttr("v_weightUnit", $variety->getWeightUnit(), "v_barcode" , $variety->getBarcode());
+            $this->updateVarietyAttr("v_inventory", $variety->getInventory(), "v_barcode" , $variety->getBarcode());
+            $this->updateVarietyAttr("v_discountRate", $variety->getDiscountRate(), "v_barcode" , $variety->getBarcode());
         }
 
         for($i = 0; $i < sizeof($newItem->getImgPaths()); $i++){

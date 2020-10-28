@@ -4,17 +4,21 @@ class Variety {
     private $barcode; //string //Unique
     private $property; //string //Flavour or type
     private $propertyType; //String //Type of describe way on propertys
-    private $price; //double //In Malaysia Riggit
-    private $weight; //double
+    private $price; //Float //In Malaysia Riggit
+    private $weight; //Float
     private $weightUnit; //string //Gram or others
+    private $inventory; //Integer
+    private $discountRate; //Float //Default: 1.0
 
-    public function __construct($barcode, $property, $propertyType, $price, $weight, $weightUnit){
+    public function __construct($barcode, $property, $propertyType, $price, $weight, $weightUnit, $inventory){
         $this->barcode = $barcode;
         $this->property = $property;
         $this->propertyType = $propertyType;
         $this->price = $price;
         $this->weight = $weight;
         $this->weightUnit = $weightUnit;
+        $this->inventory = $inventory;
+        $this->discountRate = 1.0;
     }
 
     public function getBarcode(){
@@ -41,6 +45,14 @@ class Variety {
         return $this->weightUnit;
     }
 
+    public function getInventory(){
+        return $this->inventory;
+    }
+
+    public function getDiscountRate(){
+        return $this->discountRate;
+    }
+
     public function setProperty($property){
         $this->property = $property;
     }
@@ -59,6 +71,14 @@ class Variety {
 
     public function setWeightUnit($weightUnit){
         $this->weightUnit = $weightUnit;
+    }
+
+    public function setInventory($inventory){
+        $this->inventory = $inventory;
+    }
+
+    public function setDiscountRate($discountRate){
+        $this->discountRate = $discountRate;
     }
 }
 
