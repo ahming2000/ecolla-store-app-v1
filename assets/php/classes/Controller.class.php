@@ -5,7 +5,7 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 class Controller extends Model{
 
     public function insertNewItem($item){
-        $this->insertItem($item->getName(), $item->getCatogory(), $item->getBrand(), $item->getCountry());
+        $this->insertItem($item->getName(), $item->getCatogory(), $item->getBrand(), $item->getCountry(), $item->getInventory());
 
         $item->setID($this->selectItemAttr("i_id", "i_name", $item->getName()));
 
@@ -30,6 +30,7 @@ class Controller extends Model{
         $this->updateItemAttr("i_catogory", $newItem->getCatogory(), "i_id", $orgItem->getID());
         $this->updateItemAttr("i_brand", $newItem->getBrand(), "i_id", $orgItem->getID());
         $this->updateItemAttr("i_country", $newItem->getCountry(), "i_id", $orgItem->getID());
+        $this->updateItemAttr("i_inventory", $newItem->getInventory(), "i_id", $orgItem->getID());
 
         $newItem->setID($orgItem->getID());
 
