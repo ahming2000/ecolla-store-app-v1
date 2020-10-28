@@ -6,15 +6,17 @@ class Item {
     private $catogory; //String
     private $brand; //String
     private $country; //String
+    private $inventory; //Integer
 
     private $varieties; //Array
     private $imgPaths; //Array
 
-    public function __construct($name, $catogory, $brand, $country){
+    public function __construct($name, $catogory, $brand, $country, $inventory){
         $this->name = $name;
         $this->catogory = $catogory;
         $this->brand = $brand;
         $this->country = $country;
+        $this->inventory = $inventory;
         
         $this->varieties = array();
         $this->imgPaths = array();
@@ -56,6 +58,10 @@ class Item {
         return $this->country;
     }
 
+    public function getInventory(){
+        return $this->$inventory;
+    }
+
     public function getVarieties(){
         return $this->varieties;
     }
@@ -82,6 +88,10 @@ class Item {
 
     public function setCountry($country){
         $this->country = $country;
+    }
+
+    public function setInventory($inventory){
+        $this->inventory = $inventory;
     }
 
 }
