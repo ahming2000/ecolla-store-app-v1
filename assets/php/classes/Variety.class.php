@@ -1,7 +1,7 @@
 <?php
 
 class Variety {
-    private $barcode; //int //Unique
+    private $barcode; //string //Unique
     private $property; //string //Flavour or type
     private $propertyType; //String //Type of describe way on propertys
     private $price; //double //In Malaysia Riggit
