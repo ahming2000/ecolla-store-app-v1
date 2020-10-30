@@ -6,16 +6,18 @@ class Item {
     private $catogory; //String
     private $brand; //String
     private $country; //String
+    private $isListed; //Boolean
 
     private $varieties; //Array
     private $imgPaths; //Array
 
-    public function __construct($name, $catogory, $brand, $country){
+    public function __construct($name, $catogory, $brand, $country, $isListed){
         $this->name = $name;
         $this->catogory = $catogory;
         $this->brand = $brand;
         $this->country = $country;
-        
+        $this->isListed = $isListed;
+
         $this->varieties = array();
         $this->imgPaths = array();
     }
@@ -64,6 +66,10 @@ class Item {
         return $this->imgPaths;
     }
 
+    public function isListed(){
+        return $this->isListed;
+    }
+
     public function setID($id){
         $this->id = $id;
     }
@@ -82,6 +88,10 @@ class Item {
 
     public function setCountry($country){
         $this->country = $country;
+    }
+
+    public function setListed($isListed){
+        $this->isListed = $isListed;
     }
 
 }

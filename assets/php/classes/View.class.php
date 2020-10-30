@@ -8,7 +8,8 @@ class View extends Model{
         $items = array();
         $_i = $this->selectAllItems();
         foreach($_i as $items_array){
-            $item = new Item($items_array['i_name'], $items_array['i_catogory'], $items_array['i_brand'], $items_array['i_country']);
+            $item = new Item($items_array['i_name'], $items_array['i_catogory'], $items_array['i_brand'], $items_array['i_country'], $items_array['i_isListed']);
+            
             $item->setID($items_array['i_id']);
 
             $barcode_array = $this->selectSpecification("i_id", $items_array['i_id']);

@@ -5,12 +5,12 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 class Controller extends Model{
 
     public function insertNewItem($item){
-        $this->insertItem($item->getName(), $item->getCatogory(), $item->getBrand(), $item->getCountry());
+        $this->insertItem($item->getName(), $item->getCatogory(), $item->getBrand(), $item->getCountry(), (int) $item->isListed());
 
         $item->setID($this->selectItemAttr("i_id", "i_name", $item->getName()));
 
         foreach($item->getVarieties() as $variety){
-            $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyType(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getInventory());
+            $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyType(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getInventory(), $variety->getDiscountRate());
             $this->insertSpecification($variety->getBarcode(), $item->getID());
         }
 
@@ -30,6 +30,7 @@ class Controller extends Model{
         $this->updateItemAttr("i_catogory", $newItem->getCatogory(), "i_id", $orgItem->getID());
         $this->updateItemAttr("i_brand", $newItem->getBrand(), "i_id", $orgItem->getID());
         $this->updateItemAttr("i_country", $newItem->getCountry(), "i_id", $orgItem->getID());
+        $this->updateItemAttr("i_isListed", $newItem->isListed(), "i_id", $orgItem->getID());
 
         $newItem->setID($orgItem->getID());
 
