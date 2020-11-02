@@ -1,38 +1,25 @@
 <?php
 
 class Cart{
-    private $cartItems;
-    private $cartCount;
-    private $subtotal;
-    private $shippingFee;
+    
+    private $cartItems; //Array
+    private $cartCount; //Int
+    private $subtotal; //Float
+    private $shippingFee; //Float
 
     public function __construct(){
-        $cartItems = array();
-        $subtotal = 0;
-        $shippingFee = 0;
-
-        if($cartCount != 0){
-            //To-do: Get Cart item from database and save it into object
-            //calculateSubtotal();
-        }else{
-            $cartCount = 0;
-        }
+        $cartItems = $this->getCartItems();
+        $cartCount = $this->getCartCount();
+        $subtotal = $this->getSubtotal();
+        $shippingFee = $this->getShippingFee();
     }
 
-    public function calculateSubtotal(){
-        $total = 0;
-        foreach ($this->$cartItems as $CartItem) {
-            $total += $cartItem->subPrice;
-        }
-        return $total + $shippingFee;
-    }
-
-    public function addCartItem($cartItem){
+    public function addItemToCart($cartItem){
         array_push($this->cartItems, $cartItem);
         $this->cartCount++;
     }
 
-    public function removeCartItem($barcode){
+    public function removeItemFromCart($barcode){
         for($i = 0; i < sizeof($this->$cartItems); $i++){
             if($this->cartItems[$i]->barcode == $barcode){
                 UsefulFunction::removeArrayElementE($this->cartItems, $this->cartItems[$i]);
@@ -43,10 +30,23 @@ class Cart{
         return false; //If fail to remove item
     }
 
+    public function modifyItemFromCart($orgCartItem, $newCartItem){
+
+    }
+
+    public function deleteAllData(){
+        setcookie("cartCount", "", time() - 3600);
+        setcookie("cart", "", time() - 3600);
+    }
+
     public function clearCart(){
         for($i = 0; $i < sizeof($this->cartItems); $i++){
             unset($this->cartItems[$i]);
         }
+    }
+
+    public function calculateSubtotal(){
+
     }
 
     public function getCartItems(){
@@ -54,30 +54,40 @@ class Cart{
     }
 
     public function getCartCount(){
-        return $this->cartCount;
+        if(!isset($_COOKIE["cartCount"])) {
+            return 0;
+        }
+        else{
+            return $_COOKIE["cartCount"];
+        }
     }
 
     public function getSubtotal(){
-        return $this->subtotal;
+        $total = 0;
+        foreach ($this->$cartItems as $CartItem) {
+            $total += $cartItem->subPrice;
+        }
+        return $total + $shippingFee;
     }
 
     public function getShippingFee(){
         return $this->shippingFee;
     }
 
-    public function setCartItems($cartItems){
+    private function setCartItems($cartItems){
         $this->cartItems = $cartItems;
     }
 
-    public function setCartCount($cartCount){
+    private function setCartCount($cartCount){
         $this->cartCount = $cartCount;
+        setcookie("cartCount", $cartCount, time() + (86400 * 30), "/");
     }
 
-    public function setSubTotal($subtotal){
+    private function setSubTotal($subtotal){
         $this->subtotal = $subtotal;
     }
 
-    public function setShippingFee($shippingFee){
+    private function setShippingFee($shippingFee){
         $this->shippingFee = $shippingFee;
     }
 }

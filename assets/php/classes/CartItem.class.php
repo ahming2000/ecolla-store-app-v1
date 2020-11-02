@@ -4,15 +4,15 @@ class CartItem{
         
     private $item;
     private $quantity;
-    private $subPrice;
     private $varietyIndex; //Only one various can be selected in this class
+    private $subPrice;
     private $note;
 
-    public function __construct($item, $quantity, $subPrice, $varietyProperty, $note){
+    public function __construct($item, $quantity, $varietyProperty, $note){
         $this->item = $item;
         $this->quantity = $quantity;
-        $this->subPrice = $subPrice;
         $this->varietyIndex = getVarietyIndex($varietyProperty);
+        $this->subPrice = setSubPrice();
         $this->note = $note;
     }
 
@@ -43,10 +43,11 @@ class CartItem{
 
     public function setQuantity($quantity){
         $this->quantity = $quantity;
+        $this->subPrice = setSubPrice();
     }
 
-    public function setSubPrice($subPrice){
-        $this->subPrice = $subPrice;
+    private function setSubPrice(){
+        return $this->$quantity * $this->item->getVarieties()[$this->varietyIndex]->getPrice();
     }
 
     public function setNote($note){
