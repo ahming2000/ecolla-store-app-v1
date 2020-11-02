@@ -34,9 +34,9 @@ class Cart{
     }
 
     public function removeItem($barcode){
-        for($this->){
-            if($this->cartItems[$i]->varieties[$this->cartItems[$i]->varietyIndex]->barcode === $barcode){
-                UsefulFunction::removeArrayElementE($this->cartItems, $this->cartItems[$i]);
+        for($this->cartItems as $cartItem){
+            if($cartItem->getVarieties()[$cartItem->getVarietyIndex()]->getBarcode() === $barcode){
+                UsefulFunction::removeArrayElementE($this->cartItems, $cartItem);
                 $this->cartCount--;
                 $this->updateSubtotal();
                 $this->updateCookie();
