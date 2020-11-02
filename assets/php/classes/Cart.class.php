@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__."\\UsefulFunction.class.php";
+
 class Cart{
 
     private $cartItems; //Array
