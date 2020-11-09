@@ -9,7 +9,7 @@ class View extends Model{
         $_i = $this->selectAllItems();
         foreach($_i as $items_array){
             $item = new Item($items_array['i_name'], $items_array['i_catogory'], $items_array['i_brand'], $items_array['i_country'], $items_array['i_isListed']);
-            
+
             $item->setID($items_array['i_id']);
 
             $barcode_array = $this->selectSpecification("i_id", $items_array['i_id']);
@@ -34,6 +34,10 @@ class View extends Model{
         return $this->selectCount("items");
     }
 
+    public function getItem($attrToSearch, $attrContentToSearch){
+        return $this->selectItem($attrToSearch, $attrContentToSearch);
+    }
+
     public function getItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
         return $this->selectItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
     }
@@ -48,6 +52,10 @@ class View extends Model{
 
     public function getSpecificationAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
         return $this->selectSpecificationAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
+    }
+
+    public function getItemImgs($attrToSearch, $attrContentToSearch){
+        return $this->selectItemImg($attrToSearch, $attrContentToSearch);
     }
 
     public function getItemImgsAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
