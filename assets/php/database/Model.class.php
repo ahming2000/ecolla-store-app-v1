@@ -14,10 +14,10 @@ class Model extends Dbh{
         return $results['num'];
     }
 
-    protected function insertItem($name, $catogory, $brand, $country){
-        $sql = "INSERT INTO items(i_name, i_catogory, i_brand, i_country) VALUE(?, ?, ?, ?)";
+    protected function insertItem($name, $catogory, $brand, $country, $isListed){
+        $sql = "INSERT INTO items(i_name, i_catogory, i_brand, i_country, i_isListed) VALUE(?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$name, $catogory, $brand, $country]);
+        $stmt->execute([$name, $catogory, $brand, $country, $isListed]);
     }
 
     protected function selectAllItems(){
@@ -60,10 +60,10 @@ class Model extends Dbh{
     }
 
     //Variety
-    protected function insertVariety($barcode, $property, $propertyType, $price, $weight, $weightUnit){
-        $sql = "INSERT INTO varieties(v_barcode, v_property, v_propertyType, v_price, v_weight, v_weightUnit) VALUE(?, ?, ?, ?, ?, ?)";
+    protected function insertVariety($barcode, $property, $propertyType, $price, $weight, $weightUnit, $inventory, $discountRate){
+        $sql = "INSERT INTO varieties(v_barcode, v_property, v_propertyType, v_price, v_weight, v_weightUnit, v_inventory, v_discountRate) VALUE(?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$barcode, $property, $propertyType, $price, $weight, $weightUnit]);
+        $stmt->execute([$barcode, $property, $propertyType, $price, $weight, $weightUnit, $inventory, $discountRate]);
     }
 
     protected function selectAllVarieties(){

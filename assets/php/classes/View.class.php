@@ -8,14 +8,15 @@ class View extends Model{
         $items = array();
         $_i = $this->selectAllItems();
         foreach($_i as $items_array){
-            $item = new Item($items_array['i_name'], $items_array['i_catogory'], $items_array['i_brand'], $items_array['i_country']);
+            $item = new Item($items_array['i_name'], $items_array['i_catogory'], $items_array['i_brand'], $items_array['i_country'], $items_array['i_isListed']);
+            
             $item->setID($items_array['i_id']);
 
             $barcode_array = $this->selectSpecification("i_id", $items_array['i_id']);
             foreach($barcode_array as $barcode){
                 $varieties_array = $this->selectVariety("v_barcode", $barcode["v_barcode"]);
                 foreach($varieties_array as $variety){
-                    $item->addVariety(new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyType'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit']));
+                    $item->addVariety(new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyType'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_inventory'], $variety['v_discountRate']));
                 }
             }
 
