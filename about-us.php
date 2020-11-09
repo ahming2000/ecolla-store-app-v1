@@ -18,9 +18,17 @@
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
     <?php include "block/header.php"; ?>
-    <wrapper class="d-flex flex-column">
 
+    <wrapper class="d-flex flex-column">
     <main class="flex-fill"> <!--put content-->
+    <section class="mt-5">
+        <div class="container shadow aboutus">
+            <h1 class="about">About</h1><h1 class="us"> Us</h1>
+            <h1 class="about"> 关于</h1><h1 class="us">我们</h1>
+            <p class="mt-4">进口零食 中国 泰国 韩国 零食<br>现在呆在家的最好佳食</p>
+        </div>
+
+    </section>
 
     </main>
 

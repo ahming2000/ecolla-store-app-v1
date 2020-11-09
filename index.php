@@ -36,7 +36,7 @@
         <section class="section-itemcarousel">
             <div class="container rounded mt-4 p-2">
             <h1 class="hotsell">热卖中</h1>
-            <?php include "block/item-carousel.php"?>
+        
             </div>
         </section>
 

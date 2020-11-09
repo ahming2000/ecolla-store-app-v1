@@ -31,7 +31,7 @@
     <div class="row m-0 pt-3 pb-3 logo-bt">
         <div class="col">
             <div class="text-center">
-            <img src="assets/images/icon/ecolla_icon.png" width="50" height="50" alt="logo" loading="lazy">
+            <img src="assets/images/icon/ecolla_icon.png" width="20" height="20" alt="logo" loading="lazy">
             <span class="font-color">ε口乐</span>
             </div>
         </div>

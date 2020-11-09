@@ -1,4 +1,4 @@
-<div id="imgSlide" class="carousel slide w-75 m-0" data-ride="carousel">
+<div id="imgSlide" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
         <?php 
         
@@ -20,7 +20,7 @@
                 echo "<div class=\"carousel-item";
                 if($i == 0) echo " active"; //Set active for the first slide
                 echo "\">";
-                echo "<img class=\"m-0 d-block w-100\" src=\"".$imgList[$i]."\" data-interval=\"10000\">";
+                echo "<img class=\"d-block w-100\" src=\"".$imgList[$i]."\" data-interval=\"10000\">";
                 echo "</div>";
             }
 
