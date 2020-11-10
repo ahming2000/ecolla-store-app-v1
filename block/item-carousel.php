@@ -8,7 +8,7 @@
 
       <div class="container text-center my-3">
         <div class="row mx-auto my-auto">
-          <div id="itemcarousel" class="carousel slide w-100 " data-ride="carousel">
+          <div id="itemcarousel" class="carousel slide w-100 " data-ride="carousel" data-interval="2000">
             <div class="carousel-inner w-100 vv-3" role="listbox">
               <div class="carousel-item active">
                 <div class="col-2">
@@ -47,6 +47,7 @@
                 </div>
               </div>
             </div>
+            <!--ctrl
             <a class="carousel-control-prev" href="#itemcarousel" role="button" data-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="sr-only">Previous</span>
@@ -55,10 +56,11 @@
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="sr-only">Next</span>
             </a>
+           ctrl-->
           </div>
         </div>
       </div>
-
+ 
     </div>
     <!-- Grid column -->
 
