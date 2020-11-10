@@ -10,42 +10,49 @@
         <div class="row mx-auto my-auto">
           <div id="itemcarousel" class="carousel slide w-100 " data-ride="carousel" data-interval="2000">
             <div class="carousel-inner w-100 vv-3" role="listbox">
+
               <div class="carousel-item active">
                 <div class="col-2">
                   <img class="d-block img-fluid"
                     src="assets/images/items/1/1.png">
                 </div>
               </div>
+
               <div class="carousel-item">
                 <div class="col-2">
                   <img class="d-block img-fluid"
                     src="assets/images/items/1/2.png">
                 </div>
               </div>
+
               <div class="carousel-item">
                 <div class="col-2">
                   <img class="d-block img-fluid"
                     src="assets/images/items/1/3.png">
                 </div>
               </div>
+
               <div class="carousel-item">
                 <div class="col-2">
                   <img class="d-block img-fluid"
                     src="assets/images/items/1/4.png">
                 </div>
               </div>
+
               <div class="carousel-item">
                 <div class="col-2">
                   <img class="d-block img-fluid"
                     src="assets/images/items/1/5.png">
                 </div>
               </div>
+
               <div class="carousel-item">
                 <div class="col-2">
                   <img class="d-block img-fluid"
                     src="assets/images/items/1/6.png">
                 </div>
               </div>
+              
             </div>
             <!--ctrl
             <a class="carousel-control-prev" href="#itemcarousel" role="button" data-slide="prev">

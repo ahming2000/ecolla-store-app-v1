@@ -4,7 +4,7 @@ body, wrapper {
 
 /*header.php*/
 .navbar{
-    background-color:transparent;
+    background-color:white;
     transition: background-color 0.5s;
 }
 .navbar-change{
@@ -12,15 +12,19 @@ body, wrapper {
     transition: background-color 0.5s;
 }
 .navbar-custom .navbar-brand{
-    color: white;
+    color: black;
 }
 .navbar-custom .navbar-nav .nav-link, .navbar-custom .fa-bars{
-    color: white;
+    color: black;
 }
 .navbar .nav-item.active .nav-link,
 .navbar .nav-item:hover .nav-link,
 .navbar a.navbar-brand:hover{
     color: hotpink;
+}
+.strip-header{
+    background-color:#3c3e44;
+    height: 60px;
 }
 
 /*footer.php*/
@@ -42,16 +46,13 @@ body, wrapper {
 }
 
 /*index.php*/
-.indexhead{
-background-color: black;
-opacity: 0.8;
-height: 60vh;
-text-align: center;
-}
 .headtext{
     padding-top: 200px;
     color: white;
     font-size: 50px;
+    background-color: black;
+    height: 60vh;
+    text-align: center;
 }
 
 /*about-us,php*/
