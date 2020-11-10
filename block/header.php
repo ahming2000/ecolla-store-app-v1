@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container">
         <a class="navbar-brand" href="index.php">
         <img src="assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
@@ -50,12 +50,12 @@ $(document).ready(function() {
             // Transition effect for navbar 
             $(window).scroll(function() {
                 if($(this).scrollTop() > 1) { 
-                    $('.navbar').addClass('navbar-change');
+                    $('.navbar').addClass('navbar-change shadow');
                     $('.navbar').removeClass('navbar-custom');
                     } 
                 else {
               $('.navbar').addClass('navbar-custom');
-              $('.navbar').removeClass('navbar-change');
+              $('.navbar').removeClass('navbar-change shadow');
               }
                 });
             });

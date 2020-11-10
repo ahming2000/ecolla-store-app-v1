@@ -4,7 +4,7 @@ body, wrapper {
 
 /*header.php*/
 .navbar{
-    background-color:white;
+    background-color:transparent;
     transition: background-color 0.5s;
 }
 .navbar-change{
@@ -12,10 +12,10 @@ body, wrapper {
     transition: background-color 0.5s;
 }
 .navbar-custom .navbar-brand{
-    color: black;
+    color: white;
 }
 .navbar-custom .navbar-nav .nav-link, .navbar-custom .fa-bars{
-    color: black;
+    color: white;
 }
 .navbar .nav-item.active .nav-link,
 .navbar .nav-item:hover .nav-link,
@@ -42,11 +42,16 @@ body, wrapper {
 }
 
 /*index.php*/
-.hotsell{
-    text-align: center;
-    padding-bottom: 30px;
-    color:black;
-
+.indexhead{
+background-color: black;
+opacity: 0.8;
+height: 60vh;
+text-align: center;
+}
+.headtext{
+    padding-top: 200px;
+    color: white;
+    font-size: 50px;
 }
 
 /*about-us,php*/
@@ -58,3 +63,23 @@ display: inline;
 }
 
 /*item-carousel,php*/
+.carousel-inner.vv-3 .carousel-item.active,
+.carousel-inner.vv-3 .carousel-item-next,
+.carousel-inner.vv-3 .carousel-item-prev {
+  display: flex;
+}
+
+.carousel-inner.vv-3 .carousel-item-right.active,
+.carousel-inner.vv-3 .carousel-item-next {
+  transform: translateX(17%);
+}
+
+.carousel-inner.vv-3 .carousel-item-left.active,
+.carousel-inner.vv-3 .carousel-item-prev {
+  transform: translateX(-17%);
+}
+
+.carousel-inner.vv-3 .carousel-item-right,
+.carousel-inner.vv-3 .carousel-item-left {
+  transform: translateX(0);
+}

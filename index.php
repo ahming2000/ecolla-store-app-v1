@@ -17,11 +17,14 @@
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
         <script src='https://kit.fontawesome.com/a076d05399.js'></script>
-            
-        <?php include "block/header.php"; ?>
        
     <wrapper class="d-flex flex-column">
     <main class="flex-fill"> <!--put content-->
+
+        <section class="indexhead">
+            <p class="headtext">Welcome to Ecolla</p>
+        </section>
+        <?php include "block/header.php"; ?>
 
         <!-- Advertisement -->
         <section class="ads-carousel">
@@ -33,10 +36,17 @@
         </section>
         
         <!-- Hot Sells Items -->
-        <section class="section-itemcarousel">
-            <div class="container rounded mt-4 p-2">
-            <h1 class="hotsell">热卖中</h1>
-        
+        <section class="section1">
+            <div class="container mt-5">
+                <h3 class="pt-3 pl-5">New !</h3>
+            <?php include "block/item-carousel.php";?>
+            </div>
+        </section>
+
+        <section class="section2">
+            <div class="container mt-5">
+                <h3 class="pt-3 pl-5">Hot Sell !</h3>
+            <?php include "block/item-carousel.php";?>
             </div>
         </section>
 
