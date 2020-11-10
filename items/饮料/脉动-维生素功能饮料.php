@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>好味屋 手撕素肉排 | Ecolla ε口乐</title>
+    <title>脉动 维生素功能饮料 | Ecolla ε口乐</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <link rel="shortcut icon" href="../../assets/images/icon/ecollafavicon.ico">
     <link rel="stylesheet" href="../../assets/vendor/bootstrap-4.5.2-dist/css/bootstrap.min.css">
@@ -26,9 +26,9 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="../../item-list.php">商品列表</a></li>
                 <li class="breadcrumb-item">
-                    <a href="#">零食</a>
+                    <a href="#">饮料</a>
                 </li>
-                <li class="breadcrumb-item active" aria-current="page">好味屋 手撕素肉排</li>
+                <li class="breadcrumb-item active" aria-current="page">脉动 维生素功能饮料</li>
             </ol>
 
         </nav>
@@ -44,7 +44,7 @@
 <?php
 include __DIR__."\\..\\..\\assets\\php\\classes\\View.class.php";
 $view = new View();
-$id = $view->getItemAttr("i_id", "i_name", "手撕素肉排");
+$id = $view->getItemAttr("i_id", "i_name", "维生素功能饮料");
 $imgs = $view->getItemImgs("i_id", $id);
 $imgList = array();
 
@@ -65,24 +65,24 @@ include "../../block/carousel-block.php";
 
     <div class="mb-3">
       <a href="">
-        <span class="badge purple mr-1">零食</span>
+        <span class="badge purple mr-1">饮料</span>
       </a>
-      <a href="">
+      <!-- <a href="">
         <span class="badge blue mr-1">新品</span>
-      </a>
+      </a> -->
       <a href="">
         <span class="badge red mr-1">畅销</span>
       </a>
     </div>
 
     <p class="lead">
-      <!-- <span class="mr-1  font-weight-bold">
-        <del>RM 3.00</del>
-      </span> -->
-      <span class="font-weight-bold" style="color:red;">RM 1.50</span>
+      <span class="mr-1  font-weight-bold">
+        <del>RM 4.80</del>
+      </span>
+      <span class="font-weight-bold" style="color:red;">RM 4.32</span>
     </p>
 
-    <p class="lead font-weight-bold">好味屋手撕素肉排</p>
+    <p class="lead font-weight-bold">脉动维生素功能饮料</p>
 
     <div class="row">
 
@@ -92,11 +92,12 @@ include "../../block/carousel-block.php";
 
         <div class="col-xs-12 col-sm-8">
             <ol class="list-group">
-                <li class="list-group-item active" id="normalSelected">香辣味26g</li>
-                <li class="list-group-item" id="spicySelected">黑椒味26g</li>
-                <li class="list-group-item" id="bothSelected">山椒味26g</li>
-                <li class="list-group-item" id="bothSelected">烧烤味26g</li>
-                <li class="list-group-item" id="bothSelected">黑鸭味26g</li>
+                <li class="list-group-item active" id="normalSelected">青柠600ml</li>
+                <li class="list-group-item" id="spicySelected">水蜜桃600ml</li>
+                <li class="list-group-item" id="bothSelected">芒果600ml</li>
+                <li class="list-group-item" id="bothSelected">仙人掌青橘600ml</li>
+                <li class="list-group-item" id="bothSelected">竹子青提500ml</li>
+                <li class="list-group-item" id="bothSelected">卡曼橘500ml</li>
             </ol>
         </div>
 
