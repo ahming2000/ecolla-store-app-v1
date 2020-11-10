@@ -16,7 +16,10 @@ class View extends Model{
             foreach($barcode_array as $barcode){
                 $varieties_array = $this->selectVariety("v_barcode", $barcode["v_barcode"]);
                 foreach($varieties_array as $variety){
-                    $item->addVariety(new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyType'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_inventory'], $variety['v_discountRate']));
+                    $v = new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyType'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_inventory']);
+                    $v->setDiscountRate($variety['v_discountRate']);
+                    $item->addVariety($v);
+
                 }
             }
 
@@ -30,13 +33,38 @@ class View extends Model{
         return $items;
     }
 
+    public function getItem($itemName){
+        $_i = $this->selectItem("i_name", $itemName);
+        if($_i == null) die("Item name is not found!");
+
+        $item = new Item($_i[0]['i_name'], $_i[0]['i_catogory'], $_i[0]['i_brand'], $_i[0]['i_country'], $_i[0]['i_isListed']);
+
+        $item->setID($_i[0]['i_id']);
+
+        $_b = $this->selectSpecification("i_id", $_i[0]['i_id']);
+
+        foreach($_b as $barcode){
+            $_v = $this->selectVariety("v_barcode", $barcode["v_barcode"]);
+            foreach($_v as $variety){
+                $v = new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyType'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_inventory']);
+                $v->setDiscountRate($variety['v_discountRate']);
+                $item->addVariety($v);
+
+            }
+        }
+
+        $_img = $this->selectItemImg("i_id", $_i[0]["i_id"]);
+        foreach($_img as $imgPaths){
+            $item->addImgPath($imgPaths['imgPath']);
+        }
+        return $item;
+    }
+
     public function getItemCount(){
         return $this->selectCount("items");
     }
 
-    public function getItem($attrToSearch, $attrContentToSearch){
-        return $this->selectItem($attrToSearch, $attrContentToSearch);
-    }
+
 
     public function getItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
         return $this->selectItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch);

@@ -5,7 +5,12 @@
         </a>
         <div class="card-body">
             <h5 class="card-title"><?php echo $item->getName() ?></h5>
-            <span><?php echo "RM".number_format($item->getVarieties()[0]->getPrice(), 2) ?></span>
+            <span>
+                <?php
+                    $price = $item->getVarieties()[0]->getPrice() * $item->getVarieties()[0]->getDiscountRate();
+                    echo "RM".number_format($price, 2);
+                ?>
+            </span>
         </div>
     </div>
 </div>
