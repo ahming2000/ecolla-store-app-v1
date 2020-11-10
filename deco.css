@@ -1,5 +1,5 @@
 body, wrapper {
-    min-height:100vh;
+    min-height:150vh;
  }
 
 /*header.php*/
@@ -50,14 +50,11 @@ body, wrapper {
 }
 
 /*about-us,php*/
-.aboutus{
-    height: 30vh;
-    padding: 20px;
-}
 .about,.us{
 display: inline;
 }
 .us{
     color: hotpink;
 }
+
 /*item-carousel,php*/
