@@ -16,7 +16,10 @@ class View extends Model{
             foreach($barcode_array as $barcode){
                 $varieties_array = $this->selectVariety("v_barcode", $barcode["v_barcode"]);
                 foreach($varieties_array as $variety){
-                    $item->addVariety(new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyType'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_inventory'], $variety['v_discountRate']));
+                    $v = new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyType'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_inventory']);
+                    $v->setDiscountRate($variety['v_discountRate']);
+                    $item->addVariety($v);
+
                 }
             }
 
