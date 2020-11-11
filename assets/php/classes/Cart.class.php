@@ -36,7 +36,7 @@ class Cart{
     }
 
     public function removeItem($barcode){
-        for($this->cartItems as $cartItem){
+        foreach($this->cartItems as $cartItem){
             if($cartItem->getVarieties()[$cartItem->getVarietyIndex()]->getBarcode() === $barcode){
                 UsefulFunction::removeArrayElementE($this->cartItems, $cartItem);
                 $this->cartCount--;

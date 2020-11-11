@@ -1,7 +1,7 @@
 <?php
 
 class CartItem{
-        
+
     private $item;
     private $quantity;
     private $varietyIndex; //Only one various can be selected in this class
@@ -11,14 +11,14 @@ class CartItem{
     public function __construct($item, $quantity, $varietyProperty, $note){
         $this->item = $item;
         $this->quantity = $quantity;
-        $this->varietyIndex = getVarietyIndex($varietyProperty);
+        $this->varietyIndex = $this->getVarietyIndex($varietyProperty);
         $this->subPrice = setSubPrice();
         $this->note = $note;
     }
 
     private function getVarietyIndex($itemProperty){
-        for($i = 0; $i < sizeof($this->item->varieties); $i++){
-            if($this->item->varieties[$i] === $itemProperty){
+        for($i = 0; $i < sizeof($this->getItem()->getVarieties()); $i++){
+            if($this->getItem()->getVarieties()[$i] === $itemProperty){
                 return $i;
             }
         }
