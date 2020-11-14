@@ -28,7 +28,7 @@
             <img src="assets/images/icon/pay-cash.png" alt="image" height="100" width="100">
         </div>
         <div class="col-6 col-md-9 col-sm-6 pt-4">
-            <h5>cash</h5>
+            <h5>Cash</h5>
         </div>
     </div>
         
@@ -37,7 +37,7 @@
             <img src="assets/images/icon/pay-boost.jpg" alt="image" height="100" width="100">
         </div>
         <div class="col-6 col-md-9 col-sm-6 pt-4">
-            <h5>boost</h5>
+            <h5>Boost</h5>
         </div>
     </div>
 
@@ -46,7 +46,7 @@
             <img src="assets/images/icon/pay-tnc.jpg" alt="image" height="100" width="100">
         </div>
         <div class="col-6 col-md-9 col-sm-6 pt-4">
-            <h5>touch 'n go</h5>
+            <h5>Touch 'n Go</h5>
         </div>
     </div>
 
@@ -55,7 +55,7 @@
             <img src="assets/images/icon/pay-fpx.jpeg" alt="image" height="100" width="100">
         </div>
         <div class="col-6 col-md-9 col-sm-6 pt-4">
-            <h5>online banking</h5>
+            <h5>Online Banking</h5>
         </div>
     </div>
 </div>
