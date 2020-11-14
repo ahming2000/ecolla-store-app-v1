@@ -1,28 +1,40 @@
 <?php
 
-class CartItem{
+class CartItem implements JsonSerializable {
 
     private $item;
     private $quantity;
-    private $varietyIndex; //Only one various can be selected in this class
-    private $subPrice;
+    private $barcode; //Selected variety //Only one various can be selected in this class
     private $note;
 
-    public function __construct($item, $quantity, $varietyProperty, $note){
+    private $subPrice;
+    private $varietyIndex;
+
+    public function __construct($item, $quantity, $barcode, $note){
         $this->item = $item;
         $this->quantity = $quantity;
-        $this->varietyIndex = $this->getVarietyIndex($varietyProperty);
-        $this->subPrice = setSubPrice();
+        $this->barcode = $barcode;
         $this->note = $note;
-    }
 
-    private function getVarietyIndex($itemProperty){
-        for($i = 0; $i < sizeof($this->getItem()->getVarieties()); $i++){
-            if($this->getItem()->getVarieties()[$i] === $itemProperty){
-                return $i;
+        //Assign variety index from barcode
+        for($i = 0; $i < sizeof($item->getVarieties()); $i++){
+            if($item->getVarieties()[$i]->getBarcode() === $this->barcode){
+                $this->varietyIndex = $i;
+                break;
             }
         }
-        die("Error! No variery index in this item!");
+
+        $this->subPrice = $this->setSubPrice();
+    }
+
+    public function jsonSerialize(){
+        return [
+            'item' => $this->item->jsonSerialize(),
+            'quantity' => $this->quantity,
+            'varietyIndex' => $this->varietyIndex,
+            'subPrice' => $this->subPrice,
+            'note' => $this->note
+        ];
     }
 
     public function getItem(){
@@ -33,12 +45,28 @@ class CartItem{
         return $this->quantity;
     }
 
-    public function getSubPrice(){
-        return $this->subPrice;
+    public function getBarcode(){
+        return $this->barcode;
     }
 
     public function getNote(){
         return $this->note;
+    }
+
+    public function getSubPrice(){
+        return $this->subPrice;
+    }
+
+    public function getVarietyIndex(){
+        return $this->varietyIndex;
+    }
+
+    public function getVariety(){
+        return $this->item->getVarieties()[$this->varietyIndex];
+    }
+
+    public function getVarietyProperty(){ //Can select to be remove
+        return $this->item->getVarieties()[$this->varietyIndex]->getProperty;
     }
 
     public function setQuantity($quantity){
@@ -47,7 +75,7 @@ class CartItem{
     }
 
     private function setSubPrice(){
-        return $this->$quantity * $this->item->getVarieties()[$this->varietyIndex]->getPrice();
+        return $this->quantity * $this->item->getVarieties()[$this->varietyIndex]->getPrice();
     }
 
     public function setNote($note){

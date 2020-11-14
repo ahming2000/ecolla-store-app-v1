@@ -10,20 +10,14 @@ class Cart{
     private $shippingFee; //Float
 
     public function __construct(){
-        if(!isset($_COOKIE["cart"])) {
-            $this->cartItems = array();
-            $this->cartCount = 0;
-            $this->subtotal = 0.0;
-            $this->shippingFee = 0.0;
-
-            $this->updateCookie();
+        session_start();
+        if(isset($_SESSION["cart"])){
+            $this->cartItems = $_SESSION["cart"]->cartItems;
+            $this->cartCount = $_SESSION["cart"]->cartCount;
+            $this->subtotal = $_SESSION["cart"]->subtotal;
+            $this->shippingFee = $_SESSION["cart"]->shippingFee;
         } else{
-            $cart = json_decode($_COOKIE['cart']);
-
-            $this->cartItems = $cart->cartItems;
-            $this->cartCount = $cart->cartCount;
-            $this->subtotal = $cart->subtotal;
-            $this->shippingFee = $cart->shippingFee;
+            $this->initial();
         }
     }
 
@@ -31,13 +25,14 @@ class Cart{
     public function addItem($cartItem){
         array_push($this->cartItems, $cartItem);
         $this->cartCount++;
+
         $this->updateSubtotal();
         $this->updateCookie();
     }
 
     public function removeItem($barcode){
         foreach($this->cartItems as $cartItem){
-            if($cartItem->getVarieties()[$cartItem->getVarietyIndex()]->getBarcode() === $barcode){
+            if($cartItem->getBarcode() === $barcode){
                 UsefulFunction::removeArrayElementE($this->cartItems, $cartItem);
                 $this->cartCount--;
                 $this->updateSubtotal();
@@ -50,7 +45,7 @@ class Cart{
 
     public function editQuantity($barcode, $scale){
         foreach ($this->cartItems as $cartItem) {
-            if($cartItem->getVarieties()[$cartItem->getVarietyIndex()]->getBarcode() === $barcode){
+            if($cartItem->getBarcode() === $barcode){
                 $cartItem->setQuantity($cartItem->getQuantity() + $scale);
                 $this->updateSubtotal();
                 $this->updateCookie();
@@ -61,14 +56,9 @@ class Cart{
     }
 
     public function resetCart(){
-        setcookie("cart", "", time() - 3600);
-        for($i = 0; $i < sizeof($this->cartItems); $i++){
-            unset($this->cartItems[$i]);
-        }
-        $this->cartCount = 0;
-        $this->subtotal = 0.0;
-        $this->shippingFee = 0.0;
-        $this->updateCookie();
+        session_destroy();
+        unset($this->cartItems);
+        $this->initial();
     }
 
     //Private useful function for cart
@@ -77,16 +67,21 @@ class Cart{
         foreach ($this->cartItems as $cartItem) {
             $total += $cartItem->getSubPrice();
         }
-        $this->subtotal = $total + $shippingFee;
+        $this->subtotal = $total + $this->shippingFee;
+    }
+
+    private function initial(){
+        $this->cartItems = array();
+        $this->cartCount = 0;
+        $this->subtotal = 0.0;
+        $this->shippingFee = 0.0;
+        $this->updateCookie();
     }
 
     private function updateCookie(){
-        $cart = array("cartItems" => $this->cartItems, "cartCount" => $this->cartCount, "subtotal" => $this->subtotal, "shippingFee" => $this->shippingFee);
-        setcookie("cart", json_encode($cart), time() + (86400 * 30), "/"); //Active 30 days
-    }
-
-    private function isDuplicated(){
-
+        $_SESSION["cart"] = $this;
+        // $_SESSION["cart"] = array("cartItems" => UsefulFunction::jsonSerializeArray($this->cartItems), "cartCount" => $this->cartCount, "subtotal" => $this->subtotal, "shippingFee" => $this->shippingFee);
+        // setcookie("cart", json_encode($_SESSION["cart"]), time() + (86400 * 30), "/"); //Active 30 days (wrong)
     }
 
     //Getter

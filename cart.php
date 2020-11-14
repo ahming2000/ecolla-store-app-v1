@@ -1,4 +1,5 @@
 <?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
+<?php $cart = new Cart(); //Must declare before html tag for php cookie ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,9 +14,9 @@
     <body>
         <!-- Important Thing To Declare -->
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script> 
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
         <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
-        <script src='https://kit.fontawesome.com/a076d05399.js'></script>      
+        <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
         <?php include "block/header.php"; ?>
 
@@ -28,11 +29,13 @@
                     <div class="card mb-2">
                         <div class="card-body">
                             <?php
-                                $cartList = array();
-        
+
+                                $cartList = $cart->getCartItems();
+                                
                                 for($i = 0; $i < sizeof($cartList); $i++){
                                     $cartItem = $cartList[$i];
-                                    include "block/cart-item-block";
+
+                                    include "block/cart-item-block.php";
                                 }
                             ?>
                         </div>
@@ -45,7 +48,7 @@
                         </div>
                     </div>
 
-                </div>           
+                </div>
                 <div class="col-lg-4">
                     <div class="card mb-3">
                         <div class="card-body">
@@ -55,10 +58,10 @@
                             </form>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
-            
+
         </div>
 
     </main>

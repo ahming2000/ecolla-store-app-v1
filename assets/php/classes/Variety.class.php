@@ -1,6 +1,6 @@
 <?php
 
-class Variety {
+class Variety implements JsonSerializable {
     private $barcode; //string //Unique
     private $property; //string //Flavour or type
     private $propertyType; //String //Type of describe way on propertys
@@ -19,6 +19,19 @@ class Variety {
         $this->weightUnit = $weightUnit;
         $this->inventory = $inventory;
         $this->discountRate = 1.0;
+    }
+
+    public function jsonSerialize(){
+        return [
+            'barcode' => $this->barcode,
+            'property' => $this->property,
+            'propertyType' => $this->propertyType,
+            'price' => $this->price,
+            'weight' => $this->weight,
+            'weightUnit' => $this->weightUnit,
+            'inventory' => $this->inventory,
+            'discountRate' => $this->discountRate
+        ];
     }
 
     public function getBarcode(){

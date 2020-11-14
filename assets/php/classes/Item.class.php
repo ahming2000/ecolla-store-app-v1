@@ -1,6 +1,6 @@
 <?php
 
-class Item {
+class Item implements JsonSerializable {
     private $id; //Unique //Generate after insert into database
     private $name; //String
     private $catogory; //String
@@ -20,6 +20,19 @@ class Item {
 
         $this->varieties = array();
         $this->imgPaths = array();
+    }
+
+    public function jsonSerialize(){
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'catogory' => $this->catogory,
+            'brand' => $this->brand,
+            'country' => $this->country,
+            'isListed' => $this->isListed,
+            'varieties' => UsefulFunction::jsonSerializeArray($this->varieties),
+            'imgPaths' => $this->imgPaths
+        ];
     }
 
     public function addVariety($variety){
