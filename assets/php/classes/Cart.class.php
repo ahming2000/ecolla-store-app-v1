@@ -67,7 +67,7 @@ class Cart{
         foreach ($this->cartItems as $cartItem) {
             $total += $cartItem->getSubPrice();
         }
-        $this->subtotal = $total + $this->shippingFee;
+        $this->subtotal = $total;
     }
 
     private function initial(){
@@ -82,6 +82,15 @@ class Cart{
         $_SESSION["cart"] = $this;
         // $_SESSION["cart"] = array("cartItems" => UsefulFunction::jsonSerializeArray($this->cartItems), "cartCount" => $this->cartCount, "subtotal" => $this->subtotal, "shippingFee" => $this->shippingFee);
         // setcookie("cart", json_encode($_SESSION["cart"]), time() + (86400 * 30), "/"); //Active 30 days (wrong)
+    }
+
+    //To-do: check duplicate item
+    private function isDuplicated($cartItem){
+        foreach($this->cartItems as $c){
+            if($c->getBarcode() === $cartItem->getBarcode()){
+                return True;
+            }
+        }
     }
 
     //Getter

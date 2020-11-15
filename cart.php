@@ -1,5 +1,10 @@
 <?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
 <?php $cart = new Cart(); //Must declare before html tag for php cookie ?>
+<?php
+    if(isset($_POST["clearCart"])){
+        $cart->resetCart();
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -32,16 +37,19 @@
 
                                 $cartList = $cart->getCartItems();
 
+                                if(empty($cartList[0])) echo "<div>您的购物车为空</div>";
+
                                 for($i = 0; $i < sizeof($cartList); $i++){
                                     $cartItem = $cartList[$i];
 
                                     include "block/cart-item-block.php";
                                 }
+                                if(isset($cartList[0])){
+                                    echo "<div class=\"col-12\"><form action=\"\" method=\"post\"><button class=\"btn btn-primary btn-block\" name=\"clearCart\" type=\"submit\">清空购物车</button></form></div>";
+                                }
                             ?>
 
-                            <div class="col-12">
-                                <button onclick="clearCart()" class="btn btn-primary btn-block">清空购物车</button>
-                            </div>
+                            
                         </div>
                     </div>
                     <div class="card mb-3">
@@ -56,7 +64,7 @@
                 <div class="col-lg-4">
                     <div class="card mb-3">
                         <div class="card-body">
-                            <?php include "block/order-summary-block.php"; ?>
+                            <?php $c = $cart; include "block/order-summary-block.php"; ?>
                             <form action="check-out.php" method="post">
                                 <input class="btn btn-primary btn-block" type="submit" value="前往付款">
                             </form>
@@ -73,14 +81,6 @@
         <?php include "block/footer.php"; ?>
 
     </wrapper>
-
-    <script>
-
-    function clearCart(){
-        document.getElementById("cartItemList").innerHTML = "<div>您的购物车为空</div>";
-        <?php $cart->resetCart(); ?>
-    }
-    </script>
 
     </body>
 </html>
