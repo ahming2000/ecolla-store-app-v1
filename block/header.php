@@ -1,28 +1,37 @@
+<?php
+//Set default value // '@' is to ignore the error message on null variable
+if (@$upperDirectoryCount == null) $upperDirectoryCount = 0;
+
+//Initial
+$SYMBOL = "../";
+$full = "";
+for($i = 0; $i < $upperDirectoryCount; $i++){
+    $full = $full.$SYMBOL;
+}
+?>
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
     <div class="container">
-        <a class="navbar-brand" href="index.php">
-        <img src="assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+        <a class="navbar-brand" href="<?php echo $full; ?>index.php">
+            <img src="<?php echo $full; ?>assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
             ε口乐
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="fa fa-bars"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link" href="index.php">主页</a></li>
-                <li class="nav-item"><a class="nav-link" href="item-list.php">所有商品列表</a></li>
-                <li class="nav-item"><a class="nav-link" href="payment-method.php">付款方式</a></li>
-                <li class="nav-item"><a class="nav-link" href="about-us.php">关于我们</a></li>
-                <li class="nav-item"><a class="nav-link" href="cart.php"><i class="icofont-shopping-cart mx-1"></i><span id="cartCount"></span></a></li>
-            </ul>
-        </div>
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="fa fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>index.php">主页</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>item-list.php">所有商品列表</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>payment-method.php">付款方式</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>about-us.php">关于我们</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span id="cartCount"></span></a></li>
+        </ul>
     </div>
+</div>
 </nav>
 
 <div style="margin-top: 56px;"></div><!-- To create a margin on the top of the content -->
-
-<?php if($isItemPage=false) include "../block/breadcrumb-block.php"; ?>
 
 <script>
 $(document).ready(function() {
@@ -45,18 +54,18 @@ $(document).ready(function() {
 
 });
 
-        $(document).ready(function() {
+$(document).ready(function() {
+    $('.navbar').addClass('navbar-custom');
+    // Transition effect for navbar
+    $(window).scroll(function() {
+        if($(this).scrollTop() > 5) {
+            $('.navbar').addClass('navbar-change');
+            $('.navbar').removeClass('navbar-custom');
+        }
+        else {
             $('.navbar').addClass('navbar-custom');
-            // Transition effect for navbar 
-            $(window).scroll(function() {
-                if($(this).scrollTop() > 5) { 
-                    $('.navbar').addClass('navbar-change');
-                    $('.navbar').removeClass('navbar-custom');
-                    } 
-                else {
-              $('.navbar').addClass('navbar-custom');
-              $('.navbar').removeClass('navbar-change');
-              }
-                });
-            });
+            $('.navbar').removeClass('navbar-change');
+        }
+    });
+});
 </script>
