@@ -1,4 +1,5 @@
 <?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
+<?php $cart = new Cart(); ?>
 <!DOCTYPE html>
 <html>
     <head>

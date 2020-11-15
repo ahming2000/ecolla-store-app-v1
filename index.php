@@ -1,7 +1,7 @@
 <?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
 <?php $cart = new Cart(); //Must declare first before have any output to continue the session ?>
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
     <head>
         <meta charset="utf-8">
         <title>Ecolla ε口乐零食店官网</title>
@@ -78,11 +78,6 @@
         </section>
 
         <script>
-            $(document).ready(function(){
-
-                $("#cartCount").html("0");
-
-            });
 
             $(document).ready(function(){
             $(".owl-carousel").owlCarousel();
