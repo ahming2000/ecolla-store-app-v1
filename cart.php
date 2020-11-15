@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="col-lg-8">
                     <div class="card mb-2">
-                        <div class="card-body">
+                        <div class="card-body" id="cartItemList">
                             <?php
 
                                 $cartList = $cart->getCartItems();
@@ -40,7 +40,7 @@
                             ?>
 
                             <div class="col-12">
-                                <button class="btn btn-primary btn-block">清空购物车</button>
+                                <button onclick="clearCart()" class="btn btn-primary btn-block">清空购物车</button>
                             </div>
                         </div>
                     </div>
@@ -73,5 +73,14 @@
         <?php include "block/footer.php"; ?>
 
     </wrapper>
+
+    <script>
+
+    function clearCart(){
+        document.getElementById("cartItemList").innerHTML = "<div>您的购物车为空</div>";
+        <?php $cart->resetCart(); ?>
+    }
+    </script>
+
     </body>
 </html>
