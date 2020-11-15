@@ -33,7 +33,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
     <script src="../../assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
-    <?php //include __DIR__."\\..\\..\\block\\header.php"; ?>
+    <?php include __DIR__."\\..\\..\\block\\header.php"; ?>
 
     <wrapper class="d-flex flex-column">
         <main class="flex-fill"> <!--put content-->

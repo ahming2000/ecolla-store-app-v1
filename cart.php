@@ -31,13 +31,17 @@
                             <?php
 
                                 $cartList = $cart->getCartItems();
-                                
+
                                 for($i = 0; $i < sizeof($cartList); $i++){
                                     $cartItem = $cartList[$i];
 
                                     include "block/cart-item-block.php";
                                 }
                             ?>
+
+                            <div class="col-12">
+                                <button class="btn btn-primary btn-block">清空购物车</button>
+                            </div>
                         </div>
                     </div>
                     <div class="card mb-3">
