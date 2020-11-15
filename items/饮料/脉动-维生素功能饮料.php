@@ -33,23 +33,12 @@ if($_SERVER['REQUEST_METHOD']=='POST')
     <script src="../../assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
     <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
-    <?php include __DIR__."\\..\\..\\block\\header.php"; ?>
+    <?php $upperDirectoryCount = 2; include __DIR__."\\..\\..\\block\\header.php"; ?>
 
     <wrapper class="d-flex flex-column">
         <main class="flex-fill"> <!--put content-->
 
-            <div class="container mt-4">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="../../item-list.php">商品列表</a></li>
-                        <li class="breadcrumb-item">
-                            <a href="#">饮料</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">脉动 维生素功能饮料</li>
-                    </ol>
-
-                </nav>
-            </div>
+            <?php $i = $item; include_once __DIR__."\\..\\..\\block\breadcrumb-block.php"; ?>
 
             <div class="container">
                 <!--Grid row-->
