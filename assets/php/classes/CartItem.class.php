@@ -75,7 +75,7 @@ class CartItem implements JsonSerializable {
     }
 
     private function setSubPrice(){
-        return $this->quantity * $this->item->getVarieties()[$this->varietyIndex]->getPrice();
+        return $this->quantity * ($this->item->getVarieties()[$this->varietyIndex]->getPrice() * $this->item->getVarieties()[$this->varietyIndex]->getDiscountRate());
     }
 
     public function setNote($note){
