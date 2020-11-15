@@ -25,7 +25,7 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
             <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>item-list.php">所有商品列表</a></li>
             <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>payment-method.php">付款方式</a></li>
             <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>about-us.php">关于我们</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span id="cartCount"></span></a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $full; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span><?php echo $c->getCartCount(); ?></span></a></li>
         </ul>
     </div>
 </div>

@@ -1,4 +1,5 @@
 <?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
+<?php $cart = new Cart(); //Must declare first before have any output to continue the session ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,7 +13,7 @@
         <link rel="stylesheet" href="deco.css">
         <link rel="stylesheet" href="assets/vendor/OwlCarousel2-2.3.4/dist/assets/owl.carousel.min.css" />
         <link rel="stylesheet" href="assets/vendor/OwlCarousel2-2.3.4/dist/assets/owl.theme.default.min.css" />
-        
+
     </head>
     <style>/*overwrite deco.css*/
         .navbar{
@@ -36,22 +37,22 @@
         <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
         <script src='https://kit.fontawesome.com/a076d05399.js'></script>
         <script src="assets/vendor/OwlCarousel2-2.3.4/dist/owl.carousel.min.js"></script>
-       
+
     <wrapper class="d-flex flex-column">
     <main class="flex-fill"> <!--put content-->
 
         <p class="headtext">Welcome to Ecolla</p>
-        <?php include "block/header.php"; ?>
+        <?php $c = $cart; include "block/header.php"; ?>
 
         <!-- Advertisement -->
         <section class="ads-carousel">
             <?php
                 // ***1920 x 540 pixels picture is needed for advertisement!!!***
                 $imgList = array("assets/images/ads/ads1.jpg", "assets/images/ads/ads2.jpg", "assets/images/ads/ads3.jpg", "assets/images/ads/ads4.jpg");
-                include "block/carousel-block.php"; 
+                include "block/carousel-block.php";
             ?>
         </section>
-        
+
         <!-- Hot Sells Items -->
         <section class="section1">
             <div class="container mt-5">
@@ -75,7 +76,7 @@
         <section>
         <?php include "block/footer.php"; ?>
         </section>
-        
+
         <script>
             $(document).ready(function(){
 
@@ -87,7 +88,7 @@
             $(".owl-carousel").owlCarousel();
             });
         </script>
-    
+
     </wrapper>
     </body>
 </html>

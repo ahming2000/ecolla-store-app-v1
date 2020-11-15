@@ -1,4 +1,4 @@
-<?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
+<?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
 <?php $cart = new Cart(); //Must declare before html tag for php cookie ?>
 <?php
     if(isset($_POST["clearCart"])){
@@ -23,7 +23,7 @@
         <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
         <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
-        <?php include "block/header.php"; ?>
+        <?php $c = $cart; include "block/header.php"; ?>
 
     <wrapper class="d-flex flex-column">
     <main class="flex-fill"> <!--put content-->
@@ -49,7 +49,7 @@
                                 }
                             ?>
 
-                            
+
                         </div>
                     </div>
                     <div class="card mb-3">

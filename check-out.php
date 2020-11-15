@@ -1,4 +1,4 @@
-<?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
+<?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -10,7 +10,7 @@
         <title>结账 | Ecolla e口乐</title>
     </head>
     <body>
-        
+
 
         <!-- To-do: check out form -->
 

@@ -1,4 +1,5 @@
-<?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
+<?php include "assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
+<?php $cart = new Cart(); ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,7 +18,7 @@
         <script src="assets/vendor/bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
         <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
-        <?php include "block/header.php"; ?>
+        <?php $c = $cart; include "block/header.php"; ?>
 
     <wrapper class="d-flex flex-column">
     <main class="flex-fill">
@@ -27,7 +28,7 @@
 
                 <?php
                     $view = new View();
-                    $itemList = $view->getAllItems(); //Important!! Need to take the data from the database!!!
+                    $itemList = $view->getAllItems();
 
                     foreach($itemList as $i){
                         $item = $i;
