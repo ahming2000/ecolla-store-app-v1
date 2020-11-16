@@ -15,7 +15,7 @@ if($upperDirectoryCount == 1){
  */
 
 function classAutoLoader($className){
-    $path = "assets/php/classes/";
+    $path = "assets/classes/";
     $extention = ".class.php";
     $fullPath = $path.$className.$extention;
 
@@ -25,7 +25,7 @@ function classAutoLoader($className){
 }
 
 function classAutoLoaderSingle($className){
-    $path = "../assets/php/classes/";
+    $path = "../assets/classes/";
     $extention = ".class.php";
     $fullPath = $path.$className.$extention;
 
@@ -35,7 +35,7 @@ function classAutoLoaderSingle($className){
 }
 
 function classAutoLoaderDouble($className){
-    $path = "../../assets/php/classes/";
+    $path = "../../assets/classes/";
     $extention = ".class.php";
     $fullPath = $path.$className.$extention;
 
