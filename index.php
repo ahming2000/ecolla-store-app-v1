@@ -59,7 +59,7 @@
         <section class="section1">
             <div class="container mt-5">
                 <h3 class="pt-3 pl-5">New !</h3>
-                <div class="owl-carousel owl-theme">
+                <div class="owl-carousel mousescroll owl-theme">
                     <?php include "block/item-carousel.php";?>
                 </div>
             </div>
@@ -68,7 +68,7 @@
         <section class="section2">
         <div class="container mt-5">
                 <h3 class="pt-3 pl-5">Hot !</h3>
-                <div class="owl-carousel owl-theme">
+                <div class="owl-carousel mousescroll1 owl-theme">
                     <?php include "block/item-carousel.php";?>
                 </div>
         </section>
@@ -79,11 +79,40 @@
         <?php include "block/footer.php"; ?>
         </section>
 
+        <script src="assets/vendor/jquery-mousewheel-master/jquery.mousewheel.min.js"></script>
         <script>
-
-            $(document).ready(function(){
-            $(".owl-carousel").owlCarousel();
-            });
+        $('.owl-carousel').owlCarousel({
+            margin:10,
+            responsive:{
+                0:{
+            items:2
+                },
+                600:{
+            items:3
+                },
+                1000:{
+            items:5
+                }
+            }
+        });
+        var owl= $('.mousescroll1');
+        owl.on('mousewheel', '.owl-stage', function (e) {
+        if (e.deltaY>0) {
+            owl.trigger('next.owl');
+        } else {
+            owl.trigger('prev.owl');
+        }
+        e.preventDefault();
+        });
+        var owl1= $('.mousescroll');
+        owl1.on('mousewheel', '.owl-stage', function (e) {
+        if (e.deltaY>0) {
+            owl1.trigger('next.owl');
+        } else {
+            owl1.trigger('prev.owl');
+        }
+        e.preventDefault();
+        });
         </script>
 
     </wrapper>

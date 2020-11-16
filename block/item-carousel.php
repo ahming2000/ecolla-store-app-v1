@@ -5,7 +5,7 @@
     </a>
     <div class="card-body">
     <h5 class="card-title">脉动-维生素功能饮料</h5>
-    <p class="card-text text-muted">RM</p>
+    <p class="card-text text-muted">RM4.32</p>
     </div>
 </div>
 </div>
@@ -17,7 +17,7 @@
     </a>
     <div class="card-body">
     <h5 class="card-title">好味屋-手撕素肉排</h5>
-    <p class="card-text text-muted">RM</p>
+    <p class="card-text text-muted">RM1.50</p>
     </div>
 </div>
 </div>
@@ -29,7 +29,7 @@
     </a>
     <div class="card-body">
     <h5 class="card-title">湖湘贡-鹌鹑蛋</h5>
-    <p class="card-text text-muted">RM</p>
+    <p class="card-text text-muted">RM1.20</p>
     </div>
 </div>
 </div>
@@ -41,7 +41,7 @@
     </a>
     <div class="card-body">
     <h5 class="card-title">湖湘贡-鹌鹑蛋</h5>
-    <p class="card-text text-muted">RM</p>
+    <p class="card-text text-muted">RM1.20</p>
     </div>
 </div>
 </div>
@@ -53,7 +53,7 @@
     </a>
     <div class="card-body">
     <h5 class="card-title">脉动-维生素功能饮料</h5>
-    <p class="card-text text-muted">RM</p>
+    <p class="card-text text-muted">RM4.32</p>
     </div>
 </div>
 </div>
@@ -65,7 +65,7 @@
     </a>
     <div class="card-body">
     <h5 class="card-title">好味屋-手撕素肉排</h5>
-    <p class="card-text text-muted">RM</p>
+    <p class="card-text text-muted">RM1.50</p>
     </div>
 </div>
 </div>
@@ -78,7 +78,7 @@
     </a>
     <div class="card-body">
     <h5 class="card-title">湖湘贡-鹌鹑蛋</h5>
-    <p class="card-text text-muted">RM</p>
+    <p class="card-text text-muted">RM1.20</p>
     </div>
 </div>
 </div>
