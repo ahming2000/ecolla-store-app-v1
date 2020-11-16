@@ -4,9 +4,9 @@ if (@$upperDirectoryCount == null) $upperDirectoryCount = 0;
 
 //Initial
 $SYMBOL = "../";
-$full = "";
+$upperDirectory = "";
 for($i = 0; $i < $upperDirectoryCount; $i++){
-    $full = $full.$SYMBOL;
+    $upperDirectory = $upperDirectory.$SYMBOL;
 }
 ?>
 <footer class="mt-5">
@@ -42,7 +42,7 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
         <div class="row m-0 pt-3 pb-3 logo-bt">
             <div class="col">
                 <div class="text-center">
-                    <img src="<?php echo $full; ?>assets/images/icon/ecolla_icon.png" width="20" height="20" alt="logo" loading="lazy">
+                    <img src="<?php echo $upperDirectory; ?>assets/images/icon/ecolla_icon.png" width="20" height="20" alt="logo" loading="lazy">
                     <span class="font-color">ε口乐</span>
                 </div>
             </div>

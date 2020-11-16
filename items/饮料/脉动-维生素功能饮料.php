@@ -1,8 +1,4 @@
-<?php include_once __DIR__."\\..\\..\\assets\\php\\classes\\CartItem.class.php"; ?>
-<?php include_once __DIR__."\\..\\..\\assets\\php\\classes\\Cart.class.php"; ?>
-<?php include_once __DIR__."\\..\\..\\assets\\php\\classes\\View.class.php"; ?>
-<?php include_once __DIR__."\\..\\..\\assets\\php\\classes\\Item.class.php"; ?>
-<?php include_once __DIR__."\\..\\..\\assets\\php\\classes\\Variety.class.php"; ?>
+<?php $upperDirectoryCount = 2; include "../../assets/php/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
 <?php $cart = new Cart(); //Must declare first before have any output to continue the session ?>
 <?php
 $view = new View();
