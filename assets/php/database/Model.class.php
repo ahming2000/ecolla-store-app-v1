@@ -200,6 +200,98 @@ class Model extends Dbh{
         $stmt->execute([$attrContentToSearch]);
     }
 
+    //Orders
+    protected function insertOrder($o_item_count, $c_name, $c_phone, $c_address, $c_postcode, $c_city, $c_state, $c_receiptPath, $o_subtotal){
+        $sql = "INSERT INTO orders(o_item_count, c_name, c_phone, c_address, c_postcode, c_city, c_state, c_receiptPath, o_subtotal) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$o_item_count, $c_name, $c_phone, $c_address, $c_postcode, $c_city, $c_state, $c_receiptPath, $o_subtotal]);
+    }
+
+    protected function selectAllOrders(){
+        $sql = "SELECT * FROM orders";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectOrder($attrToSearch, $attrContentToSearch){
+        $sql = "SELECT * FROM orders WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectOrderAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
+        $sql = "SELECT ".$attrToSelect." FROM orders WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+
+        $results = $stmt->fetchAll();
+        return $results[0][$attrToSelect];
+    }
+
+    protected function updateOrderAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
+        $sql = "UPDATE orders SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
+    }
+
+    protected function deleteOrderAttr($attrToSearch, $attrContentToSearch){
+        $sql = "DELETE FROM orders WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+    }
+
+    //Order items
+    protected function insertOrderItem($o_id, $s_id, $quantity){
+        $sql = "INSERT INTO order_items(o_id, s_id, quantity) VALUE(?, ?, ?)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$o_id, $s_id, $quantity]);
+    }
+
+    protected function selectAllOrderItems(){
+        $sql = "SELECT * FROM order_items";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectOrderItem($attrToSearch, $attrContentToSearch){
+        $sql = "SELECT * FROM order_items WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectOrderItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
+        $sql = "SELECT ".$attrToSelect." FROM order_items WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+
+        $results = $stmt->fetchAll();
+        return $results[0][$attrToSelect];
+    }
+
+    protected function updateOrderItemAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
+        $sql = "UPDATE order_items SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
+    }
+
+    protected function deleteOrderItemAttr($attrToSearch, $attrContentToSearch){
+        $sql = "DELETE FROM order_items WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+    }
+
 }
 
 ?>

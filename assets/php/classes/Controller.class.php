@@ -56,6 +56,19 @@ class Controller extends Model{
         }
         //To-do: delete the img file from the directory
     }
+
+    public function createNewOrder($cart, $customer){
+
+        $this->insertOrder($cart->getCartCount(), $customer["name"], $customer["phone"], $customer["address"], $customer["postcode"], $customer["city"], $customer["state"], $customer["receiptPath"], $cart->getSubtotal());
+        $o_id = $this->selectOrderAttr("o_id", "c_name", $customer["name"]);
+
+        foreach($cart->getCartItems() as $cartItem){
+            $i_id = $cartItem->getItem()->getID();
+            $s_id = $this->selectSpecificationAttr("s_id", "i_id", $i_id);
+            $this->insertOrderItem($o_id, $s_id, $cartItem->getQuantity());
+        }
+
+    }
 }
 
 ?>
