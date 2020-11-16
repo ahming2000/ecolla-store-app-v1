@@ -45,8 +45,8 @@
                     <div class="card mb-3">
                         <div class="card-body bg-warning">
                             <!-- Delivery Description -->
-                            <h5>Delivery Service</h5>
-                            <p class="text-muted">We only deliver within Kampar.</p>
+                            <h5>邮寄服务</h5>
+                            <p class="text-muted">唯独金宝区免邮。</p>
                         </div>
                     </div>
 

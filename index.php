@@ -29,7 +29,7 @@
     <wrapper class="d-flex flex-column">
         <main class="flex-fill"> <!--put content-->
 
-            <p class="headtext">Welcome to Ecolla</p>
+            <p class="headtext">欢迎来到 Ecolla ε口乐零食店官网</p>
             <?php $c = $cart; include "assets/block-user-page/header.php"; ?>
 
             <!-- Advertisement -->

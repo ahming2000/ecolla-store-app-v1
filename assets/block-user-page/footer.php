@@ -22,17 +22,17 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
                 </div>
 
                 <div class="col-lg-3 col-mb-3 col-sm-3">
-                    <h4 class="font-color font-weight-bold">Locate Us</h4>
+                    <h4 class="font-color font-weight-bold">我们的位置</h4>
                     <hr class="footer-hr">
                     <p class="text-uppercase font-color">2365, Jalan Hala Timah 3 <br>Taman Kolej Perdana
                         <br>31900 Kampar Negeri Perak</p>
                     </div>
 
                     <div class="col-lg-3 col-mb-3 col-sm-3">
-                        <h4 class='font-color font-weight-bold'>Contact Us</h4>
+                        <h4 class='font-color font-weight-bold'>联系我们</h4>
                         <hr class="footer-hr">
                         <p class="font-color"><i class="fas fa-phone pr-2"></i>012-3456789</p>
-                        <p class="font-color"><i class="fab fa-facebook-square pr-2"></i>Ecolla e口乐</p>
+                        <p class="font-color"><i class="fab fa-facebook-square pr-2"></i><a href="https://www.facebook.com/Ecolla-e%E5%8F%A3%E4%B9%90-2347940035424278">Ecolla e口乐</a></p>
                     </div>
 
                 </div>
