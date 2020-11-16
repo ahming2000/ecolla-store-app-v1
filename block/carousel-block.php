@@ -1,4 +1,4 @@
-<div id="imgSlide" class="carousel slide" data-ride="carousel">
+<div id="imgSlide" class="carousel slide m-0" data-ride="carousel">
     <ol class="carousel-indicators">
         <?php 
         

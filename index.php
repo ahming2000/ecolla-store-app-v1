@@ -46,11 +46,13 @@
 
         <!-- Advertisement -->
         <section class="ads-carousel">
+        <div class="container p-0">
             <?php
                 // ***1920 x 540 pixels picture is needed for advertisement!!!***
                 $imgList = array("assets/images/ads/ads1.jpg", "assets/images/ads/ads2.jpg", "assets/images/ads/ads3.jpg", "assets/images/ads/ads4.jpg");
                 include "block/carousel-block.php";
             ?>
+        </div>
         </section>
 
         <!-- Hot Sells Items -->
