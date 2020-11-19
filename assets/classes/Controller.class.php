@@ -5,22 +5,22 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 class Controller extends Model{
 
     public function insertNewItem($item){
-        $this->insertItem($item->getName(), $item->getCatogory(), $item->getBrand(), $item->getCountry(), (int) $item->isListed());
+        $this->insertItem($item->getName(), $item->getBrand(), $item->getCountry(), (int) $item->isListed(), $item->getImgCount());
 
         $item->setID($this->selectItemAttr("i_id", "i_name", $item->getName()));
 
-        foreach($item->getVarieties() as $variety){
-            $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyType(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getInventory(), $variety->getDiscountRate());
-            $this->insertSpecification($variety->getBarcode(), $item->getID());
+        foreach($item->getCatogories() as $catogory){
+            $this->insertCatogory($item->getID(), $catogory);
         }
 
-        foreach($item->getImgPaths() as $imgPath){
-            $this->insertItemImg($item->getID(), $imgPath);
+        foreach($item->getVarieties() as $variety){
+            $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyName(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getInventory(), $variety->getDiscountRate());
+            $this->insertSpecification($variety->getBarcode(), $item->getID());
         }
 
     }
 
-    //Need to use more effecient way
+    //Need to use more effecient way //Haven't modify for the chances - 19/11/2020
     public function modifyItemSingleAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
         $this->updateItemAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch);
     }

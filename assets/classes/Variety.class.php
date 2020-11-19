@@ -3,29 +3,30 @@
 class Variety implements JsonSerializable {
     private $barcode; //string //Unique
     private $property; //string //Flavour or type
-    private $propertyType; //String //Type of describe way on propertys
+    private $propertyName; //String //Type of describe way on propertys
     private $price; //Float //In Malaysia Riggit
     private $weight; //Float
     private $weightUnit; //string //Gram or others
     private $inventory; //Integer
     private $discountRate; //Float //Default: 1.0
 
-    public function __construct($barcode, $property, $propertyType, $price, $weight, $weightUnit, $inventory){
+    public function __construct($barcode, $property, $propertyName, $price, $weight, $weightUnit, $inventory, $discountRate){
         $this->barcode = $barcode;
         $this->property = $property;
-        $this->propertyType = $propertyType;
+        $this->propertyName = $propertyName;
         $this->price = $price;
         $this->weight = $weight;
         $this->weightUnit = $weightUnit;
         $this->inventory = $inventory;
-        $this->discountRate = 1.0;
+        is_numeric($discountRate) ? $this->discountRate = $discountRate : $this->discountRate = 1.0;
     }
 
+    //Not in use
     public function jsonSerialize(){
         return [
             'barcode' => $this->barcode,
             'property' => $this->property,
-            'propertyType' => $this->propertyType,
+            'propertyName' => $this->propertyName,
             'price' => $this->price,
             'weight' => $this->weight,
             'weightUnit' => $this->weightUnit,
@@ -42,8 +43,8 @@ class Variety implements JsonSerializable {
         return $this->property;
     }
 
-    public function getPropertyType(){
-        return $this->propertyType;
+    public function getPropertyName(){
+        return $this->propertyName;
     }
 
     public function getPrice(){
@@ -70,8 +71,8 @@ class Variety implements JsonSerializable {
         $this->property = $property;
     }
 
-    public function setPropertyType($propertyType){
-        $this->propertyType = $propertyType;
+    public function setPropertyName($propertyName){
+        $this->propertyName = $propertyName;
     }
 
     public function setPrice($price){

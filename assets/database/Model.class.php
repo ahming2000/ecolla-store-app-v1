@@ -4,8 +4,7 @@ require_once __DIR__."\\Dbh.class.php";
 
 class Model extends Dbh{
 
-    //Item
-
+    //items
     protected function selectCount($tableName){
         $sql = "SELECT COUNT(*) AS num FROM ".$tableName;
         $stmt = $this->connect()->prepare($sql);
@@ -14,10 +13,10 @@ class Model extends Dbh{
         return $results['num'];
     }
 
-    protected function insertItem($name, $catogory, $brand, $country, $isListed){
-        $sql = "INSERT INTO items(i_name, i_catogory, i_brand, i_country, i_isListed) VALUE(?, ?, ?, ?, ?)";
+    protected function insertItem($name, $brand, $country, $isListed, $i_imgCount){
+        $sql = "INSERT INTO items(i_name, i_brand, i_country, i_isListed, i_imgCount) VALUE(?, ?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$name, $catogory, $brand, $country, $isListed]);
+        $stmt->execute([$name, $brand, $country, $isListed, $i_imgCount]);
     }
 
     protected function selectAllItems(){
@@ -59,11 +58,11 @@ class Model extends Dbh{
         $stmt->execute([$attrContentToSearch]);
     }
 
-    //Variety
-    protected function insertVariety($barcode, $property, $propertyType, $price, $weight, $weightUnit, $inventory, $discountRate){
+    //varieties
+    protected function insertVariety($barcode, $property, $propertyName, $price, $weight, $weightUnit, $inventory, $discountRate){
         $sql = "INSERT INTO varieties(v_barcode, v_property, v_propertyType, v_price, v_weight, v_weightUnit, v_inventory, v_discountRate) VALUE(?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$barcode, $property, $propertyType, $price, $weight, $weightUnit, $inventory, $discountRate]);
+        $stmt->execute([$barcode, $property, $propertyName, $price, $weight, $weightUnit, $inventory, $discountRate]);
     }
 
     protected function selectAllVarieties(){
@@ -108,7 +107,7 @@ class Model extends Dbh{
         $stmt->execute([$attrContentToSearch]);
     }
 
-    //Specification
+    //specifications
     protected function insertSpecification($v_barcode, $i_id){
         $sql = "INSERT INTO specifications(v_barcode, i_id) VALUE(?, ?)";
         $stmt = $this->connect()->prepare($sql);
@@ -154,15 +153,15 @@ class Model extends Dbh{
         $stmt->execute([$attrContentToSearch]);
     }
 
-    //ItemImg
-    protected function insertItemImg($i_id, $imgPath){
-        $sql = "INSERT INTO item_imgs(i_id, imgPath) VALUE(?, ?)";
+    //catogories
+    protected function insertCatogory($id, $i_id, $catogory){
+        $sql = "INSERT INTO catogories(cat_id, i_id, cat_name) VALUE(?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$i_id, $imgPath]);
+        $stmt->execute([$id, $i_id, $catogory]);
     }
 
-    protected function selectAllItemImgs(){
-        $sql = "SELECT * FROM item_imgs";
+    protected function selectAllCatogories(){
+        $sql = "SELECT * FROM catogories";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute();
         $results = $stmt->fetchAll();
@@ -170,32 +169,32 @@ class Model extends Dbh{
         return $results;
     }
 
-    protected function selectItemImg($attrToSearch, $attrContentToSearch){
-        $sql = "SELECT * FROM item_imgs WHERE ".$attrToSearch." = ?";
+    protected function selectCatogory($attrToSearch, $attrContentToSearch){
+        $sql = "SELECT * FROM catogories WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToSearch]);
-
         $results = $stmt->fetchAll();
+
         return $results;
     }
 
-    protected function selectItemImgAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        $sql = "SELECT ".$attrToSelect." FROM item_imgs WHERE ".$attrToSearch." = ?";
+    protected function selectCatogoryAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
+        $sql = "SELECT ".$attrToSelect." FROM catogories WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToSearch]);
 
         $results = $stmt->fetchAll();
-        return $results[0][$attrToSearch];
+        return $results[0][$attrToSelect];
     }
 
-    protected function updateItemImgAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
-        $sql = "UPDATE item_imgs SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
+    protected function updateCatogoryAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
+        $sql = "UPDATE catogories SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
     }
 
-    protected function deleteItemImgAttr($attrToSearch, $attrContentToSearch){
-        $sql = "DELETE FROM item_imgs WHERE ".$attrToSearch." = ?";
+    protected function deleteCatogoryAttr($attrToSearch, $attrContentToSearch){
+        $sql = "DELETE FROM catogories WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToSearch]);
     }

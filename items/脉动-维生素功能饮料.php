@@ -1,4 +1,4 @@
-<?php $upperDirectoryCount = 2; include "../../assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
+<?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
 <?php $cart = new Cart(); //Must declare first before have any output to continue the session ?>
 <?php
 $view = new View();
@@ -14,18 +14,18 @@ if($_SERVER['REQUEST_METHOD']=='POST')
 <!DOCTYPE html>
 <html>
 <head>
-    <?php $upperDirectoryCount = 2; $title = "脉动 维生素功能饮料 | Ecolla ε口乐"; include "../../assets/includes/stylesheet-script-declaration.inc.php" ?>
+    <?php $upperDirectoryCount = 1; $title = "脉动 维生素功能饮料 | Ecolla ε口乐"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?>
     <!-- To-do: Meta for google searching -->
 </head>
 
 <body>
 
-    <?php $c = $cart; $upperDirectoryCount = 2; include __DIR__."\\..\\..\\assets\\block-user-page\\header.php"; ?>
+    <?php $c = $cart; $upperDirectoryCount = 1; include __DIR__."\\..\\assets\\block-user-page\\header.php"; ?>
 
     <wrapper class="d-flex flex-column">
         <main class="flex-fill"> <!--put content-->
 
-            <?php $i = $item; include_once __DIR__."\\..\\..\\assets\\block-user-page\breadcrumb-block.php"; ?>
+            <?php $i = $item; include_once __DIR__."\\..\\assets\\block-user-page\breadcrumb-block.php"; ?>
 
             <div class="container">
                 <!--Grid row-->
@@ -34,16 +34,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
                     <!--Grid column-->
                     <div class="col-md-6 mb-4">
 
-                        <?php
-                        $id = $view->getItemAttr("i_id", "i_name", "维生素功能饮料");
-                        $imgs = $view->getItemImgs("i_id", $id);
-                        $imgList = array();
-
-                        foreach($imgs as $img){
-                            array_push($imgList, $img['imgPath']);
-                        }
-                        include "../../assets/block-user-page/carousel-block.php";
-                        ?>
+                        <?php include "../assets/block-user-page/carousel-block-item-page.php"; ?>
 
                     </div>
                     <!--Grid column-->
@@ -124,7 +115,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
         </div>
     </main>
 
-    <?php include "../../assets/block-user-page/footer.php"; ?>
+    <?php $upperDirectoryCount = 1; include "../assets/block-user-page/footer.php"; ?>
 
 </wrapper>
 

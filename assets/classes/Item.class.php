@@ -1,27 +1,36 @@
 <?php
 
 class Item implements JsonSerializable {
+
+    //Standard variable
     private $id; //Unique //Generate after insert into database
     private $name; //String
-    private $catogory; //String
     private $brand; //String
     private $country; //String
     private $isListed; //Boolean
+    private $imgCount; //Integer
 
-    private $varieties; //Array
-    private $imgPaths; //Array
+    //Array variable
+    private $catogories; //Array //String
+    private $varieties; //Array //Variety object
 
-    public function __construct($name, $catogory, $brand, $country, $isListed){
+    //Utility variable
+    private $catogoryCount; //Integer
+
+    public function __construct($name, $brand, $country, $isListed, $imgCount){
         $this->name = $name;
-        $this->catogory = $catogory;
         $this->brand = $brand;
         $this->country = $country;
         $this->isListed = $isListed;
+        $this->imgCount = $imgCount;
 
+        $this->catogories = array();
         $this->varieties = array();
-        $this->imgPaths = array();
+
+        $this->catogoryCount = 0;
     }
 
+    //Not in use
     public function jsonSerialize(){
         return [
             'id' => $this->id,
@@ -30,9 +39,20 @@ class Item implements JsonSerializable {
             'brand' => $this->brand,
             'country' => $this->country,
             'isListed' => $this->isListed,
+            'catogories' => $this->catogories,
             'varieties' => UsefulFunction::jsonSerializeArray($this->varieties),
-            'imgPaths' => $this->imgPaths
+            'catogoryCount' => $this->catogoryCount
         ];
+    }
+
+    public function addCatogory($catogory){
+        array_push($this->catogories, $catogory);
+        $this->catogoryCount++;
+    }
+
+    public function removeCatogory($index){
+        UsefulFunction::removeArrayElementI($this->catogories, $index);
+        $this->catogoryCount--;
     }
 
     public function addVariety($variety){
@@ -43,24 +63,12 @@ class Item implements JsonSerializable {
         UsefulFunction::removeArrayElementI($this->varieties, $index);
     }
 
-    public function addImgPath($imgPath){
-        array_push($this->imgPaths, $imgPath);
-    }
-
-    public function removeImgPath($index){
-        UsefulFunction::removeArrayElementI($this->imgPaths, $index);
-    }
-
     public function getID(){
         return $this->id;
     }
 
     public function getName(){
         return $this->name;
-    }
-
-    public function getCatogory(){
-        return $this->catogory;
     }
 
     public function getBrand(){
@@ -71,40 +79,44 @@ class Item implements JsonSerializable {
         return $this->country;
     }
 
-    public function getVarieties(){
-        return $this->varieties;
-    }
-
-    public function getImgPaths(){
-        return $this->imgPaths;
-    }
-
     public function isListed(){
         return $this->isListed;
     }
 
-    public function setID($id){
-        $this->id = $id;
+    public function getImgCount(){
+        return $this->imgCount;
     }
 
     public function setName($name){
         $this->name = $name;
     }
 
-    public function setCatogory($catogory){
-        $this->catogory = $catogory;
-    }
-
     public function setBrand($brand){
         $this->brand = $brand;
     }
 
-    public function setCountry($country){
-        $this->country = $country;
-    }
-
     public function setListed($isListed){
         $this->isListed = $isListed;
+    }
+
+    public function setImgCount($imgCount){
+        $this->imgCount = $imgCount;
+    }
+
+    public function setID($id){
+        $this->id = $id;
+    }
+
+    public function getCatogories(){
+        return $this->catogories;
+    }
+
+    public function getVarieties(){
+        return $this->varieties;
+    }
+
+    public function getCatogoryCount(){
+        return $this->catogoryCount;
     }
 
 }
