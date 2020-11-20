@@ -21,7 +21,15 @@ class View extends Model{
             foreach($barcode_array as $barcode){
                 $varieties_array = $this->selectVariety("v_barcode", $barcode['v_barcode']);
                 foreach($varieties_array as $variety){
-                    $item->addVariety(new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyName'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_inventory'], $variety['v_discountRate']));
+
+                    $v = new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyName'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_discountRate']);
+
+                    $shelfLifeList_array = $this->selectShelfLife("v_barcode", $variety['v_barcode']);
+                    foreach($shelfLifeList_array as $shelfLife){
+                        $v->addShelfLife(new ShelfLife($shelfLife["sll_expireDate"], $shelfLife["sll_inventory"]));
+                    }
+
+                    $item->addVariety($v);
                 }
             }
 
@@ -47,7 +55,15 @@ class View extends Model{
         foreach($_b as $barcode){
             $_v = $this->selectVariety("v_barcode", $barcode["v_barcode"]);
             foreach($_v as $variety){
-                $item->addVariety(new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyName'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_inventory'], $variety['v_discountRate']));
+
+                $v = new Variety($variety['v_barcode'], $variety['v_property'], $variety['v_propertyName'], $variety['v_price'], $variety['v_weight'], $variety['v_weightUnit'], $variety['v_discountRate']);
+
+                $_sll = $this->selectShelfLife("v_barcode", $variety['v_barcode']);
+                foreach($_sll as $shelfLife){
+                    $v->addShelfLife(new ShelfLife($shelfLife["sll_expireDate"], $shelfLife["sll_inventory"]));
+                }
+
+                $item->addVariety($v);
             }
         }
 

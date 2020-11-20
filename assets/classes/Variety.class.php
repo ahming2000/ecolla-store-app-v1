@@ -1,27 +1,32 @@
 <?php
 
 class Variety implements JsonSerializable {
+
+    //Standard variable
     private $barcode; //string //Unique
     private $property; //string //Flavour or type
     private $propertyName; //String //Type of describe way on propertys
     private $price; //Float //In Malaysia Riggit
     private $weight; //Float
     private $weightUnit; //string //Gram or others
-    private $inventory; //Integer
     private $discountRate; //Float //Default: 1.0
 
-    public function __construct($barcode, $property, $propertyName, $price, $weight, $weightUnit, $inventory, $discountRate){
+    //Array variable
+    private $shelfLifeList; //Array //ShelfLife object
+
+    public function __construct($barcode, $property, $propertyName, $price, $weight, $weightUnit, $discountRate){
         $this->barcode = $barcode;
         $this->property = $property;
         $this->propertyName = $propertyName;
         $this->price = $price;
         $this->weight = $weight;
         $this->weightUnit = $weightUnit;
-        $this->inventory = $inventory;
         is_numeric($discountRate) ? $this->discountRate = $discountRate : $this->discountRate = 1.0;
+
+        $this->shelfLifeList = array();
     }
 
-    //Not in use
+    //Not in use //Didn't modify for the changes - 20/11/2020
     public function jsonSerialize(){
         return [
             'barcode' => $this->barcode,
@@ -30,9 +35,20 @@ class Variety implements JsonSerializable {
             'price' => $this->price,
             'weight' => $this->weight,
             'weightUnit' => $this->weightUnit,
-            'inventory' => $this->inventory,
             'discountRate' => $this->discountRate
         ];
+    }
+
+    public function addShelfLife($shelfLife){
+        array_push($this->shelfLifeList, $shelfLife);
+    }
+
+    public function removeShelfLife($index){
+        UsefulFunction::removeArrayElementI($this->shelfLifeList, $index);
+    }
+
+    public function getShelfLifeList(){
+        return $this->shelfLifeList;
     }
 
     public function getBarcode(){

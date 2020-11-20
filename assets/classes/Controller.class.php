@@ -14,13 +14,14 @@ class Controller extends Model{
         }
 
         foreach($item->getVarieties() as $variety){
-            $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyName(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getInventory(), $variety->getDiscountRate());
+            $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyName(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getDiscountRate());
+            $this->insertShelfLife($variety->getShelfLifeList()->getExpireDate(), $variety->getShelfLifeList()->getExpireDate());
             $this->insertSpecification($variety->getBarcode(), $item->getID());
         }
 
     }
 
-    //Need to use more effecient way //Haven't modify for the chances - 19/11/2020
+    //Need to use more effecient way //Haven't modify for the chances - 19/11/2020 and 20/11/2020
     public function modifyItemSingleAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
         $this->updateItemAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch);
     }

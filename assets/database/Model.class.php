@@ -59,10 +59,10 @@ class Model extends Dbh{
     }
 
     //varieties
-    protected function insertVariety($barcode, $property, $propertyName, $price, $weight, $weightUnit, $inventory, $discountRate){
-        $sql = "INSERT INTO varieties(v_barcode, v_property, v_propertyType, v_price, v_weight, v_weightUnit, v_inventory, v_discountRate) VALUE(?, ?, ?, ?, ?, ?, ?, ?)";
+    protected function insertVariety($barcode, $property, $propertyName, $price, $weight, $weightUnit, $discountRate){
+        $sql = "INSERT INTO varieties(v_barcode, v_property, v_propertyType, v_price, v_weight, v_weightUnit, v_discountRate) VALUE(?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$barcode, $property, $propertyName, $price, $weight, $weightUnit, $inventory, $discountRate]);
+        $stmt->execute([$barcode, $property, $propertyName, $price, $weight, $weightUnit, $discountRate]);
     }
 
     protected function selectAllVarieties(){
@@ -149,6 +149,52 @@ class Model extends Dbh{
 
     protected function deleteSpecificationAttr($attrToSearch, $attrContentToSearch){
         $sql = "DELETE FROM specifications WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+    }
+
+    //shelf_life_list
+    protected function insertShelfLife($v_barcode, $sll_expireDate, $sll_inventory){
+        $sql = "INSERT INTO shelf_life_list(v_barcode, sll_expireDate, sll_inventory) VALUE(?, ?, ?)";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$v_barcode, $sll_expireDate, $sll_inventory]);
+    }
+
+    protected function selectAllShelfLife(){
+        $sql = "SELECT * FROM shelf_life_list";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectShelfLife($attrToSearch, $attrContentToSearch){
+        $sql = "SELECT * FROM shelf_life_list WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function selectShelfLifeAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
+        $sql = "SELECT ".$attrToSelect." FROM shelf_life_list WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToSearch]);
+
+        $results = $stmt->fetchAll();
+        return $results[0][$attrToSelect];
+    }
+
+    protected function updateShelfLifeAttr($attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
+        $sql = "UPDATE shelf_life_list SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->execute([$attrContentToUpdate, $attrContentToSearch]);
+    }
+
+    protected function deleteShelfLifeAttr($attrToSearch, $attrContentToSearch){
+        $sql = "DELETE FROM shelf_life_list WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$attrContentToSearch]);
     }
