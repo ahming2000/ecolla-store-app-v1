@@ -4,6 +4,10 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 
 class Controller extends Model{
 
+    public function test($v_barcode, $sll_expireDate, $sll_inventory){
+        $this->insertShelfLife($v_barcode, $sll_expireDate, $sll_inventory);
+    }
+
     public function insertNewItem($item){
         $this->insertItem($item->getName(), $item->getBrand(), $item->getCountry(), (int) $item->isListed(), $item->getImgCount());
 
@@ -14,8 +18,13 @@ class Controller extends Model{
         }
 
         foreach($item->getVarieties() as $variety){
+
             $this->insertVariety($variety->getBarcode(), $variety->getProperty(), $variety->getPropertyName(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getDiscountRate());
-            $this->insertShelfLife($variety->getShelfLifeList()->getExpireDate(), $variety->getShelfLifeList()->getExpireDate());
+
+            foreach($variety->getShelfLifeList() as $shelfLife){
+                $this->insertShelfLife($variety->getBarcode(), $shelfLife->getExpireDate(), $shelfLife->getInventory());
+            }
+
             $this->insertSpecification($variety->getBarcode(), $item->getID());
         }
 

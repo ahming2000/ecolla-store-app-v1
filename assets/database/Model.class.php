@@ -14,7 +14,7 @@ class Model extends Dbh{
     }
 
     protected function insertItem($name, $brand, $country, $isListed, $i_imgCount){
-        $sql = "INSERT INTO items(i_name, i_brand, i_country, i_isListed, i_imgCount) VALUE(?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO items(i_name, i_brand, i_country, i_isListed, i_imgCount) VALUE(?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
         $stmt->execute([$name, $brand, $country, $isListed, $i_imgCount]);
     }
@@ -60,9 +60,9 @@ class Model extends Dbh{
 
     //varieties
     protected function insertVariety($barcode, $property, $propertyName, $price, $weight, $weightUnit, $discountRate){
-        $sql = "INSERT INTO varieties(v_barcode, v_property, v_propertyType, v_price, v_weight, v_weightUnit, v_discountRate) VALUE(?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO varieties(v_barcode, v_property, v_propertyName, v_price, v_weight, v_weightUnit, v_discountRate) VALUE(?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$barcode, $property, $propertyName, $price, $weight, $weightUnit, $discountRate]);
+        if(!$stmt->execute([$barcode, $property, $propertyName, $price, $weight, $weightUnit, $discountRate])) var_dump($stmt->errorInfo());
     }
 
     protected function selectAllVarieties(){
@@ -155,9 +155,15 @@ class Model extends Dbh{
 
     //shelf_life_list
     protected function insertShelfLife($v_barcode, $sll_expireDate, $sll_inventory){
-        $sql = "INSERT INTO shelf_life_list(v_barcode, sll_expireDate, sll_inventory) VALUE(?, ?, ?)";
-        $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$v_barcode, $sll_expireDate, $sll_inventory]);
+        try{
+            $sql = "INSERT INTO shelf_life_list(v_barcode, sll_expireDate, sll_inventory) VALUE(?, ?, ?)";
+            $stmt = $this->connect()->prepare($sql);
+            if(!$stmt->execute([$v_barcode, $sll_expireDate, $sll_inventory])) var_dump($stmt->errorInfo());
+        }
+        catch ( PDOException $exception )
+        {
+            die("PDO error :" . $exception->getMessage());
+        }
     }
 
     protected function selectAllShelfLife(){
@@ -200,10 +206,10 @@ class Model extends Dbh{
     }
 
     //catogories
-    protected function insertCatogory($id, $i_id, $catogory){
-        $sql = "INSERT INTO catogories(cat_id, i_id, cat_name) VALUE(?, ?, ?)";
+    protected function insertCatogory($i_id, $catogory){
+        $sql = "INSERT INTO catogories(i_id, cat_name) VALUE(?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$id, $i_id, $catogory]);
+        $stmt->execute([$i_id, $catogory]);
     }
 
     protected function selectAllCatogories(){
