@@ -18,7 +18,7 @@ if(isset($_POST["submit"])){
     $item->addCatogory($_POST["catogory"]);
 
     $controller = new Controller();
-    $controller->insertNewItem($item);
+    
 }
 
  ?>
