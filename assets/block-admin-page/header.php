@@ -11,7 +11,7 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
 ?>
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
     <div class="container">
-        <a class="navbar-brand" href="<?php echo $upperDirectory; ?>index.php">
+        <a class="navbar-brand" href="<?php echo $upperDirectory; ?>admin/index.php">
             <img src="<?php echo $upperDirectory; ?>assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
             管理员后台
         </a>
@@ -21,9 +21,9 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">主页</a></li>
-            <li class="nav-item"><a class="nav-link" href="item-manage.php">商品管理</a></li>
-            <li class="nav-item"><a class="nav-link" href="order-list.php">订单</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>admin/index.php">主页</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>admin/item-manage.php">商品</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>admin/order-manage.php">订单</a></li>
         </ul>
     </div>
 </div>
@@ -44,7 +44,7 @@ $(document).ready(function() {
         $(".navbar-nav li:nth-child(1)").addClass("active");
     } else if (getCurentFileName() === "item-manage.php") {
         $(".navbar-nav li:nth-child(2)").addClass("active");
-    } else if (getCurentFileName() === "order-list.php") {
+    } else if (getCurentFileName() === "order-manage.php") {
         $(".navbar-nav li:nth-child(3)").addClass("active");
     }
 
