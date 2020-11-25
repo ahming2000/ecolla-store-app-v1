@@ -252,10 +252,10 @@ class Model extends Dbh{
     }
 
     //Orders
-    protected function insertOrder($o_item_count, $c_name, $c_phone, $c_address, $c_postcode, $c_city, $c_state, $c_receiptPath, $o_subtotal){
-        $sql = "INSERT INTO orders(o_item_count, c_name, c_phone, c_address, c_postcode, c_city, c_state, c_receiptPath, o_subtotal) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    protected function insertOrder($o_date_time, $o_item_count, $c_name, $c_phone, $c_address, $c_postcode, $c_city, $c_state, $c_receiptPath, $o_subtotal){
+        $sql = "INSERT INTO orders(o_date_time, o_item_count, c_name, c_phone, c_address, c_postcode, c_city, c_state, c_receiptPath, o_subtotal) VALUE(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$o_item_count, $c_name, $c_phone, $c_address, $c_postcode, $c_city, $c_state, $c_receiptPath, $o_subtotal]);
+        if (!$stmt->execute([$o_date_time, $o_item_count, $c_name, $c_phone, $c_address, $c_postcode, $c_city, $c_state, $c_receiptPath, $o_subtotal])) var_dump($stmt->errorInfo());
     }
 
     protected function selectAllOrders(){
@@ -298,10 +298,10 @@ class Model extends Dbh{
     }
 
     //Order items
-    protected function insertOrderItem($o_id, $s_id, $quantity){
-        $sql = "INSERT INTO order_items(o_id, s_id, quantity) VALUE(?, ?, ?)";
+    protected function insertOrderItem($o_date_time, $s_id, $quantity){
+        $sql = "INSERT INTO order_items(o_date_time, s_id, quantity) VALUE(?, ?, ?)";
         $stmt = $this->connect()->prepare($sql);
-        $stmt->execute([$o_id, $s_id, $quantity]);
+        $stmt->execute([$o_date_time, $s_id, $quantity]);
     }
 
     protected function selectAllOrderItems(){
