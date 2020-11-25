@@ -74,22 +74,61 @@ class View extends Model{
         return $this->selectCount("items");
     }
 
+    public function getAllOrders(){
+        $orders = array();
+
+        $_o = $this->selectAllOrders();
+        foreach($_o as $o){
+
+            $cartItems = array();
+            $_c_i = $this->selectAllOrderItems();
+            foreach($_c_i as $c_i){
+
+                $i_id = $this->selectSpecificationAttr("i_id", "s_id", $c_i["s_id"]);
+                $v_barcode = $this->selectSpecificationAttr("v_barcode", "s_id", $c_i["s_id"]);
+
+                $item = $this->selectItem("i_id", $i_id);
+                $variety = $this->selectVariety("v_barcode", $v_barcode);
+
+                $cartItem = [
+                    "i_name" => $item[0]["i_name"],
+                    "i_brand" => $item[0]["i_brand"],
+                    "i_country" => $item[0]["i_country"],
+                    "i_imgCount" => $item[0]["i_imgCount"],
+                    "v_barcode" => $variety[0]["v_barcode"],
+                    "v_property" => $variety[0]["v_property"],
+                    "v_propertyName" => $variety[0]["v_propertyName"],
+                    "v_price" => $variety[0]["v_price"],
+                    "v_weight" => $variety[0]["v_weight"],
+                    "v_weightUnit" => $variety[0]["v_weightUnit"],
+                    "v_discountRate" => $variety[0]["v_discountRate"],
+                    "quantity" => $c_i["quantity"]
+                ];
+
+                array_push($cartItems, $cartItem);
+            }
 
 
-    public function getItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        return $this->selectItemAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
-    }
+            $order = [
+                "o_date_time" => $o["o_date_time"],
+                "o_item_count" => $o["o_item_count"],
+                "customer" => [
+                    "c_name" => $o["c_name"],
+                    "c_phone" => $o["c_phone"],
+                    "c_address" => $o["c_address"],
+                    "c_postcode" => $o["c_postcode"],
+                    "c_city" => $o["c_city"],
+                    "c_state" => $o["c_state"],
+                    "c_receiptPath" => $o["c_receiptPath"]
+                ],
+                "o_subtotal" => $o["o_subtotal"],
+                "cartItems" => $cartItems
+            ];
 
-    public function getAllVarieties($attrToSearch, $attrContentToSearch){
-        return $this->selectAllVarieties($attrToSearch, $attrContentToSearch);
-    }
+            array_push($orders, $order);
+        }
 
-    public function getVarietyAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        return $this->selectVarietyAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
-    }
-
-    public function getSpecificationAttr($attrToSelect, $attrToSearch, $attrContentToSearch){
-        return $this->selectSpecificationAttr($attrToSelect, $attrToSearch, $attrContentToSearch);
+        return $orders;
     }
 
 

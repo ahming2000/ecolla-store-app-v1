@@ -14,7 +14,8 @@ class Order {
     }
 
     public function getOrderHistory(){
-
+        $view = new View();
+        // Get specific order history from this function
     }
 
     public function deleteOrderHistory(){
