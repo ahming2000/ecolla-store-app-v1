@@ -69,13 +69,15 @@ class Controller extends Model{
 
     public function createNewOrder($cart, $customer){
 
-        $this->insertOrder($cart->getCartCount(), $customer["name"], $customer["phone"], $customer["address"], $customer["postcode"], $customer["city"], $customer["state"], $customer["receiptPath"], $cart->getSubtotal());
-        $o_id = $this->selectOrderAttr("o_id", "c_name", $customer["name"]);
+        $o_date_time = date("Y-m-d H:i:s");
+
+        $this->insertOrder($o_date_time, $cart->getCartCount(), $customer["name"], $customer["phone"], $customer["address"], $customer["postcode"], $customer["city"], $customer["state"], $customer["receiptPath"], $cart->getSubtotal());
+
 
         foreach($cart->getCartItems() as $cartItem){
-            $i_id = $cartItem->getItem()->getID();
-            $s_id = $this->selectSpecificationAttr("s_id", "i_id", $i_id);
-            $this->insertOrderItem($o_id, $s_id, $cartItem->getQuantity());
+            $v_barcode = $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getBarcode();
+            $s_id = $this->selectSpecificationAttr("s_id", "v_barcode", $v_barcode);
+            $this->insertOrderItem($o_date_time, $s_id, $cartItem->getQuantity());
         }
 
     }

@@ -6,13 +6,19 @@
 
     <td><?php
     foreach($item->getVarieties() as $variety){
+        echo $variety->getProperty()."<br>";
+    }
+     ?></td>
+
+    <td><?php
+    foreach($item->getVarieties() as $variety){
         echo $variety->getBarcode()."<br>";
     }
      ?></td>
 
     <td><?php
     foreach($item->getVarieties() as $variety){
-        echo $variety->getPrice()."<br>";
+        echo "RM".number_format($variety->getPrice() * $variety->getDiscountRate(), 2)."<br>";
     }
     ?></td>
 

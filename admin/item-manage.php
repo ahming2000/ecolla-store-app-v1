@@ -28,6 +28,7 @@
                     <th scope="col">出产国家</th>
                     <th scope="col">品牌</th>
                     <th scope="col">名称</th>
+                    <th scope="col">规格名称</th>
                     <th scope="col">Barcode</th>
                     <th scope="col">价格</th>
                     <th scope="col">商品总数量</th>
