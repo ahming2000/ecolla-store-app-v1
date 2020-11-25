@@ -78,10 +78,11 @@ class View extends Model{
         $orders = array();
 
         $_o = $this->selectAllOrders();
+
         foreach($_o as $o){
 
             $cartItems = array();
-            $_c_i = $this->selectAllOrderItems();
+            $_c_i = $this->selectOrderItem("o_date_time", $o["o_date_time"]);
             foreach($_c_i as $c_i){
 
                 $i_id = $this->selectSpecificationAttr("i_id", "s_id", $c_i["s_id"]);
