@@ -4,8 +4,8 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 
 class Controller extends Model{
 
-    public function test($v_barcode, $sll_expireDate, $sll_inventory){
-        $this->insertShelfLife($v_barcode, $sll_expireDate, $sll_inventory);
+    public function test($tableName, $data){
+        $this->dbBulkInsert($tableName, $data);
     }
 
     public function insertNewItem($item){

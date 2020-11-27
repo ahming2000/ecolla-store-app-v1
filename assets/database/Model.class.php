@@ -1,8 +1,209 @@
 <?php
 
+/*  MVC Model Version: v0.1.0-alpha (To be released)
+ *  Created by AhMing
+ *  Github: https://github.com/ahming2000
+ */
+
 require_once __DIR__."\\Dbh.class.php";
 
 class Model extends Dbh{
+
+    //To-do:
+    // 1. Logging to file for every function
+    // 2. Create dynamic way on declaring table attribute
+
+
+
+
+
+    /*  Database Table
+        Notice: PLEASE DEFINE YOUR TABLE ATTRIBUTE OVER HERE!
+    */
+    private $DATABASE_TABLE = [
+        "items" => [
+            "columns" => "items(i_name, i_brand, i_country, i_isListed, i_imgCount)",
+            "columnsCountToInsert" => 5
+        ],
+
+        "varieties" => [
+            "columns" => "varieties(v_barcode, v_property, v_propertyName, v_price, v_weight, v_weightUnit, v_discountRate)",
+            "columnsCountToInsert" => 7
+        ],
+
+        "catogories" => [
+            "columns" => "catogories(i_id, cat_name)",
+            "columnsCountToInsert" => 2
+        ],
+
+        "shelf_life_list" => [
+            "columns" => "shelf_life_list(v_barcode, sll_expireDate, sll_inventory)",
+            "columnsCountToInsert" => 3
+        ],
+
+        "specifications" => [
+            "columns" => "specifications(v_barcode, i_id)",
+            "columnsCountToInsert" => 2
+        ],
+
+        "orders" => [
+            "columns" => "orders(o_date_time, o_item_count, c_name, c_phone, c_address, c_postcode, c_city, c_state, c_receiptPath, o_subtotal)",
+            "columnsCountToInsert" => 10
+        ],
+
+        "order_items" => [
+            "columns" => "order_items(o_date_time, s_id, quantity)",
+            "columnsCountToInsert" => 3
+        ]
+
+    ];
+
+
+
+
+
+    /*  Concat the symbol into a string
+
+        Example:
+        $primaryChar = '?'; $saperateWith = ', '; $count = 3;
+        $output = ?, ?, ?
+    */
+    private function concatToStrChar($primaryChar, $saperateWith, $count){
+        $str = "".$primaryChar;
+
+        for($i = 1; $i < $count; $i++){
+            $str = $str.$saperateWith.$primaryChar;
+        }
+        return $str;
+    }
+
+
+
+
+
+    /*  Connect multiple attribute with clause by using this function
+
+        Example:
+        $attrArray = ["i_name", "i_brand"]; $clause = "AND";
+        $output = "i_name = ? AND i_brand = ?"
+    */
+    private function clauseConnector($attrArray, $clause){
+        $str = $attrArray[0]." = ?";
+
+        for($i = 1; $i < sizeof($attrArray); $i++){
+            $str = $str." ".$saperateWith." ".$attrArray[$i]." = ?";
+        }
+        return $str;
+    }
+
+
+
+
+
+    /*  Insert into database
+        Syntax:
+        dbInsert: INSERT INTO {table name} VALUE({number of '?' is equal to nnumber of column of the table})
+    */
+    protected function dbInsert($tableName, $data){
+        $sql = "INSERT INTO ".$this->DATABASE_TABLE[$tableName]["columns"]." VALUE(".$this->concatToStrChar('?', ', ', $this->DATABASE_TABLE[$tableName]["columnsCountToInsert"]).")";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute($data)) die("Database inserting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+    }
+
+
+
+
+
+    /*  Select from database
+        Syntax:
+        dbSelectAll: SELECT * FROM {table name}
+        dbSelectColumn: SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        dbSelectAttribute: SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        dbSelectColumn_MultiSearch: SELECT * FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
+        dbSelectAttribute_MultiSearch: SELECT {attribute to select} FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
+
+        Output: (To retrive the cell data)
+        dbSelectAll: data[row(number)][column(column name)]
+        dbSelectColumn: data[row(number)][column(column name)]
+        dbSelectAttribute: data (Auto use the first result as the main result)
+        dbSelectColumn_MultiSearch: data[row(number)][column(column name)]
+        dbSelectAttribute_MultiSearch: data (Auto use the first result as the main result)
+
+        Coming soon:
+        1. Select function with clause ORDER BY
+        2. Select function with combined table
+    */
+    protected function dbSelectAll($tablename){
+        $sql = "SELECT * FROM ".$tableName;
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute()) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    protected function dbSelectColumn($tableName, $attrToSearch, $attrContentToSearch){
+        $sql = "SELECT * FROM ".$tableName." WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    protected function dbSelectAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
+        $sql = "SELECT ".$attrToSelect." FROM ".$tableName." WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results[0][$attrToSelect];
+    }
+
+    protected function dbSelectColumn_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
+        if(sizeof($attrToSearchList) === sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+        $sql = "SELECT * FROM ".$tableName." WHERE ".clauseConnector($attrToSearchList, "AND");
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    protected function dbSelectAttribute_MultiSearch($tableName, $attrToSelect, $attrToSearchList, $attrContentToSearchList){
+        if(sizeof($attrToSearchList) === sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+        $sql = "SELECT ".$attrToSelect." FROM ".$tableName." WHERE ".clauseConnector($attrToSearchList, "AND");
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results[0][$attrToSelect];
+    }
+
+    protected function dbSelectCount($tableName){
+        $sql = "SELECT COUNT(*) AS count FROM ".$tableName;
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute()) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetch();
+        return $results[0]['count'];
+    }
+
+
+
+
+
+    /*  Update database
+        Syntax:
+        dbUpdate: UPDATE {table name} SET {attribute to update} = {attribute content to update} WHERE {attribute to search} = {attribute content to search}
+    */
+    protected function dbUpdate($tableName, $attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
+        $sql = "UPDATE ".$tableName." SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute([$attrContentToUpdate, $attrContentToSearch])) die("Database updating ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+    }
+
+
+
+
+
+    /*  MVC Model Version: v0.0.0-alpha
+     *  Old version code will remain until all codes are tested perfectly
+     */
 
     //items
     protected function selectCount($tableName){
