@@ -32,13 +32,13 @@ class Model extends Dbh{
         ],
 
         "varieties" => [
-            "columnsToInsert" => "varieties(v_barcode, v_property, v_property_name, v_price, v_weight, v_weight_unit, v_discount_rate)",
-            "columnsCountToInsert" => 7
+            "columnsToInsert" => "varieties(v_barcode, v_property, v_property_name, v_price, v_weight, v_weight_unit, v_discount_rate, i_id)",
+            "columnsCountToInsert" => 8
         ],
 
         "catogories" => [
-            "columnsToInsert" => "catogories(i_id, cat_name)",
-            "columnsCountToInsert" => 2
+            "columnsToInsert" => "catogories(cat_name)",
+            "columnsCountToInsert" => 1
         ],
 
         "inventories" => [
@@ -46,24 +46,24 @@ class Model extends Dbh{
             "columnsCountToInsert" => 3
         ],
 
-        "specifications" => [
-            "columnsToInsert" => "specifications(v_barcode, i_id)",
+        "classifications" => [
+            "columnsToInsert" => "classifications(i_id, cat_id)",
             "columnsCountToInsert" => 2
         ],
 
         "orders" => [
-            "columnsToInsert" => "orders(o_id, o_date_time, o_item_count, o_subtotal, c_id)",
-            "columnsCountToInsert" => 5
+            "columnsToInsert" => "orders(o_id, o_date_time, c_name, c_phone_mcc, c_phone, c_address, c_postcode, c_city, c_state)",
+            "columnsCountToInsert" => 9
         ],
 
         "order_items" => [
-            "columnsToInsert" => "order_items(o_id, s_id, oi_quantity)",
-            "columnsCountToInsert" => 3
+            "columnsToInsert" => "order_items(o_id, v_barcode, oi_quantity, oi_note)",
+            "columnsCountToInsert" => 4
         ],
 
-        "customers" => [
-            "columnsToInsert" => "customers(o_date_time, c_name, c_phone_mcc, c_phone, c_address, c_postcode, c_city, c_state)",
-            "columnsCountToInsert" => 8
+        "ecolla_website_config" => [
+            "columnsToInsert" => "ecolla_website_config(config_name, congif_value, config_info)",
+            "columnsCountToInsert" => 3
         ]
 
     ];
@@ -127,17 +127,27 @@ class Model extends Dbh{
     /*  Select from database
         Syntax:
         dbSelectAll: SELECT * FROM {table name}
-        dbSelectColumn: SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        dbSelectRow: SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        dbSelectColumn: SELECT {attribute to select} FRM {table name} WHERE {attribute to search} = {attribute content to search}
         dbSelectAttribute: SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
-        dbSelectColumn_MultiSearch: SELECT * FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
+        dbSelectRow_MultiSearch: SELECT * FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
+        dbSelectColumn_MultiSearch: SELECT {attribute to select} FRM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
         dbSelectAttribute_MultiSearch: SELECT {attribute to select} FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
+        dbSelectCount: SELECT COUNT(*) FROM {table name}
+        dbSelectAttributeCount: SELECT COUNT(*) FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        dbSelectAttributeCount_MultiSearch: SELECT COUNT(*) FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
 
         Output: (To retrive the cell data)
         dbSelectAll: data[row(number)][column(column name)]
-        dbSelectColumn: data[row(number)][column(column name)]
+        dbSelectRow: data[row(number)][column(column name)]
+        dbSelectColumn: data[column(column name)]
         dbSelectAttribute: data (Auto use the first result as the main result)
-        dbSelectColumn_MultiSearch: data[row(number)][column(column name)]
+        dbSelectRow_MultiSearch: data[row(number)][column(column name)]
+        dbSelectColumn_MultiSearch: data[column(column name)]
         dbSelectAttribute_MultiSearch: data (Auto use the first result as the main result)
+        dbSelectCount: data count
+        dbSelectAttributeCount: data count
+        dbSelectAttributeCount_MultiSearch: data count
 
         Coming soon:
         1. Select function with clause ORDER BY
@@ -151,12 +161,24 @@ class Model extends Dbh{
         return $results;
     }
 
-    protected function dbSelectColumn($tableName, $attrToSearch, $attrContentToSearch){
+    protected function dbSelectRow($tableName, $attrToSearch, $attrContentToSearch){
         $sql = "SELECT * FROM ".$tableName." WHERE ".$attrToSearch." = ?";
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetchAll();
         return $results;
+    }
+
+    protected function dbSelectColumn($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
+        $sql = "SELECT ".$attrToSelect." FROM ".$tableName." WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        $columns = array();
+        foreach($results as $row){
+            array_push($columns, $row[$attrToSelect]);
+        }
+        return $columns;
     }
 
     protected function dbSelectAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
@@ -167,13 +189,26 @@ class Model extends Dbh{
         return $results[0][$attrToSelect];
     }
 
-    protected function dbSelectColumn_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
+    protected function dbSelectRow_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
         if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
         $sql = "SELECT * FROM ".$tableName." WHERE ".$this->clauseConnector($attrToSearchList, "AND");
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetchAll();
         return $results;
+    }
+
+    protected function dbSelectColumn_MultiSearch($tableName, $attrToSelect, $attrToSearchList, $attrContentToSearchList){
+        if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+        $sql = "SELECT ".$attrToSelect." FROM ".$tableName." WHERE ".$this->clauseConnector($attrToSearchList, "AND");
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        $columns = array();
+        foreach($results as $row){
+            array_push($columns, $row[$attrToSelect]);
+        }
+        return $columns;
     }
 
     protected function dbSelectAttribute_MultiSearch($tableName, $attrToSelect, $attrToSearchList, $attrContentToSearchList){

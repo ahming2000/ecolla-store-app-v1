@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 28, 2020 at 02:09 PM
+-- Generation Time: Nov 28, 2020 at 06:28 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -30,48 +30,62 @@ SET time_zone = "+00:00";
 DROP TABLE IF EXISTS `catogories`;
 CREATE TABLE IF NOT EXISTS `catogories` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
-  `i_id` int(11) NOT NULL,
   `cat_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`cat_id`),
-  KEY `catogories_FK_i_id` (`i_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  PRIMARY KEY (`cat_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `catogories`
 --
 
-INSERT INTO `catogories` (`cat_id`, `i_id`, `cat_name`) VALUES
-(1, 1, '饮料'),
-(2, 2, '零食'),
-(3, 3, '零食');
+INSERT INTO `catogories` (`cat_id`, `cat_name`) VALUES
+(1, '饮料'),
+(2, '零食'),
+(25, '素食'),
+(26, '小零食'),
+(27, '能量饮品');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `customers`
+-- Table structure for table `classifications`
 --
 
-DROP TABLE IF EXISTS `customers`;
-CREATE TABLE IF NOT EXISTS `customers` (
-  `c_id` int(11) NOT NULL AUTO_INCREMENT,
-  `o_date_time` datetime NOT NULL,
-  `c_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `c_phone_mcc` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT '+60',
-  `c_phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `c_address` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `c_postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `c_city` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `c_state` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+DROP TABLE IF EXISTS `classifications`;
+CREATE TABLE IF NOT EXISTS `classifications` (
+  `i_id` int(11) NOT NULL,
+  `cat_id` int(11) NOT NULL,
+  PRIMARY KEY (`i_id`,`cat_id`),
+  KEY `classifications_FK_cat_id` (`cat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `customers`
+-- Dumping data for table `classifications`
 --
 
-INSERT INTO `customers` (`c_id`, `o_date_time`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_postcode`, `c_city`, `c_state`) VALUES
-(1, '2020-11-28 13:46:37', 'KEE SHENG MING', '+60', '143892199', '12, Jalan Tasek 17, Bandar Seri Alam', '81750', 'Masai', 'Johor'),
-(2, '2020-11-28 13:47:48', 'KEE SHENG MING', '+60', '143892199', '12, Jalan Tasek 17, Bandar Seri Alam', '81750', 'Masai', 'Johor');
+INSERT INTO `classifications` (`i_id`, `cat_id`) VALUES
+(1, 1),
+(2, 2),
+(3, 2),
+(2, 25),
+(3, 25),
+(2, 26),
+(3, 26),
+(1, 27);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ecolla_website_config`
+--
+
+DROP TABLE IF EXISTS `ecolla_website_config`;
+CREATE TABLE IF NOT EXISTS `ecolla_website_config` (
+  `config_name` varchar(50) NOT NULL,
+  `config_value` varchar(200) NOT NULL,
+  `config_info` varchar(200) NOT NULL,
+  PRIMARY KEY (`config_name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -87,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `inventories` (
   `inv_quantity` int(11) NOT NULL,
   PRIMARY KEY (`inv_id`),
   KEY `inventories_FK_v_barcode` (`v_barcode`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `inventories`
@@ -108,7 +122,8 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (12, '6941025700084', '2021-01-01', 23),
 (13, '6941025700138', '2021-01-01', 12),
 (14, '6941025701074', '2021-01-01', 14),
-(15, '6941025702019', '2021-01-01', 10);
+(15, '6941025702019', '2021-01-01', 10),
+(41, '6902538004045', '2021-03-05', 100);
 
 -- --------------------------------------------------------
 
@@ -146,21 +161,23 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders` (
   `o_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `o_date_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `o_item_count` int(11) NOT NULL DEFAULT '0',
-  `o_subtotal` float NOT NULL DEFAULT '0',
-  `c_id` int(11) NOT NULL,
-  `o_delivery_id` varchar(20) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`o_id`) USING BTREE,
-  KEY `orders_FK_c_id` (`c_id`)
+  `o_delivery_id` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'This attribute will remain NULL before the order is being processed by admin.',
+  `c_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Since the website does not have customer registration, customer information will combine with this table.',
+  `c_phone_mcc` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT '+60',
+  `c_phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `c_address` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `c_postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `c_city` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `c_state` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`o_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`o_id`, `o_date_time`, `o_item_count`, `o_subtotal`, `c_id`, `o_delivery_id`) VALUES
-('ECOLLA20201128134637', '2020-11-28 13:46:37', 1, 1.2, 1, NULL),
-('ECOLLA20201128134748', '2020-11-28 13:47:48', 3, 6.72, 2, NULL);
+INSERT INTO `orders` (`o_id`, `o_date_time`, `o_delivery_id`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_postcode`, `c_city`, `c_state`) VALUES
+('ECOLLA20201128180356', '2020-11-28 18:03:56', NULL, 'KEE SHENG MING', '+60', '143892199', '12, Jalan Tasek 17, Bandar Seri Alam', '81750', 'Masai', 'Johor');
 
 -- --------------------------------------------------------
 
@@ -171,58 +188,20 @@ INSERT INTO `orders` (`o_id`, `o_date_time`, `o_item_count`, `o_subtotal`, `c_id
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE IF NOT EXISTS `order_items` (
   `o_id` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `s_id` int(11) NOT NULL,
+  `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `oi_quantity` int(11) NOT NULL DEFAULT '0',
-  KEY `order_items_FK_s_id` (`s_id`),
-  KEY `order_items_FK_o_id` (`o_id`)
+  `oi_note` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`o_id`,`v_barcode`),
+  KEY `order_items_FK_v_barcode` (`v_barcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `order_items`
 --
 
-INSERT INTO `order_items` (`o_id`, `s_id`, `oi_quantity`) VALUES
-('ECOLLA20201128134637', 14, 1),
-('ECOLLA20201128134748', 14, 1),
-('ECOLLA20201128134748', 14, 1),
-('ECOLLA20201128134748', 2, 1);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `specifications`
---
-
-DROP TABLE IF EXISTS `specifications`;
-CREATE TABLE IF NOT EXISTS `specifications` (
-  `s_id` int(11) NOT NULL AUTO_INCREMENT,
-  `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `i_id` int(11) NOT NULL,
-  PRIMARY KEY (`s_id`),
-  KEY `specifications_FK_i_id` (`i_id`),
-  KEY `specifications_FK_v_barcode` (`v_barcode`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `specifications`
---
-
-INSERT INTO `specifications` (`s_id`, `v_barcode`, `i_id`) VALUES
-(1, '6902538005141', 1),
-(2, '6902538004045', 1),
-(3, '6902538007381', 1),
-(4, '6902538007367', 1),
-(5, '6902538007886', 1),
-(6, '6902538007862', 1),
-(7, '6931754804900', 2),
-(8, '6931754804917', 2),
-(9, '6931754804931', 2),
-(10, '6931754805655', 2),
-(11, '6931754804924', 2),
-(12, '6941025700138', 3),
-(13, '6941025701074', 3),
-(14, '6941025700084', 3),
-(15, '6941025702019', 3);
+INSERT INTO `order_items` (`o_id`, `v_barcode`, `oi_quantity`, `oi_note`) VALUES
+('ECOLLA20201128180356', '6902538004045', 1, ''),
+('ECOLLA20201128180356', '6931754804900', 1, '');
 
 -- --------------------------------------------------------
 
@@ -239,39 +218,42 @@ CREATE TABLE IF NOT EXISTS `varieties` (
   `v_weight` float NOT NULL,
   `v_weight_unit` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
   `v_discount_rate` float NOT NULL DEFAULT '1',
-  PRIMARY KEY (`v_barcode`)
+  `i_id` int(11) NOT NULL,
+  PRIMARY KEY (`v_barcode`),
+  KEY `varieties_FK_i_id` (`i_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `varieties`
 --
 
-INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_name`, `v_price`, `v_weight`, `v_weight_unit`, `v_discount_rate`) VALUES
-('6902538004045', '青柠', '口味', 4.8, 600, 'ml', 0.9),
-('6902538005141', '水蜜桃', '口味', 4.8, 600, 'ml', 0.9),
-('6902538007367', '芒果', '口味', 4.8, 600, 'ml', 0.9),
-('6902538007381', '仙人掌青橘', '口味', 4.8, 600, 'ml', 0.9),
-('6902538007862', '竹子青提', '口味', 4.8, 500, 'ml', 0.9),
-('6902538007886', '卡曼橘', '口味', 4.8, 500, 'ml', 0.9),
-('6931754804900', '香辣味', '口味', 1.5, 26, 'g', 1),
-('6931754804917', '黑椒味', '口味', 1.5, 26, 'g', 1),
-('6931754804924', '山椒味', '口味', 1.5, 26, 'g', 1),
-('6931754804931', '烧烤味', '口味', 1.5, 26, 'g', 1),
-('6931754805655', '黑鸭味', '口味', 1.5, 26, 'g', 1),
-('6941025700084', '香辣', '口味', 1.2, 20, 'g', 1),
-('6941025700138', '盐焗', '口味', 1.2, 20, 'g', 1),
-('6941025701074', '卤蛋', '口味', 1.2, 20, 'g', 1),
-('6941025702019', '泡辣', '口味', 1.2, 20, 'g', 1);
+INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_name`, `v_price`, `v_weight`, `v_weight_unit`, `v_discount_rate`, `i_id`) VALUES
+('6902538004045', '青柠', '口味', 4.8, 600, 'ml', 0.9, 1),
+('6902538005141', '水蜜桃', '口味', 4.8, 600, 'ml', 0.9, 1),
+('6902538007367', '芒果', '口味', 4.8, 600, 'ml', 0.9, 1),
+('6902538007381', '仙人掌青橘', '口味', 4.8, 600, 'ml', 0.9, 1),
+('6902538007862', '竹子青提', '口味', 4.8, 500, 'ml', 0.9, 1),
+('6902538007886', '卡曼橘', '口味', 4.8, 500, 'ml', 0.9, 1),
+('6931754804900', '香辣味', '口味', 1.5, 26, 'g', 1, 2),
+('6931754804917', '黑椒味', '口味', 1.5, 26, 'g', 1, 2),
+('6931754804924', '山椒味', '口味', 1.5, 26, 'g', 1, 2),
+('6931754804931', '烧烤味', '口味', 1.5, 26, 'g', 1, 2),
+('6931754805655', '黑鸭味', '口味', 1.5, 26, 'g', 1, 2),
+('6941025700084', '香辣', '口味', 1.2, 20, 'g', 1, 3),
+('6941025700138', '盐焗', '口味', 1.2, 20, 'g', 1, 3),
+('6941025701074', '卤蛋', '口味', 1.2, 20, 'g', 1, 3),
+('6941025702019', '泡辣', '口味', 1.2, 20, 'g', 1, 3);
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `catogories`
+-- Constraints for table `classifications`
 --
-ALTER TABLE `catogories`
-  ADD CONSTRAINT `catogories_FK_i_id` FOREIGN KEY (`i_id`) REFERENCES `items` (`i_id`) ON DELETE CASCADE;
+ALTER TABLE `classifications`
+  ADD CONSTRAINT `classifications_FK_cat_id` FOREIGN KEY (`cat_id`) REFERENCES `catogories` (`cat_id`),
+  ADD CONSTRAINT `classifications_FK_i_id` FOREIGN KEY (`i_id`) REFERENCES `items` (`i_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `inventories`
@@ -280,24 +262,17 @@ ALTER TABLE `inventories`
   ADD CONSTRAINT `shelf_life_list_FK_v_barcode` FOREIGN KEY (`v_barcode`) REFERENCES `varieties` (`v_barcode`) ON DELETE CASCADE;
 
 --
--- Constraints for table `orders`
---
-ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_FK_c_id` FOREIGN KEY (`c_id`) REFERENCES `customers` (`c_id`) ON DELETE NO ACTION;
-
---
 -- Constraints for table `order_items`
 --
 ALTER TABLE `order_items`
   ADD CONSTRAINT `order_items_FK_o_id` FOREIGN KEY (`o_id`) REFERENCES `orders` (`o_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_items_FK_s_id` FOREIGN KEY (`s_id`) REFERENCES `specifications` (`s_id`) ON DELETE NO ACTION;
+  ADD CONSTRAINT `order_items_FK_v_barcode` FOREIGN KEY (`v_barcode`) REFERENCES `varieties` (`v_barcode`) ON DELETE CASCADE;
 
 --
--- Constraints for table `specifications`
+-- Constraints for table `varieties`
 --
-ALTER TABLE `specifications`
-  ADD CONSTRAINT `specifications_FK_i_id` FOREIGN KEY (`i_id`) REFERENCES `items` (`i_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `specifications_FK_v_barcode` FOREIGN KEY (`v_barcode`) REFERENCES `varieties` (`v_barcode`) ON DELETE CASCADE;
+ALTER TABLE `varieties`
+  ADD CONSTRAINT `varieties_FK_i_id` FOREIGN KEY (`i_id`) REFERENCES `items` (`i_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
