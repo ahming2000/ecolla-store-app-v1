@@ -5,7 +5,7 @@
 
         $item = new Item($_POST["name"], $_POST["brand"], $_POST["country"], isset($_POST["isListed"]) ? 1 : 0, 1);
         $v = new Variety($_POST["barcode1"], $_POST["property1"], $_POST["propertyName1"], $_POST["price1"], $_POST["weight1"], $_POST["weightUnit1"], 1.0);
-        $v->addShelfLife(new ShelfLife($_POST["expireDate1"], $_POST["inventory1"]));
+        $v->addShelfLife(new ShelfLife($_POST["expireDate1"], $_POST["quantity1"]));
         $item->addVariety($v);
         $item->addCatogory($_POST["catogory"]);
 
@@ -134,12 +134,12 @@
                                 <div class="col"><input type="date" class="form-control" name="expireDate1" aria-describedby="expireDate1" required></div>
                             </div>
                             <div class="row mr-3">
-                                <div class="col"><label for="inventory1">库存</label></div>
-                                <div class="col"><input type="number" class="form-control" name="inventory1" aria-describedby="inventory1" required></div>
+                                <div class="col"><label for="quantity1">库存</label></div>
+                                <div class="col"><input type="number" class="form-control" name="quantity1" aria-describedby="quantity1" required></div>
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-secondary mb-3" id="extraShelfLife" disabled>添加过期日期</button>
+                        <button type="button" class="btn btn-secondary mb-3" id="extraInventory" disabled>添加过期日期</button>
 
                     </div>
 

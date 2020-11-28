@@ -20,8 +20,11 @@
                     $view = new View();
                     $itemList = $view->getAllItems();
 
+
+
                     foreach($itemList as $i){
                         $item = $i;
+                        $i_id = $view->getItemId($item);
                         if($item->isListed()){
                             include "assets/block-user-page/item-block.php";
                         }

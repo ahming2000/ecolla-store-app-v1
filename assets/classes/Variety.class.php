@@ -1,6 +1,6 @@
 <?php
 
-class Variety implements JsonSerializable {
+class Variety {
 
     //Standard variable
     private $barcode; //string //Unique
@@ -12,7 +12,7 @@ class Variety implements JsonSerializable {
     private $discountRate; //Float //Default: 1.0
 
     //Array variable
-    private $shelfLifeList; //Array //ShelfLife object
+    private $inventories; //Array //Inventory object
 
     public function __construct($barcode, $property, $propertyName, $price, $weight, $weightUnit, $discountRate){
         $this->barcode = $barcode;
@@ -23,32 +23,19 @@ class Variety implements JsonSerializable {
         $this->weightUnit = $weightUnit;
         is_numeric($discountRate) ? $this->discountRate = $discountRate : $this->discountRate = 1.0;
 
-        $this->shelfLifeList = array();
+        $this->inventories = array();
     }
 
-    //Not in use //Didn't modify for the changes - 20/11/2020
-    public function jsonSerialize(){
-        return [
-            'barcode' => $this->barcode,
-            'property' => $this->property,
-            'propertyName' => $this->propertyName,
-            'price' => $this->price,
-            'weight' => $this->weight,
-            'weightUnit' => $this->weightUnit,
-            'discountRate' => $this->discountRate
-        ];
+    public function addInventory($inventory){
+        array_push($this->inventories, $inventory);
     }
 
-    public function addShelfLife($shelfLife){
-        array_push($this->shelfLifeList, $shelfLife);
+    public function removeInventory($index){
+        UsefulFunction::removeArrayElementI($this->inventories, $index);
     }
 
-    public function removeShelfLife($index){
-        UsefulFunction::removeArrayElementI($this->shelfLifeList, $index);
-    }
-
-    public function getShelfLifeList(){
-        return $this->shelfLifeList;
+    public function getInventories(){
+        return $this->inventories;
     }
 
     public function getBarcode(){

@@ -1,9 +1,8 @@
 <?php
 
-class Item implements JsonSerializable {
+class Item {
 
     //Standard variable
-    private $id; //Unique //Generate after insert into database
     private $name; //String
     private $brand; //String
     private $country; //String
@@ -28,21 +27,6 @@ class Item implements JsonSerializable {
         $this->varieties = array();
 
         $this->catogoryCount = 0;
-    }
-
-    //Not in use
-    public function jsonSerialize(){
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'catogory' => $this->catogory,
-            'brand' => $this->brand,
-            'country' => $this->country,
-            'isListed' => $this->isListed,
-            'catogories' => $this->catogories,
-            'varieties' => UsefulFunction::jsonSerializeArray($this->varieties),
-            'catogoryCount' => $this->catogoryCount
-        ];
     }
 
     public function addCatogory($catogory){

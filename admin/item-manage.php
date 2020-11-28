@@ -107,8 +107,8 @@
                 }
 
                 document.location.href = "item-edit.php?" +
-                "itemName=" + myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML;
-                // "itemBrand=" + "myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML";
+                "itemName=" + myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML + "&" +
+                "itemBrand=" + myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML;
             }
 
             function deleteButtonClicked(){

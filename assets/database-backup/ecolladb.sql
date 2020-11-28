@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 28, 2020 at 08:48 AM
+-- Generation Time: Nov 28, 2020 at 02:09 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -54,6 +54,7 @@ INSERT INTO `catogories` (`cat_id`, `i_id`, `cat_name`) VALUES
 DROP TABLE IF EXISTS `customers`;
 CREATE TABLE IF NOT EXISTS `customers` (
   `c_id` int(11) NOT NULL AUTO_INCREMENT,
+  `o_date_time` datetime NOT NULL,
   `c_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `c_phone_mcc` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT '+60',
   `c_phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
@@ -62,7 +63,15 @@ CREATE TABLE IF NOT EXISTS `customers` (
   `c_city` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `c_state` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`c_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`c_id`, `o_date_time`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_postcode`, `c_city`, `c_state`) VALUES
+(1, '2020-11-28 13:46:37', 'KEE SHENG MING', '+60', '143892199', '12, Jalan Tasek 17, Bandar Seri Alam', '81750', 'Masai', 'Johor'),
+(2, '2020-11-28 13:47:48', 'KEE SHENG MING', '+60', '143892199', '12, Jalan Tasek 17, Bandar Seri Alam', '81750', 'Masai', 'Johor');
 
 -- --------------------------------------------------------
 
@@ -113,8 +122,8 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `i_brand` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `i_country` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `i_isListed` tinyint(1) NOT NULL,
-  `i_imgCount` int(11) NOT NULL,
+  `i_is_listed` tinyint(1) NOT NULL,
+  `i_image_count` int(11) NOT NULL,
   PRIMARY KEY (`i_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -122,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `items` (
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`i_id`, `i_name`, `i_brand`, `i_country`, `i_isListed`, `i_imgCount`) VALUES
+INSERT INTO `items` (`i_id`, `i_name`, `i_brand`, `i_country`, `i_is_listed`, `i_image_count`) VALUES
 (1, '维生素功能饮料', '脉动', '中国', 1, 4),
 (2, '手撕素肉排', '好味屋', '中国', 1, 5),
 (3, '鹌鹑蛋', '湖湘贡', '中国', 1, 5);
@@ -145,6 +154,14 @@ CREATE TABLE IF NOT EXISTS `orders` (
   KEY `orders_FK_c_id` (`c_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`o_id`, `o_date_time`, `o_item_count`, `o_subtotal`, `c_id`, `o_delivery_id`) VALUES
+('ECOLLA20201128134637', '2020-11-28 13:46:37', 1, 1.2, 1, NULL),
+('ECOLLA20201128134748', '2020-11-28 13:47:48', 3, 6.72, 2, NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -153,14 +170,22 @@ CREATE TABLE IF NOT EXISTS `orders` (
 
 DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE IF NOT EXISTS `order_items` (
-  `oi_id` int(11) NOT NULL AUTO_INCREMENT,
   `o_id` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `s_id` int(11) NOT NULL,
   `oi_quantity` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`oi_id`),
   KEY `order_items_FK_s_id` (`s_id`),
   KEY `order_items_FK_o_id` (`o_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`o_id`, `s_id`, `oi_quantity`) VALUES
+('ECOLLA20201128134637', 14, 1),
+('ECOLLA20201128134748', 14, 1),
+('ECOLLA20201128134748', 14, 1),
+('ECOLLA20201128134748', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -209,11 +234,11 @@ DROP TABLE IF EXISTS `varieties`;
 CREATE TABLE IF NOT EXISTS `varieties` (
   `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `v_property` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `v_propertyName` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `v_property_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `v_price` float NOT NULL,
   `v_weight` float NOT NULL,
-  `v_weightUnit` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `v_discountRate` float NOT NULL DEFAULT '1',
+  `v_weight_unit` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `v_discount_rate` float NOT NULL DEFAULT '1',
   PRIMARY KEY (`v_barcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -221,8 +246,7 @@ CREATE TABLE IF NOT EXISTS `varieties` (
 -- Dumping data for table `varieties`
 --
 
-INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_propertyName`, `v_price`, `v_weight`, `v_weightUnit`, `v_discountRate`) VALUES
-('1234567890', '阿铭味', '口味', 1007, 65, 'kg', 1.5),
+INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_name`, `v_price`, `v_weight`, `v_weight_unit`, `v_discount_rate`) VALUES
 ('6902538004045', '青柠', '口味', 4.8, 600, 'ml', 0.9),
 ('6902538005141', '水蜜桃', '口味', 4.8, 600, 'ml', 0.9),
 ('6902538007367', '芒果', '口味', 4.8, 600, 'ml', 0.9),

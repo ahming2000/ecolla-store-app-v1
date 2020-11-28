@@ -2,17 +2,8 @@
 <?php $cart = new Cart(); ?>
 <?php
     if(isset($_POST["submit"])){
-        $customer = array(
-            "name" => $_POST["nameInput"],
-            "phone" => $_POST["phoneNumberInputHead"].$_POST["phoneNumberInputTail"],
-            "address" => $_POST["addressInputLine"],
-            "postcode" => $_POST["addressInputPostalCode"],
-            "city" => $_POST["addressInputCity"],
-            "state" => $_POST["addressInputState"],
-            "receiptPath" => "example path"
-        );
 
-        //To-do: debug the problem of same s_id insert to the database and same o_id as previous
+        $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["addressInputLine"], $_POST["addressInputPostalCode"], $_POST["addressInputCity"], $_POST["addressInputState"]);
         $order = new Order($customer);
         $order->createOrder($cart);
     }

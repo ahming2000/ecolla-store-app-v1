@@ -27,12 +27,12 @@ class Model extends Dbh{
     private $DATABASE_TABLE = [
 
         "items" => [
-            "columnsToInsert" => "items(i_name, i_brand, i_country, i_isListed, i_imgCount)",
+            "columnsToInsert" => "items(i_name, i_brand, i_country, i_is_listed, i_image_count)",
             "columnsCountToInsert" => 5
         ],
 
         "varieties" => [
-            "columnsToInsert" => "varieties(v_barcode, v_property, v_propertyName, v_price, v_weight, v_weightUnit, v_discountRate)",
+            "columnsToInsert" => "varieties(v_barcode, v_property, v_property_name, v_price, v_weight, v_weight_unit, v_discount_rate)",
             "columnsCountToInsert" => 7
         ],
 
@@ -62,8 +62,8 @@ class Model extends Dbh{
         ],
 
         "customers" => [
-            "columnsToInsert" => "customers(c_name, c_phone_mcc, c_phone, c_address, c_postcode, c_city, c_state)",
-            "columnsCountToInsert" => 7
+            "columnsToInsert" => "customers(o_date_time, c_name, c_phone_mcc, c_phone, c_address, c_postcode, c_city, c_state)",
+            "columnsCountToInsert" => 8
         ]
 
     ];
@@ -101,7 +101,7 @@ class Model extends Dbh{
         $str = $attrArray[0]." = ?";
 
         for($i = 1; $i < sizeof($attrArray); $i++){
-            $str = $str." ".$saperateWith." ".$attrArray[$i]." = ?";
+            $str = $str." ".$clause." ".$attrArray[$i]." = ?";
         }
         return $str;
     }
@@ -143,7 +143,7 @@ class Model extends Dbh{
         1. Select function with clause ORDER BY
         2. Select function with combined table
     */
-    protected function dbSelectAll($tablename){
+    protected function dbSelectAll($tableName){
         $sql = "SELECT * FROM ".$tableName;
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute()) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
@@ -168,8 +168,8 @@ class Model extends Dbh{
     }
 
     protected function dbSelectColumn_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
-        if(sizeof($attrToSearchList) === sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-        $sql = "SELECT * FROM ".$tableName." WHERE ".clauseConnector($attrToSearchList, "AND");
+        if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+        $sql = "SELECT * FROM ".$tableName." WHERE ".$this->clauseConnector($attrToSearchList, "AND");
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetchAll();
@@ -177,8 +177,8 @@ class Model extends Dbh{
     }
 
     protected function dbSelectAttribute_MultiSearch($tableName, $attrToSelect, $attrToSearchList, $attrContentToSearchList){
-        if(sizeof($attrToSearchList) === sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-        $sql = "SELECT ".$attrToSelect." FROM ".$tableName." WHERE ".clauseConnector($attrToSearchList, "AND");
+        if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+        $sql = "SELECT ".$attrToSelect." FROM ".$tableName." WHERE ".$this->clauseConnector($attrToSearchList, "AND");
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetchAll();
@@ -189,6 +189,23 @@ class Model extends Dbh{
         $sql = "SELECT COUNT(*) AS count FROM ".$tableName;
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute()) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetch();
+        return $results[0]['count'];
+    }
+
+    protected function dbSelectAttributeCount($tableName, $attrToSearch, $attrContentToSearch){
+        $sql = "SELECT COUNT(*) AS count FROM ".$tableName." WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetch();
+        return $results[0]['count'];
+    }
+
+    protected function dbSelectAttributeCount_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
+        if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+        $sql = "SELECT COUNT(*) AS count FROM ".$tableName." WHERE ".$this->clauseConnector($attrToSearchList, "AND");
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetch();
         return $results[0]['count'];
     }
