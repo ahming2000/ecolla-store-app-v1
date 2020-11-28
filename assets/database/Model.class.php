@@ -3,6 +3,10 @@
 /*  MVC Model Version: v0.1.0-alpha (To be released)
  *  Created by AhMing
  *  Github: https://github.com/ahming2000
+ *
+ *  Changing Log:
+ *  1. Now you can insert table with one function, less confusion on inserting table.
+ *  2.
  */
 
 require_once __DIR__."\\Dbh.class.php";
@@ -11,7 +15,7 @@ class Model extends Dbh{
 
     //To-do:
     // 1. Logging to file for every function
-    // 2. Create dynamic way on declaring table attribute
+    // 2. Create dynamic way on declaring table attribute outside of this class
 
 
 
@@ -21,39 +25,45 @@ class Model extends Dbh{
         Notice: PLEASE DEFINE YOUR TABLE ATTRIBUTE OVER HERE!
     */
     private $DATABASE_TABLE = [
+
         "items" => [
-            "columns" => "items(i_name, i_brand, i_country, i_isListed, i_imgCount)",
+            "columnsToInsert" => "items(i_name, i_brand, i_country, i_isListed, i_imgCount)",
             "columnsCountToInsert" => 5
         ],
 
         "varieties" => [
-            "columns" => "varieties(v_barcode, v_property, v_propertyName, v_price, v_weight, v_weightUnit, v_discountRate)",
+            "columnsToInsert" => "varieties(v_barcode, v_property, v_propertyName, v_price, v_weight, v_weightUnit, v_discountRate)",
             "columnsCountToInsert" => 7
         ],
 
         "catogories" => [
-            "columns" => "catogories(i_id, cat_name)",
+            "columnsToInsert" => "catogories(i_id, cat_name)",
             "columnsCountToInsert" => 2
         ],
 
-        "shelf_life_list" => [
-            "columns" => "shelf_life_list(v_barcode, sll_expireDate, sll_inventory)",
+        "inventories" => [
+            "columnsToInsert" => "inventories(v_barcode, inv_expire_date, inv_quantity)",
             "columnsCountToInsert" => 3
         ],
 
         "specifications" => [
-            "columns" => "specifications(v_barcode, i_id)",
+            "columnsToInsert" => "specifications(v_barcode, i_id)",
             "columnsCountToInsert" => 2
         ],
 
         "orders" => [
-            "columns" => "orders(o_date_time, o_item_count, c_name, c_phone, c_address, c_postcode, c_city, c_state, c_receiptPath, o_subtotal)",
-            "columnsCountToInsert" => 10
+            "columnsToInsert" => "orders(o_id, o_date_time, o_item_count, o_subtotal, c_id)",
+            "columnsCountToInsert" => 5
         ],
 
         "order_items" => [
-            "columns" => "order_items(o_date_time, s_id, quantity)",
+            "columnsToInsert" => "order_items(o_id, s_id, oi_quantity)",
             "columnsCountToInsert" => 3
+        ],
+
+        "customers" => [
+            "columnsToInsert" => "customers(c_name, c_phone_mcc, c_phone, c_address, c_postcode, c_city, c_state)",
+            "columnsCountToInsert" => 7
         ]
 
     ];
@@ -105,7 +115,7 @@ class Model extends Dbh{
         dbInsert: INSERT INTO {table name} VALUE({number of '?' is equal to nnumber of column of the table})
     */
     protected function dbInsert($tableName, $data){
-        $sql = "INSERT INTO ".$this->DATABASE_TABLE[$tableName]["columns"]." VALUE(".$this->concatToStrChar('?', ', ', $this->DATABASE_TABLE[$tableName]["columnsCountToInsert"]).")";
+        $sql = "INSERT INTO ".$this->DATABASE_TABLE[$tableName]["columnsToInsert"]." VALUE(".$this->concatToStrChar('?', ', ', $this->DATABASE_TABLE[$tableName]["columnsCountToInsert"]).")";
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute($data)) die("Database inserting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
     }
