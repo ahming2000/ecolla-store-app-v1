@@ -17,6 +17,7 @@
         <table class="table" id="item-table">
             <thead>
                 <tr>
+                    <th scope="col">订单ID</th>
                     <th scope="col">订单日期时间</th>
                     <th scope="col">顾客资料资料</th>
                     <th scope="col">订单物品列表</th>

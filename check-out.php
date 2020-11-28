@@ -5,7 +5,10 @@
 
         $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["addressInputLine"], $_POST["addressInputPostalCode"], $_POST["addressInputCity"], $_POST["addressInputState"]);
         $order = new Order($customer);
-        $order->createOrder($cart);
+        $order->orderNow($cart);
+        
+        $controller = new Controller();
+        $controller->insertNewOrder($order);
     }
 ?>
 <!DOCTYPE html>

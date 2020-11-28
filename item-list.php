@@ -16,6 +16,14 @@
         <div class="container mt-5">
             <div class="row">
 
+                <form action="item-list.php" method="get">
+                    <select name="catogory" class="custom-select mb-3">
+                        <option selected>打开选单选择类别/标签...</option>
+                        <option value="饮料">饮料</option>
+                        <option value="小零食">小零食</option>
+                    </select>
+                </form>
+
                 <?php
                     $view = new View();
                     $itemList = $view->getAllItems();
@@ -26,7 +34,17 @@
                         $item = $i;
                         $i_id = $view->getItemId($item);
                         if($item->isListed()){
-                            include "assets/block-user-page/item-block.php";
+                            if(isset($_GET["catogory"])){
+                                foreach($i->getCatogories() as $catogory){
+                                    if($catogory == $_GET["catogory"]){
+                                        include "assets/block-user-page/item-block.php";
+                                        break;
+                                    }
+                                }
+                            } else{
+                                include "assets/block-user-page/item-block.php";
+                            }
+
                         }
                     }
 
