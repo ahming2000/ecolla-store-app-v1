@@ -35,6 +35,17 @@ class UsefulFunction{
         return (substr($string, 0, $len) === $startString);
     }
 
+    public static function isExisted($arr, $element){
+        foreach($arr as $a){
+            if($a === $element){
+                return true;
+            } else{
+                return false;
+            }
+
+        }
+    }
+
 }
 
 ?>
