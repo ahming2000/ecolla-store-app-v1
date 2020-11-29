@@ -8,6 +8,7 @@
             if($count > 0){
                 setcookie("username", $_POST["username"], time() + 7200, "/admin/");
                 header("location: index.php");
+                die(); //To improve security
             } else{
                 echo "Wrong user or password!"."<br>";
             }
