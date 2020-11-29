@@ -225,7 +225,7 @@ class Model extends Dbh{
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute()) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetch();
-        return $results[0]['count'];
+        return $results['count'];
     }
 
     protected function dbSelectAttributeCount($tableName, $attrToSearch, $attrContentToSearch){
@@ -233,7 +233,7 @@ class Model extends Dbh{
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetch();
-        return $results[0]['count'];
+        return $results['count'];
     }
 
     protected function dbSelectAttributeCount_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
@@ -242,7 +242,7 @@ class Model extends Dbh{
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetch();
-        return $results[0]['count'];
+        return $results['count'];
     }
 
 

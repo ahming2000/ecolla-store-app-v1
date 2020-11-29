@@ -1,4 +1,5 @@
 <?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
+<?php if(!isset($_COOKIE["username"])) header("location: login.php"); ?>
 <?php $view = new View(); $orderList = $view->getAllOrders(); ?>
 <!DOCTYPE html>
 <html>

@@ -114,6 +114,10 @@ class Controller extends Model {
         }
 
     }
+
+    public function checkUserPassword($username, $password){
+        return $this->dbSelectAttributeCount_MultiSearch("users", ["user_name", "user_password"], [$username, $password]);
+    }
 }
 
 ?>
