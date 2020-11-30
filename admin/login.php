@@ -4,9 +4,8 @@
 
     if(isset($_POST["login"])){
         if(!empty($_POST["username"]) && !empty($_POST["password"])){
-            $count = $controller->checkUserPassword($_POST["username"], $_POST["password"]);
-            if($count > 0){
-                setcookie("username", $_POST["username"], time() + 7200, "/admin/");
+            if($controller->checkUserPassword($_POST["username"], $_POST["password"])){
+                setcookie("username", $_POST["username"], time() + 3600, "/admin/");
                 header("location: index.php");
                 die(); //To improve security
             } else{

@@ -64,6 +64,11 @@ class Model extends Dbh{
         "ecolla_website_config" => [
             "columnsToInsert" => "ecolla_website_config(config_name, congif_value, config_info)",
             "columnsCountToInsert" => 3
+        ],
+
+        "users" => [
+            "columnsToInsert" => "users(user_name, user_password)",
+            "columnsCountToInsert" => 2
         ]
 
     ];

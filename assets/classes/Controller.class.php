@@ -116,7 +116,15 @@ class Controller extends Model {
     }
 
     public function checkUserPassword($username, $password){
-        return $this->dbSelectAttributeCount_MultiSearch("users", ["user_name", "user_password"], [$username, $password]);
+        $results = $this->dbSelectRow("users", "user_name", $username);
+        if(count($results) > 0 && password_verify($password, $results[0]["user_password"])){
+            return true;
+        }
+        return false;
+    }
+
+    public function registerAccount(){
+        $this->dbInsert("users", ["ahming", password_hash("Ksm10072000", PASSWORD_BCRYPT)]);
     }
 }
 
