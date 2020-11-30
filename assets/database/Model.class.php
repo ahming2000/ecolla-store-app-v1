@@ -52,8 +52,8 @@ class Model extends Dbh{
         ],
 
         "orders" => [
-            "columnsToInsert" => "orders(o_id, o_date_time, c_name, c_phone_mcc, c_phone, c_address, c_postcode, c_city, c_state)",
-            "columnsCountToInsert" => 9
+            "columnsToInsert" => "orders(o_id, o_date_time, c_name, c_phone_mcc, c_phone, c_address)",
+            "columnsCountToInsert" => 6
         ],
 
         "order_items" => [

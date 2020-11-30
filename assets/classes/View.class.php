@@ -165,7 +165,7 @@ class View extends Model{
 
             }
 
-            $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"], $o["c_postcode"], $o["c_city"], $o["c_state"]);
+            $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"]);
             $order = new Order($customer);
             $order->importOrder($o["o_date_time"], $o["o_id"], $cart, $o["o_delivery_id"]);
 
@@ -179,6 +179,14 @@ class View extends Model{
         return $this->dbSelectAttribute("orders", "o_delivery_id", "o_id", $orderId);
     }
 
+    public function getCatogoryList(){
+        $results = $this->dbSelectAll("catogories");
+        $catArray = array();
+        foreach($results as $result){
+            array_push($catArray, $result);
+        }
+        return $catArray;
+    }
 
 }
 

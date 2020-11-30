@@ -102,7 +102,7 @@ class Controller extends Model {
 
     public function insertNewOrder($order){ //$order
 
-        $order_ready = [$order->getOrderId(), $order->getDateTime(), $order->getCustomer()->getName(), $order->getCustomer()->getPhoneMMC(), $order->getCustomer()->getPhone(), $order->getCustomer()->getAddress(), $order->getCustomer()->getPostcode(), $order->getCustomer()->getCity(), $order->getCustomer()->getState()];
+        $order_ready = [$order->getOrderId(), $order->getDateTime(), $order->getCustomer()->getName(), $order->getCustomer()->getPhoneMMC(), $order->getCustomer()->getPhone(), $order->getCustomer()->getAddress()];
         $this->dbInsert("orders", $order_ready);
 
         foreach($order->getCart()->getCartItems() as $cartItem){
@@ -123,6 +123,7 @@ class Controller extends Model {
         return false;
     }
 
+    // Static function to call
     public function registerAccount(){
         $this->dbInsert("users", ["ahming", password_hash("Ksm10072000", PASSWORD_BCRYPT)]);
     }

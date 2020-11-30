@@ -6,18 +6,12 @@ class Customer {
     private $phoneMMC;
     private $phone;
     private $address;
-    private $postcode;
-    private $city;
-    private $state;
 
-    public function __construct($name, $phoneMMC, $phone, $address, $postcode, $city, $state){
+    public function __construct($name, $phoneMMC, $phone, $address){
         $this->name = $name;
         $this->phoneMMC = $phoneMMC;
         $this->phone = $phone;
         $this->address = $address;
-        $this->postcode = $postcode;
-        $this->city = $city;
-        $this->state = $state;
     }
 
     public function getName() {
@@ -53,33 +47,6 @@ class Customer {
 
     public function setAddress($address) {
         $this->address = $address;
-        return $this;
-    }
-
-    public function getPostcode() {
-        return $this->postcode;
-    }
-
-    public function setPostcode($postcode) {
-        $this->postcode = $postcode;
-        return $this;
-    }
-
-    public function getCity() {
-        return $this->city;
-    }
-
-    public function setCity($city) {
-        $this->city = $city;
-        return $this;
-    }
-
-    public function getState() {
-        return $this->state;
-    }
-
-    public function setState($state) {
-        $this->state = $state;
         return $this;
     }
 }
