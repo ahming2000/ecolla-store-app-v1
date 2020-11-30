@@ -6,9 +6,12 @@
         $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["addressInputLine"], $_POST["addressInputPostalCode"], $_POST["addressInputCity"], $_POST["addressInputState"]);
         $order = new Order($customer);
         $order->orderNow($cart);
-        
+
+        UsefulFunction::uploadReceipt($_FILES["receipt"], $order->getOrderId());
+
         $controller = new Controller();
         $controller->insertNewOrder($order);
+        header("location: order-tracking.php?orderId=".$order->getOrderId());
     }
 ?>
 <!DOCTYPE html>
@@ -25,7 +28,7 @@
 
             <div class="h1">结账界面</div>
 
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="nameInput">名字/昵称</label>
                     <input type="text" class="form-control" name="nameInput" aria-describedby="nameHelp" placeholder="e.g. Alex Lee" required>
@@ -58,10 +61,10 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="receiptUpload">上传收据</label>
+                    <label>上传收据</label>
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" id="customFile">
-                        <label class="custom-file-label" for="customFile">请上传您的收据</label>
+                        <input type="file" class="custom-file-input" name="receipt" id="receipt">
+                        <label class="custom-file-label" for="receipt" data-browse="上传">请上传您的收据</label>
                     </div>
                 </div>
                 <input class="btn btn-primary btn-block" type="submit" value="提交" name="submit">
@@ -70,6 +73,11 @@
         </div>
 
         <?php include "assets/block-user-page/footer.php"; ?>
+        <script>
+        $(document).ready(function () {
+            bsCustomFileInput.init() //For file uploaded name to show
+        })
+        </script>
 
     </body>
 </html>
