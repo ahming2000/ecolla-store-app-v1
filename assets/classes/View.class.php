@@ -175,6 +175,10 @@ class View extends Model{
         return $orders;
     }
 
+    public function getDeliveryId($orderId){
+        return $this->dbSelectAttribute("orders", "o_delivery_id", "o_id", $orderId);
+    }
+
 
 }
 

@@ -6,6 +6,7 @@
         $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["addressInputLine"], $_POST["addressInputPostalCode"], $_POST["addressInputCity"], $_POST["addressInputState"]);
         $order = new Order($customer);
         $order->orderNow($cart);
+        $cart->resetCart();
 
         UsefulFunction::uploadReceipt($_FILES["receipt"], $order->getOrderId());
 
