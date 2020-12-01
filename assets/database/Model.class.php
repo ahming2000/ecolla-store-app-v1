@@ -27,8 +27,8 @@ class Model extends Dbh{
     private $DATABASE_TABLE = [
 
         "items" => [
-            "columnsToInsert" => "items(i_name, i_brand, i_country, i_is_listed, i_image_count)",
-            "columnsCountToInsert" => 5
+            "columnsToInsert" => "items(i_name, i_desc, i_brand, i_country, i_is_listed, i_image_count)",
+            "columnsCountToInsert" => 6
         ],
 
         "varieties" => [

@@ -4,6 +4,7 @@ class Item {
 
     //Standard variable
     private $name; //String
+    private $description; //String
     private $brand; //String
     private $country; //String
     private $isListed; //Boolean
@@ -16,8 +17,9 @@ class Item {
     //Utility variable
     private $catogoryCount; //Integer
 
-    public function __construct($name, $brand, $country, $isListed, $imgCount){
+    public function __construct($name, $description, $brand, $country, $isListed, $imgCount){
         $this->name = $name;
+        $this->description = $description;
         $this->brand = $brand;
         $this->country = $country;
         $this->isListed = $isListed;
@@ -47,62 +49,86 @@ class Item {
         UsefulFunction::removeArrayElementI($this->varieties, $index);
     }
 
-    public function getID(){
-        return $this->id;
-    }
-
-    public function getName(){
+    public function getName() {
         return $this->name;
     }
 
-    public function getBrand(){
+    public function setName($name) {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setDescription($description) {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getBrand() {
         return $this->brand;
     }
 
-    public function getCountry(){
+    public function setBrand($brand) {
+        $this->brand = $brand;
+        return $this;
+    }
+
+    public function getCountry() {
         return $this->country;
     }
 
-    public function isListed(){
+    public function setCountry($country) {
+        $this->country = $country;
+        return $this;
+    }
+
+    public function getIsListed() {
         return $this->isListed;
     }
 
-    public function getImgCount(){
+    public function setIsListed($isListed) {
+        $this->isListed = $isListed;
+        return $this;
+    }
+
+    public function getImgCount() {
         return $this->imgCount;
     }
 
-    public function setName($name){
-        $this->name = $name;
-    }
-
-    public function setBrand($brand){
-        $this->brand = $brand;
-    }
-
-    public function setListed($isListed){
-        $this->isListed = $isListed;
-    }
-
-    public function setImgCount($imgCount){
+    public function setImgCount($imgCount) {
         $this->imgCount = $imgCount;
+        return $this;
     }
 
-    public function setID($id){
-        $this->id = $id;
-    }
-
-    public function getCatogories(){
+    public function getCatogories() {
         return $this->catogories;
     }
 
-    public function getVarieties(){
+    public function setCatogories($catogories) {
+        $this->catogories = $catogories;
+        return $this;
+    }
+
+    public function getVarieties() {
         return $this->varieties;
     }
 
-    public function getCatogoryCount(){
+    public function setVarieties($varieties) {
+        $this->varieties = $varieties;
+        return $this;
+    }
+
+    public function getCatogoryCount() {
         return $this->catogoryCount;
     }
 
+    public function setCatogoryCount($catogoryCount) {
+        $this->catogoryCount = $catogoryCount;
+        return $this;
+    }
 }
 
 ?>
