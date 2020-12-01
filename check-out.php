@@ -12,7 +12,7 @@
 
         $controller = new Controller();
         $controller->insertNewOrder($order);
-        header("location: order-tracking.php?orderId=".$order->getOrderId());
+        header("location: order-tracking.php?orderId=".$order->getOrderId()."&checkOut=1");
     }
 ?>
 <!DOCTYPE html>
@@ -45,20 +45,7 @@
                 <div class="form-row">
                     <div class="col-12 mb-3">
                         <label for="addressInputLine">地址</label>
-                        <input type="text" class="form-control" name="addressInputLine" placeholder="e.g. 123, Jalan 20, Taman Baru" required>
-                    </div>
-
-                    <div class="col-4 mb-3">
-                        <label for="addressInputPostalCode">邮政编码（Postcode）</label>
-                        <input type="text" class="form-control" name="addressInputPostalCode" placeholder="e.g. 81000" required>
-                    </div>
-                    <div class="col-4 mb-3">
-                        <label for="addressInputCity">城市（City）</label>
-                        <input type="text" class="form-control" name="addressInputCity" placeholder="e.g. Kampar" required>
-                    </div>
-                    <div class="col-4 mb-3">
-                        <label for="addressInputState">州属（State）</label>
-                        <input type="text" class="form-control" name="addressInputState" placeholder="e.g. Perak" required>
+                        <input type="text" class="form-control" name="addressInputLine" placeholder="e.g. 123, Jalan 20, Taman Baru, 82000 Kampar, Perak" required>
                     </div>
                 </div>
                 <div class="form-group">
@@ -68,7 +55,7 @@
                         <label class="custom-file-label" for="receipt" data-browse="上传">请上传您的收据</label>
                     </div>
                 </div>
-                <input class="btn btn-primary btn-block" type="submit" value="提交" name="submit">
+                <div class="text-center"><input class="btn btn-primary" type="submit" value="提交" name="submit" style="width: 200px"></div>
             </form>
 
         </div>
