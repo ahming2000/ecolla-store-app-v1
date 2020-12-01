@@ -6,7 +6,7 @@
 
         $item = new Item($_POST["name"], $_POST["brand"], $_POST["country"], isset($_POST["isListed"]) ? 1 : 0, 1);
         $v = new Variety($_POST["barcode1"], $_POST["property1"], $_POST["propertyName1"], $_POST["price1"], $_POST["weight1"], $_POST["weightUnit1"], 1.0);
-        $v->addShelfLife(new ShelfLife($_POST["expireDate1"], $_POST["quantity1"]));
+        $v->addInventory(new Inventory($_POST["expireDate1"], $_POST["quantity1"]));
         $item->addVariety($v);
         $item->addCatogory($_POST["catogory"]);
 
