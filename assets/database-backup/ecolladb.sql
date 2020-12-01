@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Nov 28, 2020 at 06:28 PM
+-- Generation Time: Dec 01, 2020 at 01:50 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `catogories` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `catogories`
@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `classifications` (
 
 INSERT INTO `classifications` (`i_id`, `cat_id`) VALUES
 (1, 1),
+(4, 1),
 (2, 2),
 (3, 2),
 (2, 25),
@@ -101,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `inventories` (
   `inv_quantity` int(11) NOT NULL,
   PRIMARY KEY (`inv_id`),
   KEY `inventories_FK_v_barcode` (`v_barcode`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `inventories`
@@ -123,7 +124,8 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (13, '6941025700138', '2021-01-01', 12),
 (14, '6941025701074', '2021-01-01', 14),
 (15, '6941025702019', '2021-01-01', 10),
-(41, '6902538004045', '2021-03-05', 100);
+(41, '6902538004045', '2021-03-05', 100),
+(42, '6954645911153', '2020-11-20', 10);
 
 -- --------------------------------------------------------
 
@@ -140,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_is_listed` tinyint(1) NOT NULL,
   `i_image_count` int(11) NOT NULL,
   PRIMARY KEY (`i_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `items`
@@ -149,7 +151,8 @@ CREATE TABLE IF NOT EXISTS `items` (
 INSERT INTO `items` (`i_id`, `i_name`, `i_brand`, `i_country`, `i_is_listed`, `i_image_count`) VALUES
 (1, '维生素功能饮料', '脉动', '中国', 1, 4),
 (2, '手撕素肉排', '好味屋', '中国', 1, 5),
-(3, '鹌鹑蛋', '湖湘贡', '中国', 1, 5);
+(3, '鹌鹑蛋', '湖湘贡', '中国', 1, 5),
+(4, '素食主义', '食为光', '中国', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -162,22 +165,12 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `o_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `o_date_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `o_delivery_id` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'This attribute will remain NULL before the order is being processed by admin.',
-  `c_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Since the website does not have customer registration, customer information will combine with this table.',
+  `c_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Since the website does not have customer registration, customer information will combine with this table.',
   `c_phone_mcc` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT '+60',
-  `c_phone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `c_address` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
-  `c_postcode` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
-  `c_city` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `c_state` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `c_phone` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
+  `c_address` varchar(300) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`o_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`o_id`, `o_date_time`, `o_delivery_id`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_postcode`, `c_city`, `c_state`) VALUES
-('ECOLLA20201128180356', '2020-11-28 18:03:56', NULL, 'KEE SHENG MING', '+60', '143892199', '12, Jalan Tasek 17, Bandar Seri Alam', '81750', 'Masai', 'Johor');
 
 -- --------------------------------------------------------
 
@@ -195,13 +188,26 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   KEY `order_items_FK_v_barcode` (`v_barcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `order_items`
+-- Table structure for table `users`
 --
 
-INSERT INTO `order_items` (`o_id`, `v_barcode`, `oi_quantity`, `oi_note`) VALUES
-('ECOLLA20201128180356', '6902538004045', 1, ''),
-('ECOLLA20201128180356', '6931754804900', 1, '');
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(20) NOT NULL,
+  `user_password` varchar(250) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `user_name`, `user_password`) VALUES
+(4, 'ahming', '$2y$10$MRlh6g79a9c20u3zIwRdcONp9XhOoYJ.1ucT7AaMQazZ94y4u.ZtG');
 
 -- --------------------------------------------------------
 
@@ -242,7 +248,8 @@ INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_name`, `v_price`
 ('6941025700084', '香辣', '口味', 1.2, 20, 'g', 1, 3),
 ('6941025700138', '盐焗', '口味', 1.2, 20, 'g', 1, 3),
 ('6941025701074', '卤蛋', '口味', 1.2, 20, 'g', 1, 3),
-('6941025702019', '泡辣', '口味', 1.2, 20, 'g', 1, 3);
+('6941025702019', '泡辣', '口味', 1.2, 20, 'g', 1, 3),
+('6954645911153', '海带丝', '口味', 1.3, 36, 'g', 1, 4);
 
 --
 -- Constraints for dumped tables
