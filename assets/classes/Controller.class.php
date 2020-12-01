@@ -49,7 +49,7 @@ class Controller extends Model {
 
         // Insert into varieties
         foreach($item->getVarieties() as $variety){
-            $variety_ready = [$variety->getBarcode(), $variety->getProperty(), $variety->getPropertyName(), $variety->getPrice(), $variety->getWeight(), $variety->getWeightUnit(), $variety->getDiscountRate(), $i_id];
+            $variety_ready = [$variety->getBarcode(), $variety->getProperty(), $variety->getPropertyName(), $variety->getPrice(), $variety->getWeight(), $variety->getDiscountRate(), $i_id];
             $this->dbInsert("varieties", $variety_ready);
 
             // Insert into inventories

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 01, 2020 at 06:27 AM
+-- Generation Time: Dec 01, 2020 at 07:33 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -219,11 +219,10 @@ INSERT INTO `users` (`user_id`, `user_name`, `user_password`) VALUES
 DROP TABLE IF EXISTS `varieties`;
 CREATE TABLE IF NOT EXISTS `varieties` (
   `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
-  `v_property` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `v_property_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `v_price` float NOT NULL,
-  `v_weight` float NOT NULL,
-  `v_weight_unit` varchar(10) COLLATE utf8_unicode_ci NOT NULL,
+  `v_property` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `v_property_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `v_price` float NOT NULL COMMENT 'Default currency unit is Ringgit Malaysia',
+  `v_weight` float NOT NULL COMMENT 'Format in kilogram',
   `v_discount_rate` float NOT NULL DEFAULT '1',
   `i_id` int(11) NOT NULL,
   PRIMARY KEY (`v_barcode`),
@@ -234,23 +233,23 @@ CREATE TABLE IF NOT EXISTS `varieties` (
 -- Dumping data for table `varieties`
 --
 
-INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_name`, `v_price`, `v_weight`, `v_weight_unit`, `v_discount_rate`, `i_id`) VALUES
-('6902538004045', '青柠', '口味', 4.8, 600, 'ml', 0.9, 1),
-('6902538005141', '水蜜桃', '口味', 4.8, 600, 'ml', 0.9, 1),
-('6902538007367', '芒果', '口味', 4.8, 600, 'ml', 0.9, 1),
-('6902538007381', '仙人掌青橘', '口味', 4.8, 600, 'ml', 0.9, 1),
-('6902538007862', '竹子青提', '口味', 4.8, 500, 'ml', 0.9, 1),
-('6902538007886', '卡曼橘', '口味', 4.8, 500, 'ml', 0.9, 1),
-('6931754804900', '香辣味', '口味', 1.5, 26, 'g', 1, 2),
-('6931754804917', '黑椒味', '口味', 1.5, 26, 'g', 1, 2),
-('6931754804924', '山椒味', '口味', 1.5, 26, 'g', 1, 2),
-('6931754804931', '烧烤味', '口味', 1.5, 26, 'g', 1, 2),
-('6931754805655', '黑鸭味', '口味', 1.5, 26, 'g', 1, 2),
-('6941025700084', '香辣', '口味', 1.2, 20, 'g', 1, 3),
-('6941025700138', '盐焗', '口味', 1.2, 20, 'g', 1, 3),
-('6941025701074', '卤蛋', '口味', 1.2, 20, 'g', 1, 3),
-('6941025702019', '泡辣', '口味', 1.2, 20, 'g', 1, 3),
-('6954645911153', '海带丝', '口味', 1.3, 36, 'g', 1, 4);
+INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_name`, `v_price`, `v_weight`, `v_discount_rate`, `i_id`) VALUES
+('6902538004045', '青柠', '口味', 4.8, 0.6, 0.9, 1),
+('6902538005141', '水蜜桃', '口味', 4.8, 0.6, 0.9, 1),
+('6902538007367', '芒果', '口味', 4.8, 0.6, 0.9, 1),
+('6902538007381', '仙人掌青橘', '口味', 4.8, 0.6, 0.9, 1),
+('6902538007862', '竹子青提', '口味', 4.8, 0.5, 0.9, 1),
+('6902538007886', '卡曼橘', '口味', 4.8, 0.5, 0.9, 1),
+('6931754804900', '香辣味', '口味', 1.5, 0.026, 1, 2),
+('6931754804917', '黑椒味', '口味', 1.5, 0.026, 1, 2),
+('6931754804924', '山椒味', '口味', 1.5, 0.026, 1, 2),
+('6931754804931', '烧烤味', '口味', 1.5, 0.026, 1, 2),
+('6931754805655', '黑鸭味', '口味', 1.5, 0.026, 1, 2),
+('6941025700084', '香辣', '口味', 1.2, 0.02, 1, 3),
+('6941025700138', '盐焗', '口味', 1.2, 0.02, 1, 3),
+('6941025701074', '卤蛋', '口味', 1.2, 0.02, 1, 3),
+('6941025702019', '泡辣', '口味', 1.2, 0.02, 1, 3),
+('6954645911153', '海带丝', '口味', 1.3, 0.036, 1, 4);
 
 --
 -- Constraints for dumped tables

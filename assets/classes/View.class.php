@@ -42,7 +42,7 @@ class View extends Model{
             foreach($dbTable_varieties as $v){
 
                 // Create new Variety object
-                $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_weight_unit'], $v['v_discount_rate']);
+                $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
 
                 // Get inventories of current variety
                 // Query: SELECT * FROM inventories WHERE v_barcode = ?
@@ -112,7 +112,7 @@ class View extends Model{
         foreach($dbTable_varieties as $v){
 
             // Create new Variety object
-            $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_weight_unit'], $v['v_discount_rate']);
+            $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
 
             // Get inventories of current variety
             // Query: SELECT * FROM inventories WHERE v_barcode = ?

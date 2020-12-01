@@ -32,8 +32,8 @@ class Model extends Dbh{
         ],
 
         "varieties" => [
-            "columnsToInsert" => "varieties(v_barcode, v_property, v_property_name, v_price, v_weight, v_weight_unit, v_discount_rate, i_id)",
-            "columnsCountToInsert" => 8
+            "columnsToInsert" => "varieties(v_barcode, v_property, v_property_name, v_price, v_weight, v_discount_rate, i_id)",
+            "columnsCountToInsert" => 7
         ],
 
         "catogories" => [
