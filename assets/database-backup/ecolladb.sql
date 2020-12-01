@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 01, 2020 at 06:10 AM
+-- Generation Time: Dec 01, 2020 at 06:27 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -139,7 +139,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_name` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `i_desc` varchar(3000) COLLATE utf8_unicode_ci DEFAULT NULL,
   `i_brand` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `i_country` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `i_origin` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `i_is_listed` tinyint(1) NOT NULL DEFAULT '0',
   `i_image_count` int(11) NOT NULL,
   PRIMARY KEY (`i_id`)
@@ -149,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `items` (
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_country`, `i_is_listed`, `i_image_count`) VALUES
+INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_is_listed`, `i_image_count`) VALUES
 (1, '维生素功能饮料', '', '脉动', '中国', 1, 4),
 (2, '手撕素肉排', '', '好味屋', '中国', 1, 5),
 (3, '鹌鹑蛋', '', '湖湘贡', '中国', 1, 5),

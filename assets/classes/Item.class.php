@@ -6,7 +6,7 @@ class Item {
     private $name; //String
     private $description; //String
     private $brand; //String
-    private $country; //String
+    private $origin; //String
     private $isListed; //Boolean
     private $imgCount; //Integer
 
@@ -17,11 +17,11 @@ class Item {
     //Utility variable
     private $catogoryCount; //Integer
 
-    public function __construct($name, $description, $brand, $country, $isListed, $imgCount){
+    public function __construct($name, $description, $brand, $origin, $isListed, $imgCount){
         $this->name = $name;
         $this->description = $description;
         $this->brand = $brand;
-        $this->country = $country;
+        $this->origin = $origin;
         $this->isListed = $isListed;
         $this->imgCount = $imgCount;
 
@@ -76,12 +76,12 @@ class Item {
         return $this;
     }
 
-    public function getCountry() {
-        return $this->country;
+    public function getOrigin() {
+        return $this->origin;
     }
 
-    public function setCountry($country) {
-        $this->country = $country;
+    public function setOrigin($origin) {
+        $this->origin = $origin;
         return $this;
     }
 

@@ -18,7 +18,7 @@ class View extends Model{
         foreach($dbTable_items as $i){
 
             // Create new Item object
-            $item = new Item($i['i_name'], $i['i_brand'], $i['i_country'], $i['i_is_listed'], $i['i_image_count']);
+            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count']);
 
             // Get classifications of current item
             // Query: SELECT cat_id FROM classifications WHERE i_id = ?
@@ -88,7 +88,7 @@ class View extends Model{
         $i = $dbTable_items[0];
 
         // Create new Item object
-        $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_country'], $i['i_is_listed'], $i['i_image_count']);
+        $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count']);
 
         // Get classifications of current item
         // Query: SELECT cat_id FROM classifications WHERE i_id = ?
