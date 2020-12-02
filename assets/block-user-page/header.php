@@ -25,6 +25,7 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
             <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>item-list.php">所有商品列表</a></li>
             <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>payment-method.php">付款方式</a></li>
             <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>about-us.php">关于我们</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>order-tracking.php">订单追踪</a></li>
             <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span><?php echo $c->getCartCount(); ?></span></a></li>
         </ul>
     </div>
@@ -50,6 +51,8 @@ $(document).ready(function() {
         $(".navbar-nav li:nth-child(3)").addClass("active");
     } else if (getCurentFileName() === "about-us.php") {
         $(".navbar-nav li:nth-child(4)").addClass("active");
+    } else if (getCurentFileName() === "order-tracking.php") {
+        $(".navbar-nav li:nth-child(5)").addClass("active");
     }
 
 });
