@@ -27,7 +27,7 @@
 
                                 $cartList = $cart->getCartItems();
 
-                                if(empty($cartList[0])) echo "<div class=\"text-center\"><img src=\"assets/images/icon/empty-cart.png\" width=\"150\" height=\"150\"> <h5 class=\"p-2\">您的购物车为空</h5></div>";
+                                if(empty($cartList[0])) echo "<div>您的购物车为空</div>";
 
                                 for($i = 0; $i < sizeof($cartList); $i++){
                                     $cartItem = $cartList[$i];
