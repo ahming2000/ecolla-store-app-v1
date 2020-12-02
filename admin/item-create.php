@@ -216,7 +216,7 @@
                                                 <td><input type="text" class="form-control variety-property" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100" disabled/></td>
                                                 <td colspan="2">
                                                     <div class="form-row inventory-section-class">
-                                                        <input type="number" value="1" id="inventory-count" hidden/>
+                                                        <input type="number" value="1" class="inventory-count" hidden/>
                                                         <div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[0]['inventory'][0]['expireDate']" aria-describedby="inventory-expire-date" required/></div>
                                                         <div class="col-6"><input type="number" class="form-control inventory-quantity mb-1" name="variety[0]['inventory'][0]['quantity']" aria-describedby="inventory-quantity" required/></div>
                                                     </div>
