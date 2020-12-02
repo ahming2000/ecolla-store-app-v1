@@ -142,8 +142,8 @@
 
                             <div class="h2" id="step-two">规格资讯</div>
 
-                            <div class="col-12"><label for="property">规格设定</label></div>
                             <!-- Property Name -->
+                            <div class="col-12"><label for="property">规格设定</label></div>
                             <div class="col-12">
                                 <div class="form-row">
                                     <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
@@ -164,7 +164,7 @@
 
                                     <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
                                         <div class="row" id="property-section">
-                                            <div class="col-12 mb-1"><input type="text" class="form-control variety-property" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100"/></div>
+                                            <div class="col-12 mb-1"><input type="text" class="form-control variety-property-main" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -172,8 +172,8 @@
                             <!-- Add extra variety button -->
                             <div class="col-12 text-center"><button type="button" class="btn btn-secondary mb-3" id="extraProperty">添加更多规格</button></div>
 
-                            <div class="col-12"><label for="variety-table">规格销售</label></div>
                             <!-- Variety -->
+                            <div class="col-12"><label for="variety-table">规格销售</label></div>
                             <div class="col-12 mb-3">
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
@@ -198,8 +198,8 @@
                                 </div>
                             </div><!-- Variety -->
 
-                            <div class="col-12"><label for="inventory-table">规格库存</label></div>
                             <!-- Inventory -->
+                            <div class="col-12"><label for="inventory-table">规格库存</label></div>
                             <div class="col-12">
                                 <div class="table-responsive">
                                     <table class="table table-bordered">
@@ -229,21 +229,42 @@
                                 </div>
                             </div><!-- Inventory -->
 
-                            <div class="h2">媒体资料</div>
+                            <div class="h2" id="step-three">媒体资料</div>
+
+                            <!-- Cover picture 0.jpg -->
+                            <div class="col-12">
+                                <div class="form-row">
+
+                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+                                        <label for="image">
+                                            <input type="file" name="image" id="image" style="display:none;"/>
+                                            <img class="img-thumbnail" id="blah" src="../assets/images/icon/example-square-256x256.jpg"/>
+                                        </label>
+                                    </div>
+
+                                    <!-- <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3 text-sm-left text-md-right mb-3">
+                                        <label for="upload-pictue">封面：</label>
+                                    </div>
+
+                                    <div class="custom-file col-xs-10 col-sm-6 col-md-6 col-lg-7 mb-3 text-center">
+                                        <input type="file" class="custom-file-input" name="imgVariety1" id="imgVariety1">
+                                        <label class="custom-file-label" for="imgVariety1" data-browse="上传">点击上传封面</label>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <!-- Cover picture 0.jpg -->
+
+                            <!-- Additional picture {1 - 10}.jpg -->
+                            <section id="additional-picture-section"></section>
+                            <!-- Additional picture {1 - 10}.jpg -->
+
+                            <div class="col-12">
+
+                            </div>
 
                             <!-- TO-DO: REWORK THIS PART -->
 
-                            <div class="form-group">
-                                <label>上传照片</label>
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" name="imgVariety1" id="imgVariety1">
-                                    <label class="custom-file-label" for="imgVariety1" data-browse="上传">规格1：香辣味</label>
-                                </div>
 
-                                <div class="img-variety-preview" style="width: 250px; height: 250px;">
-                                    展示照片
-                                </div>
-                            </div>
 
                             <!-- TO-DO: REWORK THIS PART -->
 
