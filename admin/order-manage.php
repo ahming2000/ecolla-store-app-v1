@@ -1,4 +1,5 @@
 <?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
+<?php if(!isset($_COOKIE["username"])) header("location: login.php"); ?>
 <?php $view = new View(); $orderList = $view->getAllOrders(); ?>
 <!DOCTYPE html>
 <html>
@@ -17,6 +18,7 @@
         <table class="table" id="item-table">
             <thead>
                 <tr>
+                    <th scope="col">订单ID</th>
                     <th scope="col">订单日期时间</th>
                     <th scope="col">顾客资料资料</th>
                     <th scope="col">订单物品列表</th>

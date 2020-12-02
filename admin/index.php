@@ -1,4 +1,13 @@
 <?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
+<?php
+
+if(isset($_COOKIE["username"])){
+    echo "<br><br><br><br>"."<h3>Login successfull!</h3>"."<br>"."<a href=\"logout.php\">Logout</a>";
+} else{
+    header("location: login.php");
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -8,7 +17,7 @@
     <?php $upperDirectoryCount = 1; include "../assets/block-admin-page/header.php"; ?>
 
     <div class="container">
-        <a href="new.php">创建新商品</a><br>
+
 
     </div>
 </body>

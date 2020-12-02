@@ -2,7 +2,8 @@
 <?php $cart = new Cart(); //Must declare first before have any output to continue the session ?>
 <?php
 $view = new View();
-$item = $view->getItem("鹌鹑蛋");
+$item = $view->getItem("鹌鹑蛋", "湖湘贡");
+$i_id = $view->getItemId($item);
 ?>
 <?php
 if($_SERVER['REQUEST_METHOD']=='POST')
