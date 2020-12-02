@@ -91,3 +91,10 @@ display: inline;
 .carousel-inner.vv-3 .carousel-item-left {
   transform: translateX(0);
 }
+
+/* Global css*/
+
+/* help on html bookmark jumping to make sure the target is visible below the navbar */
+html {
+  scroll-padding-top: 65px; /* height of sticky header */
+}

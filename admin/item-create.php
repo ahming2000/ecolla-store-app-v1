@@ -54,8 +54,10 @@
 
     <body>
         <div class="container-sm" style="margin-top: 100px;">
+
             <?php include_once "../assets/block-admin-page/header.php"; ?>
 
+            <!-- Page content with row class -->
             <div class="row">
 
                 <div class="col-sm-12 col-md-10">
@@ -225,32 +227,34 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div><!-- Variety -->
+                            </div><!-- Inventory -->
 
                             <div class="h2">媒体资料</div>
 
+                            <!-- TO-DO: REWORK THIS PART -->
 
+                            <div class="form-group">
+                                <label>上传照片</label>
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="imgVariety1" id="imgVariety1">
+                                    <label class="custom-file-label" for="imgVariety1" data-browse="上传">规格1：香辣味</label>
+                                </div>
+
+                                <div class="img-variety-preview" style="width: 250px; height: 250px;">
+                                    展示照片
+                                </div>
+                            </div>
+
+                            <!-- TO-DO: REWORK THIS PART -->
 
                         </div><br>
-
-
-
-                        <div class="form-group">
-                            <label>上传照片</label>
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="imgVariety1" id="imgVariety1">
-                                <label class="custom-file-label" for="imgVariety1" data-browse="上传">规格1：香辣味</label>
-                            </div>
-
-                            <div class="img-variety-preview" style="width: 250px; height: 250px;">
-                                展示照片
-                            </div>
-                        </div>
 
                         <input class="btn btn-primary btn-block" type="submit" value="添加" name="submit">
 
                     </form>
                 </div>
+
+                <!-- Navigation guideline -->
                 <div class="col-sm-0 col-md-2">
                     <div style="position: fixed;">
                         <ul class="list-group">
@@ -259,68 +263,14 @@
                             <a href="#step-three" class="item-create-step-info list-group-item list-group-item-action">媒体管理</a>
                             <a href="#step-four" class="item-create-step-info list-group-item list-group-item-action">运输资料</a>
                         </ul>
-
                     </div>
-                </div>
-            </div>
+                </div><!-- Navigation guideline -->
+
+            </div><!-- Page content with row class -->
 
         </div>
 
-        <script>
-        $(document).ready(function(){
-
-            // For file uploaded name to show
-            bsCustomFileInput.init()
-
-            // Extra catogory
-            var catogoryCount = 1;
-
-
-            $("#extraCatogory").on("click", function(){
-                var extraCatogoryHTML = '<div class="col-12 mb-1"><input type="text" class="form-control" name="catogory[' + catogoryCount + ']" aria-describedby="catogory" list="catogoryList" maxlength="20"/></div>';
-                $("#catogory-section").append(extraCatogoryHTML);
-                catogoryCount++;
-            });
-
-            // Extra property
-            var propertyCount = 1;
-
-            $("#extraProperty").on("click", function(){
-                var extraPropertyHTML = '<div class="col-12 mb-1"><input type="text" class="form-control" name="variety[' + propertyCount + '][\'property\']" aria-describedby="property" maxlength="100"/></div>';
-                var newVarietyTableRow = '<tr><td><input type="text" class="form-control variety-property" name="variety[' + propertyCount + '][\'property\']" aria-describedby="variety-property" maxlength="100" disabled/></td><td><input type="text" class="form-control variety-barcode" name="variety[' + propertyCount + '][\'barcode\']" aria-describedby="variety-barcode" maxlength="20" required/></td><td><input type="number" class="form-control variety-price" name="variety[' + propertyCount + '][\'price\']" aria-describedby="variety-price" maxlength="10" required/></td><td><input type="number" class="form-control variety-weight" name="variety[' + propertyCount + '][\'weight\']" aria-describedby="variety-weight" maxlength="10" required/></td></tr>';
-                var newInventoryTableRow = '<tr><td><input type="number" value="1" id="inventory-count" hidden/><input type="text" class="form-control variety-property" name="variety[' + propertyCount + '][\'property\']" aria-describedby="variety-property" maxlength="100" disabled/></td><td colspan="2"><div class="form-row inventory-section-class"><div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[' + propertyCount + '][\'inventory\'][0][\'expireDate\']" aria-describedby="inventory-expire-date" required/></div><div class="col-6"><input type="number" class="form-control inventory-quantity mb-1" name="variety[' + propertyCount + '][\'inventory\'][0][\'quantity\']" aria-describedby="inventory-quantity" required/></div></div><!-- Add extra inventory button --><div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-class">添加更多库存</button></div></td></tr>';
-                $("#property-section").append(extraPropertyHTML);
-                $('#variety-section').append(newVarietyTableRow);
-                $('#inventory-table-section').append(newInventoryTableRow);
-                propertyCount++;
-            });
-
-            // Extra inventory
-
-
-
-            $(".extra-inventory-class").on("click", function(){
-
-                var inventoryCount = $(this).children("#inventory-count");
-                var currentIndex = $(".extra-inventory-class").index($(this));
-
-                var extraInventoryHTML = '<input type="number" value="1" id="inventory-count" hidden/><div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[' + (currentIndex + 1) + '][\'inventory\'][' + inventoryCount + '][\'expireDate\']" aria-describedby="inventory-expire-date" required/></div><div class="col-6"><input type="number" class="form-control inventory-quantity mb-1" name="variety[' + (currentIndex + 1) + '][\'inventory\'][' + inventoryCount + '][\'quantity\']" aria-describedby="inventory-quantity" required/></div>';
-
-                $(".inventory-section-class").eq(currentIndex).append(extraInventoryHTML);
-                $(this).children("#inventory-count").val(inventoryCount++);
-            });
-
-
-            // Auto sync property shown below two table
-            $(".variety-property").on("change", function(){
-                var value = $(this).val();
-                var count = $(".variety-property").length - 1;
-                var currentIndex = $(".variety-property").index($(this));
-                $(".variety-property").eq(currentIndex * count + 1).val(value);
-                $(".variety-property").eq(currentIndex * count + 2).val(value);
-            });
-        });
-        </script>
+        <script src="../assets/js/admin-item-management-page.js"></script>
 
     </body>
     </html>
