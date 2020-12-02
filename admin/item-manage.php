@@ -21,7 +21,7 @@
 
         </div>
 
-        <table class="table" id="item-table">
+        <table class="table table-bordered" id="item-table">
             <thead>
                 <tr>
                     <th scope="col"><input type="checkbox" onclick="selectAll(this)"> 全选</th>

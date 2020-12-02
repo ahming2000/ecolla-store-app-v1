@@ -1,6 +1,8 @@
 <?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
 <?php if(!isset($_COOKIE["username"])) header("location: login.php"); ?>
-<?php
+
+    <?php $view = new View(); ?>
+    <?php
     if(isset($_POST["submit"])){
 
 
@@ -43,134 +45,282 @@
         // fclose($template);
         // fclose($newPHPFile);
     }
-?>
-<!DOCTYPE html>
-<html>
+    ?>
+    <!DOCTYPE html>
+    <html>
     <head>
         <?php $upperDirectoryCount = 1; $title = "创建新商品"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?>
     </head>
 
     <body>
-        <div class="container">
-        <div class="h1">创建新商品</div>
+        <div class="container-sm" style="margin-top: 100px;">
+            <?php include_once "../assets/block-admin-page/header.php"; ?>
 
-            <form action="" method="post">
-                <div class="form-row">
-                    <div class="col">
-                        <label for="country">出产国家</label>
-                        <input type="text" class="form-control" name="country" aria-describedby="country" required>
-                    </div>
-                    <div class="col">
-                        <label for="brand">商品品牌</label>
-                        <input type="text" class="form-control" name="brand" aria-describedby="brand" required>
-                    </div>
+            <div class="row">
 
-                    <div class="col">
-                        <label for="name">商品名称</label>
-                        <input type="text" class="form-control" name="name" aria-describedby="name" required>
-                    </div>
+                <div class="col-sm-12 col-md-10">
+                    <form action="" method="post">
+                        <div class="h1">创建新商品</div>
+
+                        <div class="h2" id="step-one">基本资讯</div>
+                        <div class="form-row">
+                            <!-- Name -->
+                            <div class="col-12">
+                                <div class="form-row">
+                                    <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                                        <label for="name">* 商品名称：</label>
+                                    </div>
+
+                                    <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                                        <input type="text" class="form-control" name="name" aria-describedby="name" maxlength="250" required/>
+                                    </div>
+                                </div>
+                            </div><!-- Name -->
+                            <!-- Description -->
+                            <div class="col-12">
+                                <div class="form-row">
+                                    <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                                        <label for="name">商品描述：</label>
+                                    </div>
+
+                                    <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                                        <textarea class="form-control" name="description" aria-describedby="description" rows="5" maxlength="3000"></textarea>
+                                    </div>
+                                </div>
+                            </div><!-- Description -->
+                            <!-- Origin -->
+                            <div class="col-12">
+                                <div class="form-row">
+                                    <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                                        <label for="origin">出产地：</label>
+                                    </div>
+
+                                    <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                                        <input type="text" class="form-control" name="origin" aria-describedby="origin">
+                                    </div>
+                                </div>
+                            </div><!-- Origin -->
+                            <!-- Brand -->
+                            <div class="col-12">
+                                <div class="form-row">
+                                    <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                                        <label for="brand">商品品牌：</label>
+                                    </div>
+
+                                    <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                                        <input type="text" class="form-control" name="brand" aria-describedby="brand">
+                                    </div>
+                                </div>
+                            </div><!-- Brand -->
+                            <!-- Catogory -->
+                            <div class="col-12">
+                                <!-- Current catogory list -->
+                                <datalist id="catogoryList">
+                                    <?php
+                                    foreach($view->getCatogoryList() as $catogory){
+                                        echo '<option value="'.$catogory["cat_name"].'">'.$catogory["cat_name"].'</option>';
+                                    }
+                                    ?>
+                                </datalist><!-- Current catogory list -->
+
+                                <div class="form-row">
+                                    <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                                        <label for="brand">商品类别/标签：</label>
+                                    </div>
+
+                                    <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                                        <div class="row" id="catogory-section">
+                                            <div class="col-12 mb-1"><input type="text" class="form-control" name="catogory[0]" aria-describedby="catogory" list="catogoryList" maxlength="20"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- Catogory -->
+                            <!-- Add extra catogory button -->
+                            <div class="col-12 text-center"><button type="button" class="btn btn-secondary" id="extraCatogory">添加更多类别/标签</button></div>
+
+                            <div class="h2" id="step-two">规格资讯</div>
+
+                            <div class="col-12"><label for="property">规格设定</label></div>
+                            <!-- Property Name -->
+                            <div class="col-12">
+                                <div class="form-row">
+                                    <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                                        <label for="variety-property-name">规格名称：</label>
+                                    </div>
+
+                                    <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                                        <input type="text" class="form-control" name="variety-property-name" aria-describedby="variety-property-name" onchange="syncVariety(this)" />
+                                    </div>
+                                </div>
+                            </div><!-- Property Name -->
+                            <!-- Property -->
+                            <div class="col-12">
+                                <div class="form-row">
+                                    <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                                        <label for="variety-property">选择：</label>
+                                    </div>
+
+                                    <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                                        <div class="row" id="property-section">
+                                            <div class="col-12 mb-1"><input type="text" class="form-control variety-property" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- Property -->
+                            <!-- Add extra variety button -->
+                            <div class="col-12 text-center"><button type="button" class="btn btn-secondary mb-3" id="extraProperty">添加更多规格</button></div>
+
+                            <div class="col-12"><label for="variety-table">规格销售</label></div>
+                            <!-- Variety -->
+                            <div class="col-12 mb-3">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">选择</th>
+                                                <th scope="col">商品货号</th>
+                                                <th scope="col">价格(RM)</th>
+                                                <th scope="col">重量(kg)</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="variety-section">
+                                            <tr>
+                                                <td><input type="text" class="form-control variety-property" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100" disabled/></td>
+                                                <td><input type="text" class="form-control variety-barcode" name="variety[0]['barcode']" aria-describedby="variety-barcode" maxlength="20" required/></td>
+                                                <td><input type="number" class="form-control variety-price" name="variety[0]['price']" aria-describedby="variety-price" maxlength="10" required/></td>
+                                                <td><input type="number" class="form-control variety-weight" name="variety[0]['weight']" aria-describedby="variety-weight" maxlength="10" required/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div><!-- Variety -->
+
+                            <div class="col-12"><label for="inventory-table">规格库存</label></div>
+                            <!-- Inventory -->
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">选择</th>
+                                                <th scope="col">过期日期</th>
+                                                <th scope="col">数量</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="inventory-table-section">
+                                            <tr>
+                                                <td><input type="text" class="form-control variety-property" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100" disabled/></td>
+                                                <td colspan="2">
+                                                    <div class="form-row inventory-section-class">
+                                                        <input type="number" value="1" id="inventory-count" hidden/>
+                                                        <div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[0]['inventory'][0]['expireDate']" aria-describedby="inventory-expire-date" required/></div>
+                                                        <div class="col-6"><input type="number" class="form-control inventory-quantity mb-1" name="variety[0]['inventory'][0]['quantity']" aria-describedby="inventory-quantity" required/></div>
+                                                    </div>
+                                                    <!-- Add extra inventory button -->
+                                                    <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-class">添加更多库存</button></div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div><!-- Variety -->
+
+                            <div class="h2">媒体资料</div>
 
 
-                </div><br>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="isListed" value="" id="listing">
-                    <label class="form-check-label" for="listing">
-                        上架
-                    </label>
-                </div><br>
-
-                <div class="form-row" id="catogory">
-
-                    <div class="col-12"><label>商品类别/标签</label></div>
-                    <div class="col-sm-12 col-md-6 col-lg-4">
-
-                        <select name="catogory" class="custom-select mb-3">
-                            <option selected>打开选单选择类别/标签...</option>
-                            <option value="饮料">饮料</option>
-                            <option value="小零食">小零食</option>
-                        </select>
-                    </div>
-
-                </div>
-
-                <button type="button" class="btn btn-secondary mb-3" id="extraCatogory" disabled>添加更多类别/标签</button>
-
-                <div class="form-row" id="variety">
+                        </div><br>
 
 
-                    <div class="col-12">
-                        <div class="col-12"><label for="name">商品规格 1</label></div>
-                        <!-- Upload images for specific variety -->
 
-
-                        <div class="row mb-3">
-                            <div class="col"><label for="barcode">商品 Barcode</label></div>
-                            <div class="col"><input type="text" class="form-control" name="barcode1" aria-describedby="barcode" required></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col"><label for="property1">规格</label></div>
-                            <div class="col"><input type="text" class="form-control" name="property1" aria-describedby="property1" required></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col"><label for="propertyName1">规格名称</label></div>
-                            <div class="col"><input type="text" class="form-control" name="propertyName1" aria-describedby="propertyName1" required></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col"><label for="price">价钱</label></div>
-                            <div class="col"><input type="text" class="form-control" name="price1" aria-describedby="price" required></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col"><label for="weight">重量/容量</label></div>
-                            <div class="col"><input type="text" class="form-control" name="weight1" aria-describedby="weight" required></div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col"><label for="weightUnit">重量/容量单位</label></div>
-                            <div class="col"><input type="text" class="form-control" name="weightUnit1" aria-describedby="weightUnit" required></div>
-                        </div>
-                        <div class="col-12"><label for="name">库存规格 1</label></div>
-                        <div class="row mb-3 expireDateForm">
-                            <div class="row mr-3">
-                                <div class="col"><label for="expireDate1">过期日期</label></div>
-                                <div class="col"><input type="date" class="form-control" name="expireDate1" aria-describedby="expireDate1" required></div>
+                        <div class="form-group">
+                            <label>上传照片</label>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="imgVariety1" id="imgVariety1">
+                                <label class="custom-file-label" for="imgVariety1" data-browse="上传">规格1：香辣味</label>
                             </div>
-                            <div class="row mr-3">
-                                <div class="col"><label for="quantity1">库存</label></div>
-                                <div class="col"><input type="number" class="form-control" name="quantity1" aria-describedby="quantity1" required></div>
+
+                            <div class="img-variety-preview" style="width: 250px; height: 250px;">
+                                展示照片
                             </div>
                         </div>
 
-                        <button type="button" class="btn btn-secondary mb-3" id="extraInventory" disabled>添加过期日期</button>
+                        <input class="btn btn-primary btn-block" type="submit" value="添加" name="submit">
+
+                    </form>
+                </div>
+                <div class="col-sm-0 col-md-2">
+                    <div style="position: fixed;">
+                        <ul class="list-group">
+                            <a href="#step-one" class="item-create-step-info list-group-item list-group-item-action active">基本资讯</a>
+                            <a href="#step-two" class="item-create-step-info list-group-item list-group-item-action">销售资料</a>
+                            <a href="#step-three" class="item-create-step-info list-group-item list-group-item-action">媒体管理</a>
+                            <a href="#step-four" class="item-create-step-info list-group-item list-group-item-action">运输资料</a>
+                        </ul>
 
                     </div>
-
                 </div>
+            </div>
 
-                <button type="button" class="btn btn-secondary mb-3" id="extraVariety" disabled>添加更多规格</button>
-
-
-                <input class="btn btn-primary btn-block" type="submit" value="添加" name="submit">
-
-            </form>
         </div>
 
         <script>
-            $(document).ready(function(){
+        $(document).ready(function(){
 
-                var extraCatogoryHTML = "<div class=\"col-sm-12 col-md-6 col-lg-4\"><select class=\"custom-select mb-3\"><option selected>打开选单选择类别/标签...</option><option value=\"饮料\">饮料</option><option value=\"小零食\">小零食</option></select></div>";
+            // For file uploaded name to show
+            bsCustomFileInput.init()
 
-                var extraVarietyHTML = "<div class=\"col-6\"><div class=\"col-12 mb-3\"><label for=\"barcode\">商品 Barcode</label><input type=\"text\" class=\"form-control\" name=\"barcode\" aria-describedby=\"barcode\" required></div><div class=\"col-12 mb-3\"><label for=\"variety\">规格</label><input type=\"text\" class=\"form-control\" name=\"variety\" aria-describedby=\"variety\" required></div><div class=\"col-12 mb-3\"><label for=\"varietyName\">规格名称</label><input type=\"text\" class=\"form-control\" name=\"varietyName\" aria-describedby=\"varietyName\" required></div><div class=\"col-12 mb-3\"><label for=\"price\">价钱</label><input type=\"text\" class=\"form-control\" name=\"price\" aria-describedby=\"price\" required></div><div class=\"col-12 mb-3\"><label for=\"weight\">重量/容量</label><input type=\"text\" class=\"form-control\" name=\"weight\" aria-describedby=\"weight\" required></div><div class=\"col-12 mb-3\"><label for=\"weightUnit\">重量/容量单位</label><input type=\"text\" class=\"form-control\" name=\"weightUnit\" aria-describedby=\"weightUnit\" required></div></div>";
+            // Extra catogory
+            var catogoryCount = 1;
 
 
-                $("#extraCatogory").on("click", function(){
-                    $("#catogory").append(extraCatogoryHTML);
-                });
-
-                $("#extraVariety").on("click", function(){
-                    $("#variety").append(extraVarietyHTML);
-                });
+            $("#extraCatogory").on("click", function(){
+                var extraCatogoryHTML = '<div class="col-12 mb-1"><input type="text" class="form-control" name="catogory[' + catogoryCount + ']" aria-describedby="catogory" list="catogoryList" maxlength="20"/></div>';
+                $("#catogory-section").append(extraCatogoryHTML);
+                catogoryCount++;
             });
+
+            // Extra property
+            var propertyCount = 1;
+
+            $("#extraProperty").on("click", function(){
+                var extraPropertyHTML = '<div class="col-12 mb-1"><input type="text" class="form-control" name="variety[' + propertyCount + '][\'property\']" aria-describedby="property" maxlength="100"/></div>';
+                var newVarietyTableRow = '<tr><td><input type="text" class="form-control variety-property" name="variety[' + propertyCount + '][\'property\']" aria-describedby="variety-property" maxlength="100" disabled/></td><td><input type="text" class="form-control variety-barcode" name="variety[' + propertyCount + '][\'barcode\']" aria-describedby="variety-barcode" maxlength="20" required/></td><td><input type="number" class="form-control variety-price" name="variety[' + propertyCount + '][\'price\']" aria-describedby="variety-price" maxlength="10" required/></td><td><input type="number" class="form-control variety-weight" name="variety[' + propertyCount + '][\'weight\']" aria-describedby="variety-weight" maxlength="10" required/></td></tr>';
+                var newInventoryTableRow = '<tr><td><input type="number" value="1" id="inventory-count" hidden/><input type="text" class="form-control variety-property" name="variety[' + propertyCount + '][\'property\']" aria-describedby="variety-property" maxlength="100" disabled/></td><td colspan="2"><div class="form-row inventory-section-class"><div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[' + propertyCount + '][\'inventory\'][0][\'expireDate\']" aria-describedby="inventory-expire-date" required/></div><div class="col-6"><input type="number" class="form-control inventory-quantity mb-1" name="variety[' + propertyCount + '][\'inventory\'][0][\'quantity\']" aria-describedby="inventory-quantity" required/></div></div><!-- Add extra inventory button --><div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-class">添加更多库存</button></div></td></tr>';
+                $("#property-section").append(extraPropertyHTML);
+                $('#variety-section').append(newVarietyTableRow);
+                $('#inventory-table-section').append(newInventoryTableRow);
+                propertyCount++;
+            });
+
+            // Extra inventory
+
+
+
+            $(".extra-inventory-class").on("click", function(){
+
+                var inventoryCount = $(this).children("#inventory-count");
+                var currentIndex = $(".extra-inventory-class").index($(this));
+
+                var extraInventoryHTML = '<input type="number" value="1" id="inventory-count" hidden/><div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[' + (currentIndex + 1) + '][\'inventory\'][' + inventoryCount + '][\'expireDate\']" aria-describedby="inventory-expire-date" required/></div><div class="col-6"><input type="number" class="form-control inventory-quantity mb-1" name="variety[' + (currentIndex + 1) + '][\'inventory\'][' + inventoryCount + '][\'quantity\']" aria-describedby="inventory-quantity" required/></div>';
+
+                $(".inventory-section-class").eq(currentIndex).append(extraInventoryHTML);
+                $(this).children("#inventory-count").val(inventoryCount++);
+            });
+
+
+            // Auto sync property shown below two table
+            $(".variety-property").on("change", function(){
+                var value = $(this).val();
+                var count = $(".variety-property").length - 1;
+                var currentIndex = $(".variety-property").index($(this));
+                $(".variety-property").eq(currentIndex * count + 1).val(value);
+                $(".variety-property").eq(currentIndex * count + 2).val(value);
+            });
+        });
         </script>
 
     </body>
-</html>
+    </html>

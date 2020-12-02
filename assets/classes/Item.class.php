@@ -85,11 +85,11 @@ class Item {
         return $this;
     }
 
-    public function getIsListed() {
+    public function isListed() {
         return $this->isListed;
     }
 
-    public function setIsListed($isListed) {
+    public function setListed($isListed) {
         $this->isListed = $isListed;
         return $this;
     }

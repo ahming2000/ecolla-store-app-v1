@@ -13,7 +13,7 @@
                         <div class="item-title h4 font-weight-bold"><?php echo $cartItem->getItem()->getBrand()." ".$cartItem->getItem()->getName(); ?></div>
                         <div class="item-properties h6 grey-text"><?php echo $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty(); ?></div>
                         <div class="item-note h6 grey-text"><?php echo $cartItem->getNote() ?></div>
-                        <div class="item-total-weight h6 grey-text"><?php $totalWeight = $cartItem->getQuantity() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getWeight(); echo $totalWeight.$cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getWeightUnit(); ?></div>
+                        <div class="item-total-weight h6 grey-text"><?php $totalWeight = $cartItem->getQuantity() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getWeight(); echo $totalWeight."kg" ?></div>
 
                         <div class="row d-flex justify-content-between align-items-center">
                             <div class="col-xs-12 col-sm-12 col-md-3"><div class="h6">数量：</div></div>

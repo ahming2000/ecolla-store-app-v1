@@ -1,6 +1,6 @@
 <tr>
     <td><input class="item-check-box" name="item-check-box" onclick="itemCheckBoxClicked(this)" type="checkbox"></td>
-    <td><?php echo $item->getCountry(); ?></td>
+    <td><?php echo $item->getOrigin(); ?></td>
     <td><?php echo $item->getBrand(); ?></td>
     <td><?php echo $item->getName(); ?></td>
 
