@@ -7,7 +7,7 @@
     <td><?php
     echo "名字：".$order->getCustomer()->getName()."<br>";
     echo "联系：".$order->getCustomer()->getPhoneMMC().$order->getCustomer()->getPhone()."<br>";
-    echo "地址：".$order->getCustomer()->getAddress().", ".$order->getCustomer()->getPostcode()." ".$order->getCustomer()->getCity().", ".$order->getCustomer()->getState()."<br>";
+    echo "地址：".$order->getCustomer()->getAddress()."<br>";
      ?></td>
 
     <td><?php
