@@ -24,11 +24,11 @@
 
     <td><?php
     foreach($item->getVarieties() as $variety){
-        $totalInventory = 0;
-        foreach($variety->getShelfLifeList() as $shelfLife){
-            $totalInventory += $shelfLife->getInventory();
+        $totalQuantity = 0;
+        foreach($variety->getInventories() as $inventory){
+            $totalQuantity += $inventory->getQuantity();
         }
-        echo $totalInventory."<br>";
+        echo $totalQuantity."<br>";
     }
     ?></td>
 </tr>
