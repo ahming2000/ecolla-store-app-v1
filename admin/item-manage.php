@@ -1,5 +1,5 @@
 <?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
-<?php if(!isset($_COOKIE["username"])) header("location: login.php"); $view = new View(); $itemList = $view->getAllItems(); ?>
+<?php $view = new View(); $itemList = $view->getAllItems(); ?>
 <!DOCTYPE html>
 
 <html>
@@ -107,8 +107,8 @@
                 }
 
                 document.location.href = "item-edit.php?" +
-                "itemName=" + myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML + "&" +
-                "itemBrand=" + myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML;
+                "itemName=" + myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML;
+                // "itemBrand=" + "myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML";
             }
 
             function deleteButtonClicked(){

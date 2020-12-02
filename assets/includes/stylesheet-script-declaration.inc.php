@@ -34,4 +34,3 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
 <script src='https://kit.fontawesome.com/a076d05399.js'></script>
 <script src="<?php echo $upperDirectory; ?>assets/vendor/OwlCarousel2-2.3.4/dist/owl.carousel.min.js"></script>
 <script src="<?php echo $upperDirectory; ?>assets/vendor/jquery-mousewheel-master/jquery.mousewheel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>

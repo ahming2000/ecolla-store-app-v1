@@ -1,12 +1,12 @@
 <?php
 
-class Item {
+class Item implements JsonSerializable {
 
     //Standard variable
+    private $id; //Unique //Generate after insert into database
     private $name; //String
-    private $description; //String
     private $brand; //String
-    private $origin; //String
+    private $country; //String
     private $isListed; //Boolean
     private $imgCount; //Integer
 
@@ -17,11 +17,10 @@ class Item {
     //Utility variable
     private $catogoryCount; //Integer
 
-    public function __construct($name, $description, $brand, $origin, $isListed, $imgCount){
+    public function __construct($name, $brand, $country, $isListed, $imgCount){
         $this->name = $name;
-        $this->description = $description;
         $this->brand = $brand;
-        $this->origin = $origin;
+        $this->country = $country;
         $this->isListed = $isListed;
         $this->imgCount = $imgCount;
 
@@ -29,6 +28,21 @@ class Item {
         $this->varieties = array();
 
         $this->catogoryCount = 0;
+    }
+
+    //Not in use
+    public function jsonSerialize(){
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'catogory' => $this->catogory,
+            'brand' => $this->brand,
+            'country' => $this->country,
+            'isListed' => $this->isListed,
+            'catogories' => $this->catogories,
+            'varieties' => UsefulFunction::jsonSerializeArray($this->varieties),
+            'catogoryCount' => $this->catogoryCount
+        ];
     }
 
     public function addCatogory($catogory){
@@ -49,86 +63,62 @@ class Item {
         UsefulFunction::removeArrayElementI($this->varieties, $index);
     }
 
-    public function getName() {
+    public function getID(){
+        return $this->id;
+    }
+
+    public function getName(){
         return $this->name;
     }
 
-    public function setName($name) {
-        $this->name = $name;
-        return $this;
-    }
-
-    public function getDescription() {
-        return $this->description;
-    }
-
-    public function setDescription($description) {
-        $this->description = $description;
-        return $this;
-    }
-
-    public function getBrand() {
+    public function getBrand(){
         return $this->brand;
     }
 
-    public function setBrand($brand) {
-        $this->brand = $brand;
-        return $this;
+    public function getCountry(){
+        return $this->country;
     }
 
-    public function getOrigin() {
-        return $this->origin;
-    }
-
-    public function setOrigin($origin) {
-        $this->origin = $origin;
-        return $this;
-    }
-
-    public function getIsListed() {
+    public function isListed(){
         return $this->isListed;
     }
 
-    public function setIsListed($isListed) {
-        $this->isListed = $isListed;
-        return $this;
-    }
-
-    public function getImgCount() {
+    public function getImgCount(){
         return $this->imgCount;
     }
 
-    public function setImgCount($imgCount) {
-        $this->imgCount = $imgCount;
-        return $this;
+    public function setName($name){
+        $this->name = $name;
     }
 
-    public function getCatogories() {
+    public function setBrand($brand){
+        $this->brand = $brand;
+    }
+
+    public function setListed($isListed){
+        $this->isListed = $isListed;
+    }
+
+    public function setImgCount($imgCount){
+        $this->imgCount = $imgCount;
+    }
+
+    public function setID($id){
+        $this->id = $id;
+    }
+
+    public function getCatogories(){
         return $this->catogories;
     }
 
-    public function setCatogories($catogories) {
-        $this->catogories = $catogories;
-        return $this;
-    }
-
-    public function getVarieties() {
+    public function getVarieties(){
         return $this->varieties;
     }
 
-    public function setVarieties($varieties) {
-        $this->varieties = $varieties;
-        return $this;
-    }
-
-    public function getCatogoryCount() {
+    public function getCatogoryCount(){
         return $this->catogoryCount;
     }
 
-    public function setCatogoryCount($catogoryCount) {
-        $this->catogoryCount = $catogoryCount;
-        return $this;
-    }
 }
 
 ?>
