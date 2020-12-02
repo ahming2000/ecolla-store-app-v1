@@ -8,7 +8,7 @@ $i_id = $view->getItemId($item);
 <?php
 if($_SERVER['REQUEST_METHOD']=='POST')
 {
-    $cartItem = new CartItem($item, 1, $_POST['variety'], "");
+    $cartItem = new CartItem($item, $_POST['itemQuantity'], $_POST['variety'], "");
     $cart->addItem($cartItem);
 }
 ?>
@@ -93,8 +93,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
                             <div class="col-xs-12 col-sm-8 quantity-button-control">
                                 <button type="button" class="btn btn-primary dropButton btn-sm mx-3 my-3"
                                 disabled>-</button>
-                                <input id="itemQuantity" type="number" class="mx-3 my-3" value="1" style="width: 45px;"
-                                disabled>
+                                <input id="itemQuantity" name="itemQuantity" type="number" class="mx-3 my-3" value="1" style="width: 45px;">
                                 <button type="button" class="btn btn-primary addButton btn-sm mx-3 my-3">+</button>
                             </div>
                             <button class="btn btn-md my-0 p ml-1" style="color:white; background-color: #3c3e44;" type="submit">加入购物车
