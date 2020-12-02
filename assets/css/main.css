@@ -4,7 +4,7 @@ body, wrapper {
 
 /*header.php*/
 .navbar{
-    background-color:white;
+    background-color:#303136;
     transition: background-color 0.5s;
 }
 .navbar-change{
@@ -12,10 +12,10 @@ body, wrapper {
     transition: background-color 0.5s;
 }
 .navbar-custom .navbar-brand{
-    color: black;
+    color: white;
 }
 .navbar-custom .navbar-nav .nav-link, .navbar-custom .fa-bars{
-    color: black;
+    color: white;
 }
 .navbar .nav-item.active .nav-link,
 .navbar .nav-item:hover .nav-link,
@@ -47,12 +47,19 @@ body, wrapper {
 
 /*index.php*/
 .headtext{
+    background-image: url('../images/ads/index-shop-bg.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
     padding-top: 200px;
     color: white;
     font-size: 50px;
-    background-color: black;
     height: 60vh;
     text-align: center;
+}
+.headtext1{
+    color: hotpink;
+    display: inline;
 }
 
 /*about-us,php*/
