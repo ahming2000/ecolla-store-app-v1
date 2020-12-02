@@ -2,17 +2,19 @@
 <?php $cart = new Cart(); ?>
 <?php
     if(isset($_POST["submit"])){
+        $customer = array(
+            "name" => $_POST["nameInput"],
+            "phone" => $_POST["phoneNumberInputHead"].$_POST["phoneNumberInputTail"],
+            "address" => $_POST["addressInputLine"],
+            "postcode" => $_POST["addressInputPostalCode"],
+            "city" => $_POST["addressInputCity"],
+            "state" => $_POST["addressInputState"],
+            "receiptPath" => "example path"
+        );
 
-        $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["addressInputLine"], $_POST["addressInputPostalCode"], $_POST["addressInputCity"], $_POST["addressInputState"]);
+        //To-do: debug the problem of same s_id insert to the database and same o_id as previous
         $order = new Order($customer);
-        $order->orderNow($cart);
-        $cart->resetCart();
-
-        UsefulFunction::uploadReceipt($_FILES["receipt"], $order->getOrderId());
-
-        $controller = new Controller();
-        $controller->insertNewOrder($order);
-        header("location: order-tracking.php?orderId=".$order->getOrderId()."&checkOut=1");
+        $order->createOrder($cart);
     }
 ?>
 <!DOCTYPE html>
@@ -29,7 +31,7 @@
 
             <div class="h1">结账界面</div>
 
-            <form action="" method="post" enctype="multipart/form-data">
+            <form action="" method="post">
                 <div class="form-group">
                     <label for="nameInput">名字/昵称</label>
                     <input type="text" class="form-control" name="nameInput" aria-describedby="nameHelp" placeholder="e.g. Alex Lee" required>
@@ -45,27 +47,35 @@
                 <div class="form-row">
                     <div class="col-12 mb-3">
                         <label for="addressInputLine">地址</label>
-                        <input type="text" class="form-control" name="addressInputLine" placeholder="e.g. 123, Jalan 20, Taman Baru, 82000 Kampar, Perak" required>
+                        <input type="text" class="form-control" name="addressInputLine" placeholder="e.g. 123, Jalan 20, Taman Baru" required>
+                    </div>
+
+                    <div class="col-4 mb-3">
+                        <label for="addressInputPostalCode">邮政编码（Postcode）</label>
+                        <input type="text" class="form-control" name="addressInputPostalCode" placeholder="e.g. 81000" required>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label for="addressInputCity">城市（City）</label>
+                        <input type="text" class="form-control" name="addressInputCity" placeholder="e.g. Kampar" required>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <label for="addressInputState">州属（State）</label>
+                        <input type="text" class="form-control" name="addressInputState" placeholder="e.g. Perak" required>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>上传收据</label>
+                    <label for="receiptUpload">上传收据</label>
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="receipt" id="receipt">
-                        <label class="custom-file-label" for="receipt" data-browse="上传">请上传您的收据</label>
+                        <input type="file" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label" for="customFile">请上传您的收据</label>
                     </div>
                 </div>
-                <div class="text-center"><input class="btn btn-primary" type="submit" value="提交" name="submit" style="width: 200px"></div>
+                <input class="btn btn-primary btn-block" type="submit" value="提交" name="submit">
             </form>
 
         </div>
 
         <?php include "assets/block-user-page/footer.php"; ?>
-        <script>
-        $(document).ready(function () {
-            bsCustomFileInput.init() //For file uploaded name to show
-        })
-        </script>
 
     </body>
 </html>

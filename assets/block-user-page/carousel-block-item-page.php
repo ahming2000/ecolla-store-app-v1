@@ -20,7 +20,7 @@
                 echo "<div class=\"carousel-item";
                 if($i == 0) echo " active"; //Set active for the first slide
                 echo "\">";
-                echo "<img class=\"d-block w-100\" src=\"../assets/images/items/".$i_id."/".$i.".png\" data-interval=\"10000\">";
+                echo "<img class=\"d-block w-100\" src=\"../assets/images/items/".$item->getID()."/".$i.".png\" data-interval=\"10000\">";
                 echo "</div>";
             }
 

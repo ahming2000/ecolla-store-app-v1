@@ -1,5 +1,5 @@
 <?php include "assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
-<?php $cart = new Cart(); $view = new View(); ?>
+<?php $cart = new Cart(); ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,58 +14,16 @@
     <main class="flex-fill">
 
         <div class="container mt-5">
-
             <div class="row">
-
-
-                <form action="item-list.php" method="get">
-
-
-                        <select name="catogory" class="custom-select mb-3" style="width: 300px;">
-                            <option value="<?php @$_GET["catogory"] != null? $_GET["catogory"]: ""; ?>" selected><?php if(@$_GET["catogory"] != null) echo $_GET["catogory"]; else echo "点击进行分类...";?></option>
-                            <?php
-                            $catList = $view->getCatogoryList();
-                            foreach($catList as $catogory){
-                                echo '<option value="'.$catogory["cat_name"].'">'.$catogory["cat_name"].'</option>';
-                            }
-                            ?>
-                        </select>
-                        <input class="btn btn-primary" value="搜查" type="submit">
-                        <button class="btn btn-secondary" type="button" onclick="removeCatogory()">取消分类</button>
-
-
-                </form>
-
-
-
-
-            </div>
-
-            <div class="row">
-
-
 
                 <?php
-
+                    $view = new View();
                     $itemList = $view->getAllItems();
-
-
 
                     foreach($itemList as $i){
                         $item = $i;
-                        $i_id = $view->getItemId($item);
                         if($item->isListed()){
-                            if(isset($_GET["catogory"])){
-                                foreach($i->getCatogories() as $catogory){
-                                    if($catogory == $_GET["catogory"]){
-                                        include "assets/block-user-page/item-block.php";
-                                        break;
-                                    }
-                                }
-                            } else{
-                                include "assets/block-user-page/item-block.php";
-                            }
-
+                            include "assets/block-user-page/item-block.php";
                         }
                     }
 
@@ -81,11 +39,5 @@
         </section>
 
     </wrapper>
-
-<script>
-    function removeCatogory(){
-        window.location.href = "item-list.php";
-    }
-</script>
     </body>
 </html>
