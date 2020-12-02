@@ -1,6 +1,6 @@
 <?php
 
-class CartItem implements JsonSerializable {
+class CartItem {
 
     private $item;
     private $quantity;
@@ -25,16 +25,6 @@ class CartItem implements JsonSerializable {
         }
 
         $this->subPrice = $this->setSubPrice();
-    }
-
-    public function jsonSerialize(){
-        return [
-            'item' => $this->item->jsonSerialize(),
-            'quantity' => $this->quantity,
-            'varietyIndex' => $this->varietyIndex,
-            'subPrice' => $this->subPrice,
-            'note' => $this->note
-        ];
     }
 
     public function getItem(){

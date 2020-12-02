@@ -1,5 +1,5 @@
 <?php include "assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
-<?php $cart = new Cart(); //Must declare before html tag for php cookie ?>
+<?php $cart = new Cart(); $view = new View(); //Must declare before html tag for php cookie ?>
 <?php
     if(isset($_POST["clearCart"])){
         $cart->resetCart();
