@@ -6,10 +6,25 @@ $item = $view->getItem("鹌鹑蛋", "湖湘贡");
 $i_id = $view->getItemId($item);
 ?>
 <?php
-if($_SERVER['REQUEST_METHOD']=='POST')
-{
+
+$max_count = 10;
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cartItem = new CartItem($item, $_POST['itemQuantity'], $_POST['variety'], "");
-    $cart->addItem($cartItem);
+    if ($cart->isDuplicated($cartItem)) {
+
+        $cur_count = $_POST['itemQuantity'];
+        $existing_item_count = $cart->getSpecificCartItem($_POST['variety'])->getQuantity();
+
+        if($cur_count + $existing_item_count <= $max_count) // if the existing item count and current count does not exceed max_count
+            $cart->editQuantity($_POST['variety'], $cur_count);
+        else // This adds item to the max_count since they already added more than 10
+            $cart->editQuantity($_POST['variety'], 10 - $existing_item_count);
+
+        //Will work on disabling the add item, or show a notification if existing item count has already exceeded the max value
+    } else {
+        $cart->addItem($cartItem);
+    }
 }
 ?>
 <!DOCTYPE html>

@@ -4,6 +4,7 @@
 $view = new View(); //Must declare before html tag for php cookie 
 ?>
 <?php
+
 if (isset($_POST["clearCart"])) {
     $cart->resetCart();
 }
@@ -96,7 +97,6 @@ if (isset($_POST['removeItem'])) {
         <?php include "assets/block-user-page/footer.php"; ?>
 
     </wrapper>
-
 </body>
 
 </html>

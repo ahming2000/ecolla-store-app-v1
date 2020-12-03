@@ -85,11 +85,22 @@ class Cart{
     }
 
     //To-do: check duplicate item
-    private function isDuplicated($cartItem){
+    public function isDuplicated($cartItem){
         foreach($this->cartItems as $c){
             if($c->getBarcode() === $cartItem->getBarcode()){
                 return True;
             }
+        }
+    }
+
+    //Xi En added this
+    // Just remove it if you feel its unnecessary
+    public function getSpecificCartItem($barcode){
+        foreach($this->cartItems as $cartItem){
+            if($cartItem->getBarcode() === $barcode){
+                return $cartItem;
+            }
+            return NULL;
         }
     }
 
