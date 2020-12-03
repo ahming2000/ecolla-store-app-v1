@@ -65,7 +65,7 @@ class Cart{
     private function updateSubtotal(){
         $total = 0;
         foreach ($this->cartItems as $cartItem) {
-            $total += $cartItem->getSubPrice() * $cartItem->getQuantity();
+            $total += $cartItem->getSubPrice();
         }
         $this->subtotal = $total;
     }
