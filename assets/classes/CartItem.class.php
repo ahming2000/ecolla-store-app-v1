@@ -61,7 +61,7 @@ class CartItem {
 
     public function setQuantity($quantity){
         $this->quantity = $quantity;
-        $this->subPrice = setSubPrice();
+        $this->subPrice = $this->setSubPrice();
     }
 
     private function setSubPrice(){

@@ -9,18 +9,18 @@ if (isset($_POST["clearCart"])) {
 }
 
 if (isset($_POST['addItemQuantity'])) {
-    $obj = json_decode($_POST['addItemQuantity']);
-    $cart->editQuantity($obj->barcode, 1);
+    $obj = $_POST['addItemQuantity'];
+    $cart->editQuantity($obj, 1);
 }
 
 if (isset($_POST['minusItemQuantity'])) {
-    $obj = json_decode($_POST['minusItemQuantity']);
-    $cart->editQuantity($obj->barcode, -1);
+    $obj = $_POST['minusItemQuantity'];
+    $cart->editQuantity($obj, -1);
 }
 
 if (isset($_POST['removeItem'])) {
-    $obj = json_decode($_POST['removeItem']);
-    $cart->removeItem($obj->barcode);
+    $obj = $_POST['removeItem'];
+    $cart->removeItem($obj);
 }
 ?>
 <!DOCTYPE html>
@@ -45,21 +45,23 @@ if (isset($_POST['removeItem'])) {
                     <div class="col-lg-8">
                         <div class="card mb-2">
                             <div class="card-body" id="cartItemList">
-                                <?php
+                                <form method="POST" action="cart.php" id="item_list_form">
+                                    <?php
 
-                                $cartList = $cart->getCartItems();
+                                    $cartList = $cart->getCartItems();
 
-                                if (empty($cartList[0])) echo "<div class=\"text-center\"><img src=\"assets/images/icon/empty-cart.png\" width=\"150\" height=\"150\"> <h5 class=\"p-2\">您的购物车为空</h5></div>";
+                                    if (empty($cartList[0])) echo "<div class=\"text-center\"><img src=\"assets/images/icon/empty-cart.png\" width=\"150\" height=\"150\"> <h5 class=\"p-2\">您的购物车为空</h5></div>";
 
-                                for ($i = 0; $i < sizeof($cartList); $i++) {
-                                    $cartItem = $cartList[$i];
+                                    for ($i = 0; $i < sizeof($cartList); $i++) {
+                                        $cartItem = $cartList[$i];
 
-                                    include "assets/block-user-page/cart-item-block.php";
-                                }
-                                if (isset($cartList[0])) {
-                                    echo "<div class=\"col-12\"><form action=\"\" method=\"post\"><button class=\"btn btn-primary btn-block\" name=\"clearCart\" type=\"submit\">清空购物车</button></form></div>";
-                                }
-                                ?>
+                                        include "assets/block-user-page/cart-item-block.php";
+                                    }
+                                    if (isset($cartList[0])) {
+                                        echo "<div class=\"col-12\"><form action=\"\" method=\"post\"><button class=\"btn btn-primary btn-block\" name=\"clearCart\" type=\"submit\">清空购物车</button></form></div>";
+                                    }
+                                    ?>
+                                </form>
 
 
                             </div>
