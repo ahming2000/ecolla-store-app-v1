@@ -39,11 +39,10 @@
 </div>
 
 <script>
-    let count = $(".quantity-number").val();
-    const max_count = 10;
-    if(count >= max_count){
-        $(".increase-button").attr('disabled', 'disabled');
-    }else if(count <= 0){
-        $(".decrease-button").attr('disabled', 'disabled');
+    let count_<?php echo $cartItem->getBarcode() ?> = $("#<?php echo $cartItem->getBarcode() ?> .quantity-number").val();
+    if(count_<?php echo $cartItem->getBarcode() ?> >= max_count){
+        $("#<?php echo $cartItem->getBarcode() ?> .increase-button").attr('disabled', 'disabled');
+    }else if(count_<?php echo $cartItem->getBarcode() ?> <= 0){
+        $("#<?php echo $cartItem->getBarcode() ?> .decrease-button").attr('disabled', 'disabled');
     }
 </script>

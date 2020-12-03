@@ -34,6 +34,9 @@ if (isset($_POST['removeItem'])) {
 </head>
 
 <body>
+    <script>
+        const max_count = 10;
+    </script>
     <?php $c = $cart;
     include "assets/block-user-page/header.php"; ?>
 
