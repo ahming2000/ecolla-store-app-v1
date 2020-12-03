@@ -37,3 +37,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    let count = $(".quantity-number").val();
+    const max_count = 10;
+    if(count >= max_count){
+        $(".increase-button").attr('disabled', 'disabled');
+    }else if(count <= 0){
+        $(".decrease-button").attr('disabled', 'disabled');
+    }
+</script>
