@@ -29,7 +29,7 @@
 
                         <div class="item-action-price d-flex justify-content-between align-items-center">
                             <div><a type="button" class="remove-item-button card-link-secondary small text-uppercase mr-3"><i class="fas fa-trash-alt mr-1"></i>移除</a></div>
-                            <span class="item-price">RM<?php echo number_format($cartItem->getSubPrice(), 2); ?></span>
+                            <span class="item-price">RM<?php echo number_format($cartItem->getSubPrice() * $cartItem->getQuantity(), 2); ?></span>
                         </div>
                     </div>
                 </div>
