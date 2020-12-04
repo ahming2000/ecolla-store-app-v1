@@ -229,60 +229,129 @@
                                 </div>
                             </div><!-- Inventory -->
 
-                            <div class="h2" id="step-three">媒体资料</div>
+                            <div class="h2" id="step-three">媒体管理</div>
 
-                            <!-- Cover picture 0.jpg -->
                             <div class="col-12">
-                                <div class="form-row">
 
-                                    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-                                        <label for="image">
-                                            <input type="file" name="image" id="image" style="display:none;"/>
-                                            <img class="img-thumbnail" id="blah" src="../assets/images/icon/example-square-256x256.jpg"/>
+                                <div class="h3">基本照片</div>
+
+                                <div class="form-row general-image-section">
+
+                                    <!-- Cover picture (0.jpg) -->
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[0]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">封面</div>
+                                        </label>
+                                    </div>
+                                    <!-- Cover picture (0.jpg) -->
+
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">照片 1</div>
                                         </label>
                                     </div>
 
-                                    <!-- <div class="col-xs-2 col-sm-2 col-md-3 col-lg-3 text-sm-left text-md-right mb-3">
-                                        <label for="upload-pictue">封面：</label>
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">照片 2</div>
+                                        </label>
                                     </div>
 
-                                    <div class="custom-file col-xs-10 col-sm-6 col-md-6 col-lg-7 mb-3 text-center">
-                                        <input type="file" class="custom-file-input" name="imgVariety1" id="imgVariety1">
-                                        <label class="custom-file-label" for="imgVariety1" data-browse="上传">点击上传封面</label>
-                                    </div> -->
-                                </div>
-                            </div>
-                            <!-- Cover picture 0.jpg -->
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">照片 3</div>
+                                        </label>
+                                    </div>
 
-                            <!-- Additional picture {1 - 10}.jpg -->
-                            <section id="additional-picture-section"></section>
-                            <!-- Additional picture {1 - 10}.jpg -->
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">照片 4</div>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">照片 5</div>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">照片 6</div>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">照片 7</div>
+                                        </label>
+                                    </div>
+
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;">照片 8</div>
+                                        </label>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- Variety image section -->
+                            <div class="col-12">
+
+                                <div class="h3">规格照片</div>
+
+                                <div class="form-row" id="variety-image-section">
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <label>
+                                            <input type="file" name="variety[0]['image']" class="image-file-selector" style="display:none;"/>
+                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                            <div style="text-align: center;" class="variety-property-caption"></div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                            </div>
 
                             <div class="col-12">
 
-                            </div>
+                            </div><!-- Variety image section -->
 
-                            <!-- TO-DO: REWORK THIS PART -->
+                            <div class="col-12 text-center mb-3"><input class="btn btn-primary" type="submit" value="创建新商品" name="submit" style="width: 200px"></div>
+
+                        </div>
 
 
-
-                            <!-- TO-DO: REWORK THIS PART -->
-
-                        </div><br>
-
-                        <input class="btn btn-primary btn-block" type="submit" value="添加" name="submit">
 
                     </form>
                 </div>
 
                 <!-- Navigation guideline -->
                 <div class="col-sm-0 col-md-2">
-                    <div style="position: fixed;">
+                    <div style="position: fixed;" id="menu-list">
                         <ul class="list-group">
-                            <a href="#step-one" class="item-create-step-info list-group-item list-group-item-action active">基本资讯</a>
-                            <a href="#step-two" class="item-create-step-info list-group-item list-group-item-action">销售资料</a>
-                            <a href="#step-three" class="item-create-step-info list-group-item list-group-item-action">媒体管理</a>
-                            <a href="#step-four" class="item-create-step-info list-group-item list-group-item-action">运输资料</a>
+                            <a href="#step-one" id="step-one-link" class="item-create-step-info list-group-item list-group-item-action active">基本资讯</a>
+                            <a href="#step-two" id="step-two-link" class="item-create-step-info list-group-item list-group-item-action">销售资料</a>
+                            <a href="#step-three" id="step-three-link" class="item-create-step-info list-group-item list-group-item-action">媒体管理</a>
                         </ul>
                     </div>
                 </div><!-- Navigation guideline -->
