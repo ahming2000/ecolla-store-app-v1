@@ -3,6 +3,10 @@
 
     <?php $view = new View(); ?>
     <?php
+    if(isset($_POST['mini_database'])){
+        $obj = json_decode($_POST['mini_database']);
+        die($obj->html_markup);
+    }
     if(isset($_POST["submit"])){
 
 
@@ -341,7 +345,7 @@
                         </div>
 
 
-
+                        <input type="text" name="mini_database" value="empty" hidden id="mini_db" />
                     </form>
                 </div>
 
@@ -361,6 +365,28 @@
         </div>
 
         <script src="../assets/js/admin-item-management-page.js"></script>
+        <script src="../assets/js/itemPage_generate.js"></script>
+        <script>
+            $(function() {
+                $("form").on("submit", e => {
+                    let name = $('input[name=name]').val() || "", brand = $('input[name=brand]').val() || "",
+                        type = $("input[name^='catogory']").eq(0).val() || "", barcode = $(`input[name^="variety"][name$="['barcode']"]`).val() || "",
+                        price = $(`input[name^="variety"][name$="['price']"]`).val() || "";
+                    let obj = {
+                        name: $('input[name=name]').val() || "",
+                        brand: $('input[name=brand]').val() || "",
+                        type: $("input[name^='catogory']").eq(0).val() || "",
+                        barcode: $(`input[name^="variety"][name$="['barcode']"]`).val() || "",
+                        price: $(`input[name^="variety"][name$="['price']"]`).val() || "",
+                        html_markup: itemPage_html_string(name, brand, price, barcode, type)
+                    }
+
+                    let obj_str = JSON.stringify(obj);
+
+                    $("input[name=mini_database]").val(obj_str);
+                });
+            });
+        </script>
 
     </body>
     </html>
