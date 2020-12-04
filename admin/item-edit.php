@@ -174,7 +174,7 @@ if(isset($_POST["submit"])){
                                             for($i = 0; $i < sizeof($item->getVarieties()); $i++){
                                                 echo "<tr>".
                                                     "<td><input type=\"text\" class=\"form-control variety-property\" name=\"variety[".$i."]['property']\" aria-describedby=\"variety-property\" maxlength=\"100\" value=\"".$item->getVarieties()[$i]->getProperty()."\" disabled/></td>" .
-                                                    "<td><input type=\"text\" class=\"form-control variety-barcode\" name=\"variety[".$i."]['barcode']\" aria-describedby=\"variety-barcode\" maxlength=\"20\" value=\"".$item->getVarieties()[$i]->getBarcode()."\" required/></td>".
+                                                    "<td><input type=\"text\" class=\"form-control variety-barcode\" name=\"variety[".$i."]['barcode']\" aria-describedby=\"variety-barcode\" maxlength=\"20\" value=\"".$item->getVarieties()[$i]->getBarcode()."\" disabled/></td>".
                                                     "<td><input type=\"number\" class=\"form-control variety-price\" name=\"variety[".$i."]['price']\" aria-describedby=\"variety-price\" maxlength=\"10\" value=\"".$item->getVarieties()[$i]->getPrice()."\" required/></td>".
                                                     "<td><input type=\"number\" class=\"form-control variety-weight\" name=\"variety[".$i."]['weight']\" aria-describedby=\"variety-weight\" maxlength=\"10\" value=\"".$item->getVarieties()[$i]->getWeight()."\" required/></td>".
                                                     "</tr>";
