@@ -228,6 +228,20 @@ class UsefulFunction{
             return "上传成功！";
         }
 
+
+        public static function createPHPFile($name, $brand, $markup){
+            //$newPHPFile = fopen("../items/".str_replace(" ", "-", $item->getName()).".php", "w") or die("Error on creating new php file!");
+            $newPHPFile = fopen("../items/".$brand."-".$name.".php", "w") or die("Error on creating new php file!");
+
+            if(!fwrite($newPHPFile, $markup->html_markup)) return false;
+
+            fclose($newPHPFile);
+
+            return true;
+        }
+
     }
+
+
 
     ?>
