@@ -3,14 +3,11 @@
 
     <?php $view = new View(); ?>
     <?php
-    if(isset($_POST['mini_database'])){
-        $obj = json_decode($_POST['mini_database']);
-        die($obj->html_markup);
-    }
     if(isset($_POST["submit"])){
 
 
-        // $item = new Item($_POST["name"], $_POST["brand"], $_POST["country"], isset($_POST["isListed"]) ? 1 : 0, 1);
+
+        // $item = new Item($_POST["name"], $_POST["brand"], $_POST["country"], 0, );
         // $v = new Variety($_POST["barcode1"], $_POST["property1"], $_POST["propertyName1"], $_POST["price1"], $_POST["weight1"], $_POST["weightUnit1"], 1.0);
         // $v->addInventory(new Inventory($_POST["expireDate1"], $_POST["quantity1"]));
         // $item->addVariety($v);
@@ -19,36 +16,14 @@
         // $controller = new Controller();
         // $controller->insertNewItem($item);
 
-        // $newPHPFile = fopen("../items/".str_replace(" ", "-", $item->getName()).".php", "w") or die("Error on creating new php file!");
-        // $template = fopen("../items/item-page-template.txt", "r") or die("Error on opening the item php file template!");
-        //
-        // while(!feof($template)){
-        //     $str = fgets($template);
-        //
-        //     if($str === "<!--Name-->"){
-        //         fwrite($newPHPFile, strval($item->getName()));
-        //     }
-        //
-        //     if(UsefulFunction::startsWith($str, "<!--")){
-        //         //Implement dynamic information
-        //         if(UsefulFunction::startsWith($str, "<!--Catogory-->")){
-        //             fwrite($newPHPFile, strtolower($item->getCatogory()));
-        //         }
-        //         else if(UsefulFunction::startsWith($str, "<!--Name-->")){
-        //             fwrite($newPHPFile, $item->getName());
-        //         }
-        //         else if(UsefulFunction::startsWith($str, "<!--ImgPath-->")){
-        //             for($i = 0; $i < sizeof($item->getImgPath()); $i++){
-        //                 fwrite($newPHPFile, $item->getImgPath[$i]);
-        //             }
-        //         }
-        //     } else{
-        //         fwrite($newPHPFile, $str); //Read from template
-        //     }
-        // }
-        // fclose($template);
-        // fclose($newPHPFile);
+        if(isset($_POST['mini_database'])){
+            $obj = json_decode($_POST['mini_database']);
+            UsefulFunction::createPHPFile($_POST["name"], $_POST["brand"], $obj);
+            header("location: ../items/".$_POST["brand"]."-".$_POST["name"].".php");
+        }
     }
+
+
     ?>
     <!DOCTYPE html>
     <html>
