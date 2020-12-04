@@ -385,21 +385,12 @@ if(isset($_POST["submit"])){
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
                                                 echo "\"/>" .
-                                                "<div style=\"text-align: center;\" class=\"variety-property-caption\"></div>" .
+                                                "<div style=\"text-align: center;\" class=\"variety-property-caption\">".$item->getVarieties()[$i]->getProperty()."</div>" .
                                             "</label>" .
                                         "</div>";
                                     }
 
                                  ?>
-
-
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="variety[0]['image']" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
-                                        <div style="text-align: center;" class="variety-property-caption"></div>
-                                    </label>
-                                </div>
                             </div>
 
                         </div>
