@@ -6,14 +6,14 @@
     if(isset($_POST["submit"])){
 
 
-        $item = new Item($_POST["name"], $_POST["brand"], $_POST["country"], isset($_POST["isListed"]) ? 1 : 0, 1);
-        $v = new Variety($_POST["barcode1"], $_POST["property1"], $_POST["propertyName1"], $_POST["price1"], $_POST["weight1"], $_POST["weightUnit1"], 1.0);
-        $v->addInventory(new Inventory($_POST["expireDate1"], $_POST["quantity1"]));
-        $item->addVariety($v);
-        $item->addCatogory($_POST["catogory"]);
-
-        $controller = new Controller();
-        $controller->insertNewItem($item);
+        // $item = new Item($_POST["name"], $_POST["brand"], $_POST["country"], isset($_POST["isListed"]) ? 1 : 0, 1);
+        // $v = new Variety($_POST["barcode1"], $_POST["property1"], $_POST["propertyName1"], $_POST["price1"], $_POST["weight1"], $_POST["weightUnit1"], 1.0);
+        // $v->addInventory(new Inventory($_POST["expireDate1"], $_POST["quantity1"]));
+        // $item->addVariety($v);
+        // $item->addCatogory($_POST["catogory"]);
+        //
+        // $controller = new Controller();
+        // $controller->insertNewItem($item);
 
         // $newPHPFile = fopen("../items/".str_replace(" ", "-", $item->getName()).".php", "w") or die("Error on creating new php file!");
         // $template = fopen("../items/item-page-template.txt", "r") or die("Error on opening the item php file template!");
@@ -53,9 +53,9 @@
     </head>
 
     <body>
-        <div class="container-sm" style="margin-top: 100px;">
+        <?php include_once "../assets/block-admin-page/header.php"; ?>
 
-            <?php include_once "../assets/block-admin-page/header.php"; ?>
+        <div class="container-sm" style="margin-top: 100px;">
 
             <!-- Page content with row class -->
             <div class="row">
@@ -151,7 +151,7 @@
                                     </div>
 
                                     <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                        <input type="text" class="form-control" name="variety-property-name" aria-describedby="variety-property-name" onchange="syncVariety(this)" />
+                                        <input type="text" class="form-control" name="variety-property-name" aria-describedby="variety-property-name" />
                                     </div>
                                 </div>
                             </div><!-- Property Name -->
