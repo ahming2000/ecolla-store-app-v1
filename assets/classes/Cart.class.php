@@ -97,11 +97,11 @@ class Cart{
     // Just remove it if you feel its unnecessary
     public function getSpecificCartItem($barcode){
         foreach($this->cartItems as $cartItem){
-            if($cartItem->getBarcode() === $barcode){
+            if($cartItem->getBarcode() == $barcode){
                 return $cartItem;
             }
-            return NULL;
         }
+        return NULL;
     }
 
     //Getter

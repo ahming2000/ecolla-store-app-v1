@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $cur_count = $_POST['itemQuantity'];
         $existing_item_count = $cart->getSpecificCartItem($_POST['variety'])->getQuantity();
 
-        if($cur_count + $existing_item_count <= $max_count) // if the existing item count and current count does not exceed max_count
+        if ($cur_count + $existing_item_count <= $max_count) // if the existing item count and current count does not exceed max_count
             $cart->editQuantity($_POST['variety'], $cur_count);
         else // This adds item to the max_count since they already added more than 10
             $cart->editQuantity($_POST['variety'], 10 - $existing_item_count);
@@ -75,9 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <a href="">
                                     <span class="badge purple mr-1">零食</span>
                                 </a>
-                                <a href="">
+                                <!-- <a href="">
                                     <span class="badge blue mr-1">新品</span>
-                                </a>
+                                </a> -->
                                 <a href="">
                                     <span class="badge red mr-1">畅销</span>
                                 </a>
@@ -101,28 +101,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                     <input id="variety" type="text" name="variety" value="6931754804900" hidden></input>
 
-                                    <div class="col-xs-12 col-sm-8 mb-3">
+                                    <div class="col-xs-12 col-sm-8">
                                         <ol class="list-group">
-                                            <li class="list-group-item active">香辣味26g</li>
-                                            <li class="list-group-item">黑椒味26g</li>
-                                            <li class="list-group-item">山椒味26g</li>
-                                            <li class="list-group-item">烧烤味26g</li>
-                                            <li class="list-group-item">黑鸭味26g</li>
+                                            <?php
+                                            for ($i = 0; $i < sizeof($item->getVarieties()); $i++) {
+                                                echo '<li class="list-group-item';
+                                                if ($i == 0) echo ' active';
+                                                echo '">' . $item->getVarieties()[$i]->getProperty() . '</li>';
+                                            }
+                                            ?>
                                         </ol>
                                     </div>
 
-                                    <div class="d-flex justify-content-left">
-                                        <!-- Default input -->
-                                        <div class="col-xs-12 col-sm-8 quantity-button-control">
-                                            <button type="button" class="btn btn-primary dropButton btn-sm mx-3 my-3" disabled>-</button>
-                                            <input id="itemQuantity" name="itemQuantity" type="number" class="mx-3 my-3" value="1" style="width: 45px;">
-                                            <button type="button" class="btn btn-primary addButton btn-sm mx-3 my-3">+</button>
-                                        </div>
-                                        <button class="btn btn-md my-0 p ml-1" style="color:white; background-color: #3c3e44;" type="submit">加入购物车
-                                            <i class="fas fa-shopping-cart ml-1"></i>
-                                        </button>
-                                    </div>
+                                </div><br>
 
+                                <div class="d-flex justify-content-left">
+                                    <!-- Default input -->
+                                    <div class="col-xs-12 col-sm-8 quantity-button-control">
+                                        <button type="button" class="btn btn-primary dropButton btn-sm mx-3 my-3" disabled>-</button>
+                                        <input id="itemQuantity" name="itemQuantity" type="number" class="mx-3 my-3" value="1" style="width: 45px;">
+                                        <button type="button" class="btn btn-primary addButton btn-sm mx-3 my-3">+</button>
+                                    </div>
+                                    <button class="btn btn-md my-0 p ml-1" style="color:white; background-color: #3c3e44;" type="submit">加入购物车
+                                        <i class="fas fa-shopping-cart ml-1"></i>
+                                    </button>
                                 </div>
 
                             </form>
@@ -150,17 +152,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $(".list-group li").removeClass("active");
                 $(this).addClass("active");
 
-                if ($(".list-group li:nth-child(1)").hasClass("active")) {
-                    $("#variety").val("6931754804900");
-                } else if ($(".list-group li:nth-child(2)").hasClass("active")) {
-                    $("#variety").val("6931754804917");
-                } else if ($(".list-group li:nth-child(3)").hasClass("active")) {
-                    $("#variety").val("6931754804924");
-                } else if ($(".list-group li:nth-child(4)").hasClass("active")) {
-                    $("#variety").val("6931754804931");
-                } else if ($(".list-group li:nth-child(5)").hasClass("active")) {
-                    $("#variety").val("6931754805655");
+                <?php
+                for ($i = 0; $i < sizeof($item->getVarieties()); $i++) {
+                    if ($i != 0) {
+                        echo "else ";
+                    }
+
+                    echo "if ($('.list-group li:nth-child(".($i + 1).
+                    ")').hasClass('active')) $('#variety').val('".$item->getVarieties()[$i]->getBarcode().
+                    "');";
+
                 }
+                ?>
 
             });
 
