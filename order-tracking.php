@@ -1,30 +1,26 @@
-<?php include "assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
-<?php $cart = new Cart(); ?>
 <?php
-$alertType = "";
-$message = "";
+// Initialize
+include "assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed.
+$cart = new Cart();
+
 if(isset($_GET["orderId"])){
 
     $view = new View();
     $o_delivery_id = $view->getDeliveryId($_GET["orderId"]);
+    $order = $view->getOrder($_GET["orderId"]);
 
-    if($o_delivery_id != null){
-        $message = "您的快递的运送ID为：".$o_delivery_id;
+    if($o_delivery_id != null && $order != null){
+        $message = "您的订单已经在路上：";
         $alertType = "alert-success";
+    } else if($o_delivery_id == null && $order != null){
+        $message = "您的订单正在处理中。";
+        $alertType = "alert-secondary";
     } else{
-
-        if(isset($_GET["checkOut"])){
-            $message = "您的订单已经提交完成，订单会在两天内出货！";
-            $alertType = "alert-primary";
-        } else{
-            $message = "您输入的订单ID不存在我们的记录里。";
-            $alertType = "alert-warning";
-        }
-
+        $message = "订单不在我们的数据库里！";
+        $alertType = "alert-warning";
     }
+
 }
-
-
 
 ?>
 <!DOCTYPE html>
@@ -41,22 +37,39 @@ if(isset($_GET["orderId"])){
     <wrapper class="d-flex flex-column">
         <main class="flex-fill"> <!--put content-->
 
-            <div class="container">
-                <div class="alert <?php echo $alertType ?>" role="alert"><?php echo $message ?></div>
-                <div class="text-center" style="width: 300px; font-size: large;">
-                    <?php if(@$_GET["orderId"] != null) echo $_GET["orderId"]; ?>
+            <div class="container-sm">
+
+                <div class="row">
+                    <div class="col-12">
+                        <form action="order-tracking.php" method="get">
+                            <div class="form-group">
+                                <label for="order-id-input">请输入订单ID</label>
+                                <input type="text" class="form-control form-control-lg" name="orderId" aria-describedby="order-id-input-help" placeholder="e.g. ECOLLA20201130132713" required>
+                                <small id="order-id-input-help" class="form-text text-muted">订单ID来自上一次的结账界面</small>
+                            </div>
+                            <input type="submit" value="确认">
+                        </form>
+                    </div>
                 </div>
 
-                <?php if(@$_GET["orderId"] != null) echo "<br><br>"; ?>
-
-                <form action="order-tracking.php" method="get">
-                    <div class="form-group">
-                        <label for="order-id-input">请输入订单ID</label>
-                        <input type="text" class="form-control form-control-lg" name="orderId" aria-describedby="order-id-input-help" placeholder="e.g. ECOLLA20201130132713" required>
-                        <small id="order-id-input-help" class="form-text text-muted">订单ID来自上一次的结账界面</small>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert <?php
+                        if(isset($alertType)){
+                            echo $alertType;
+                        } ?>" role="alert"><?php
+                        if(isset($message)){
+                            echo $message;
+                        } ?></div>
                     </div>
-                    <input type="submit" value="确认">
-                </form>
+                    <div class="col-4">
+                        <div class="text-center" style="font-size: large;">
+                            <?php if(@$_GET["orderId"] != null) echo $_GET["orderId"]; ?>
+                        </div>
+                    </div>
+                </div>
+
+
 
 
 

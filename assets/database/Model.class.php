@@ -191,7 +191,8 @@ class Model extends Dbh{
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetchAll();
-        return $results[0][$attrToSelect];
+        if($results != null) return $results[0][$attrToSelect];
+        else return null;
     }
 
     protected function dbSelectRow_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
@@ -222,7 +223,8 @@ class Model extends Dbh{
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute($attrContentToSearchList)) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetchAll();
-        return $results[0][$attrToSelect];
+        if($results != null) return $results[0][$attrToSelect];
+        else return null;
     }
 
     protected function dbSelectCount($tableName){
