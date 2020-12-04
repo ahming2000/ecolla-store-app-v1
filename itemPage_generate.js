@@ -54,7 +54,6 @@ function generate_script() {
 
                 }
                 ?>
-
             });
 
             $(".quantity-button-control button").on("click", function() {
@@ -86,6 +85,43 @@ function generate_script() {
                 }
 
             });
+
+            //Star-Rating System
+            let flag = [0, 0, 0, 0, 0, 0];
+
+            for (let i = 1; i <= 5; i++) {
+                $(\`#star\${i}\`).hover(e => {
+                    for (let k = i; k >= 1; k--) {
+                        if (flag[k] == 0){
+                            $(\`#star\${k}\`).css("color", "orange");
+                            $("#rate_points").html(\`\${parseInt(i).toFixed(2)}\`);
+                        }
+                    }
+                }, e => {
+                    for (let k = i; k >= 1; k--) {
+                        if (flag[k] == 0){
+                            $(\`\#star\${k}\`).css("color", "grey");
+                            $("#rate_points").html("0.00");
+                        }
+                    }
+                });
+
+                $(\`#star\${i}\`).on("click", e => {
+                    reset();
+                    for (let k = i; k >= 1; k--) {
+                        $(\`#star\${k}\`).css("color", "orange");
+                        flag[k] = 1;
+                    }
+                    $("#rate_points").html(\`\${parseInt(i).toFixed(2)}\`);
+                });
+            }
+
+            function reset() {
+                for (let i = 1; i <= 5; i++) {
+                    flag[i] = 0;
+                    $(\`#star\${i}\`).css("color", "grey");
+                }
+            }
 
         });
     </script>
@@ -208,8 +244,32 @@ function generate_ItemPage_wrapper_footer() {
     `;
 }
 
+function generate_star_rating_system(){
+    return ` <!-- Star Rating System -->
+    <div class="row">
+        <div class="col-6">
+            <div class="rating">
+                <div class="fa fa-star" id="star1" style="color: grey;">
+                </div>
+                <div class="fa fa-star" id="star2" style="color: grey;">
+                </div>
+                <div class="fa fa-star" id="star3" style="color: grey;">
+                </div>
+                <div class="fa fa-star" id="star4" style="color: grey;">
+                </div>
+                <div class="fa fa-star" id="star5" style="color: grey;">
+                </div>
+            </div>
+        </div>
+        <div class="col-6">
+            Rating: <span id="rate_points">0.00</span> / 5.00
+        </div>
+    </div><br>`;
+}
+
 function generate_itemPage_wrapper(item_name, brand, pricePerItem, barcode, itemType) {
     return generate_itemPage_wrapper_header(item_name, brand, pricePerItem, itemType)
+        + generate_star_rating_system()
         + generate_form_html(barcode)
         + generate_ItemPage_wrapper_footer();
 }

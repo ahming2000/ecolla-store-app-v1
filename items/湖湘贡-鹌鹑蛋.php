@@ -92,6 +92,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                             <p class="lead font-weight-bold">湖湘贡鹌鹑蛋</p>
 
+                            <!-- Star Rating System -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="rating">
+                                        <div class="fa fa-star" id="star1" style="color: grey;">
+                                        </div>
+                                        <div class="fa fa-star" id="star2" style="color: grey;">
+                                        </div>
+                                        <div class="fa fa-star" id="star3" style="color: grey;">
+                                        </div>
+                                        <div class="fa fa-star" id="star4" style="color: grey;">
+                                        </div>
+                                        <div class="fa fa-star" id="star5" style="color: grey;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    Rating: <span id="rate_points">0.00</span> / 5.00
+                                </div>
+                            </div><br>
+
                             <form action="" method="post">
                                 <div class="row">
 
@@ -195,6 +216,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
             });
+
+            //Star-Rating System
+            let flag = [0, 0, 0, 0, 0, 0];
+
+            for (let i = 1; i <= 5; i++) {
+                $(`#star${i}`).hover(e => {
+                    for (let k = i; k >= 1; k--) {
+                        if (flag[k] == 0){
+                            $(`#star${k}`).css("color", "orange");
+                            $("#rate_points").html(`${parseInt(i).toFixed(2)}`);
+                        }
+                    }
+                }, e => {
+                    for (let k = i; k >= 1; k--) {
+                        if (flag[k] == 0){
+                            $(`#star${k}`).css("color", "grey");
+                            $("#rate_points").html("0.00");
+                        }
+                    }
+                });
+
+                $(`#star${i}`).on("click", e => {
+                    reset();
+                    for (let k = i; k >= 1; k--) {
+                        $(`#star${k}`).css("color", "orange");
+                        flag[k] = 1;
+                    }
+                    $("#rate_points").html(`${parseInt(i).toFixed(2)}`);
+                });
+            }
+
+            function reset() {
+                for (let i = 1; i <= 5; i++) {
+                    flag[i] = 0;
+                    $(`#star${i}`).css("color", "grey");
+                }
+            }
 
         });
     </script>
