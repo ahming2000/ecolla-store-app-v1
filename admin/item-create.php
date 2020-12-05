@@ -3,16 +3,15 @@
 
     <?php $view = new View(); ?>
     <?php
-    if(isset($_POST["submit"])){
-
+    function saveData(){
         // Convert file pointer to better array arrangement. Reference: https://www.php.net/manual/en/features.file-upload.multiple.php#53240
-        $filePtrArray = UsefulFunction::reArrayFiles($_FILES["item-image"]);
+        $generalImageListWithNull = UsefulFunction::reArrayFiles($_FILES["item-image"]);
         // Check list all image into an array
         $generalImageList = array();
-        for($i = 0; $i < sizeof($filePtrArray); $i++){
-            if($filePtrArray[$i]["name"] != null){
+        for($i = 0; $i < sizeof($generalImageListWithNull); $i++){
+            if($generalImageListWithNull[$i]["name"] != null){
                 //Used to rearrage the index for image upload later
-                array_push($generalImageList, $filePtrArray[$i]);
+                array_push($generalImageList, $generalImageListWithNull[$i]);
             }
         }
 
@@ -45,20 +44,43 @@
         $controller->insertNewItem($item);
         $i_id = $view->getItemId($item);
 
-
-
-        // Image upload
+        // General image upload
         for($i = 0; $i < sizeof($generalImageList); $i++){
             UsefulFunction::uploadItemImage($generalImageList[$i], $i_id, $i, "crop");
         }
 
+        // Variety image upload
+        $varietyImageList =  UsefulFunction::reArrayFiles($_FILES["variety-image"]);
+        for($i = 0; $i < sizeof($varietyImageList); $i++){
+            if($varietyImageList[$i]["name"] != null){
+                UsefulFunction::uploadItemImage($varietyImageList[$i], $i_id, $_POST["variety"][$i]["barcode"], "crop");
+            }
+        }
+        return $item;
+    }
 
-        if(isset($_POST['mini_database'])){
+    if(isset($_POST["save"])){
+
+        $item = saveData();
+        UsefulFunction::generateAlert("商品保存成功！");
+        header("location: item-edit.php?itemName=".$_POST["name"]."&itemBrand=".$_POST["brand"]);
+
+    }
+
+    // Listing button clicked
+    if(isset($_POST['list'])){
+
+        $item = saveData();
+        if(UsefulFunction::checkListingCondition($item)){
             $obj = json_decode($_POST['mini_database']);
             UsefulFunction::createPHPFile($_POST["name"], $_POST["brand"], $obj);
-            header("location: ../items/".$_POST["brand"]."-".$_POST["name"].".php");
+            // To-do: set is_listed attribute to 1 in database
+            UsefulFunction::generateAlert("商品保存成功，商品已上架！");
+            header("location: item-edit.php?itemName=".$_POST["name"]."&itemBrand=".$_POST["brand"]);
+        } else{
+            UsefulFunction::generateAlert("商品资料没有达到上架的条件！");
+            header("location: item-edit.php?itemName=".$_POST["name"]."&itemBrand=".$_POST["brand"]);
         }
-
     }
 
 
@@ -115,7 +137,7 @@
                                     </div>
 
                                     <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                        <input type="text" class="form-control" name="origin" aria-describedby="origin">
+                                        <input type="text" class="form-control" name="origin" aria-describedby="origin"/>
                                     </div>
                                 </div>
                             </div><!-- Origin -->
@@ -123,11 +145,11 @@
                             <div class="col-12">
                                 <div class="form-row">
                                     <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
-                                        <label for="brand">商品品牌：</label>
+                                        <label for="brand">* 商品品牌：</label>
                                     </div>
 
                                     <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                        <input type="text" class="form-control" name="brand" aria-describedby="brand">
+                                        <input type="text" class="form-control" name="brand" aria-describedby="brand" required/>
                                     </div>
                                 </div>
                             </div><!-- Brand -->
@@ -164,7 +186,7 @@
                             <div class="col-12">
                                 <div class="form-row">
                                     <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
-                                        <label for="variety-property-name">规格名称：</label>
+                                        <label for="variety-property-name">* 规格名称：</label>
                                     </div>
 
                                     <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
@@ -206,9 +228,9 @@
                                         <tbody id="variety-section">
                                             <tr>
                                                 <td><input type="text" class="form-control variety-property" name="variety[0][property]" aria-describedby="variety-property" maxlength="100" disabled/></td>
-                                                <td><input type="text" class="form-control variety-barcode" name="variety[0][barcode]" aria-describedby="variety-barcode" maxlength="20" required/></td>
-                                                <td><input type="number" step="0.01" min="0" class="form-control variety-price" name="variety[0][price]" aria-describedby="variety-price" maxlength="10" required/></td>
-                                                <td><input type="number" step="0.001" min="0" class="form-control variety-weight" name="variety[0][weight]" aria-describedby="variety-weight" maxlength="10" required/></td>
+                                                <td><input type="text" class="form-control variety-barcode" name="variety[0][barcode]" aria-describedby="variety-barcode" maxlength="20"/></td>
+                                                <td><input type="number" step="0.01" min="0" class="form-control variety-price" name="variety[0][price]" aria-describedby="variety-price" maxlength="10"/></td>
+                                                <td><input type="number" step="0.001" min="0" class="form-control variety-weight" name="variety[0][weight]" aria-describedby="variety-weight" maxlength="10"/></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -234,8 +256,8 @@
                                                 <td colspan="2">
                                                     <div class="form-row inventory-section-class">
                                                         <input type="number" value="1" class="inventory-count" hidden/>
-                                                        <div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[0][inventory][0][expireDate]" aria-describedby="inventory-expire-date" required/></div>
-                                                        <div class="col-6"><input type="number" min="0" class="form-control inventory-quantity mb-1" name="variety[0][inventory][0][quantity]" aria-describedby="inventory-quantity" required/></div>
+                                                        <div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[0][inventory][0][expireDate]" aria-describedby="inventory-expire-date"/></div>
+                                                        <div class="col-6"><input type="number" min="0" class="form-control inventory-quantity mb-1" name="variety[0][inventory][0][quantity]" aria-describedby="inventory-quantity"/></div>
                                                     </div>
                                                     <!-- Add extra inventory button -->
                                                     <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-class">添加更多库存</button></div>
@@ -261,72 +283,79 @@
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">封面</div>
                                         </label>
-                                    </div>
-                                    <!-- Cover picture (0.jpg) -->
+                                    </div><!-- Cover picture (0.jpg) -->
 
+                                    <!-- Cover picture (1.jpg) -->
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
                                             <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 1</div>
                                         </label>
-                                    </div>
+                                    </div><!-- Cover picture (1.jpg) -->
 
+                                    <!-- Cover picture (2.jpg) -->
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
                                             <input type="file" name="item-image[2]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 2</div>
                                         </label>
-                                    </div>
+                                    </div><!-- Cover picture (2.jpg) -->
 
+                                    <!-- Cover picture (3.jpg) -->
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
                                             <input type="file" name="item-image[3]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 3</div>
                                         </label>
-                                    </div>
+                                    </div><!-- Cover picture (3.jpg) -->
 
+                                    <!-- Cover picture (4.jpg) -->
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
                                             <input type="file" name="item-image[4]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 4</div>
                                         </label>
-                                    </div>
+                                    </div><!-- Cover picture (4.jpg) -->
 
+                                    <!-- Cover picture (5.jpg) -->
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
                                             <input type="file" name="item-image[5]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 5</div>
                                         </label>
-                                    </div>
+                                    </div><!-- Cover picture (5.jpg) -->
 
+                                    <!-- Cover picture (6.jpg) -->
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
                                             <input type="file" name="item-image[6]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 6</div>
                                         </label>
-                                    </div>
+                                    </div><!-- Cover picture (6.jpg) -->
 
+                                    <!-- Cover picture (7.jpg) -->
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
                                             <input type="file" name="item-image[7]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 7</div>
                                         </label>
-                                    </div>
+                                    </div><!-- Cover picture (7.jpg) -->
 
+                                    <!-- Cover picture (8.jpg) -->
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
                                             <input type="file" name="item-image[8]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 8</div>
                                         </label>
-                                    </div>
+                                    </div><!-- Cover picture (8.jpg) -->
 
                                 </div>
 
@@ -340,7 +369,7 @@
                                 <div class="form-row" id="variety-image-section">
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="variety[0][image]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="variety-image[0]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;" class="variety-property-caption"></div>
                                         </label>
@@ -349,7 +378,10 @@
 
                             </div><!-- Variety image section -->
 
-                            <div class="col-12 text-center mb-3"><input class="btn btn-primary" type="submit" value="创建新商品" name="submit" style="width: 200px"></div>
+                            <div class="col-12 text-center mb-3">
+                                <input class="btn btn-primary mr-2" type="submit" value="创建并保存" name="save" style="width: 200px">
+                                <input class="btn btn-primary" type="submit" value="创建并上架" name="list" style="width: 200px">
+                            </div>
 
                         </div>
 
