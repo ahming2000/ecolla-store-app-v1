@@ -93,14 +93,14 @@ if (isset($_POST["submit"])) {
 
                                 echo "<div class=\"row\" style=\"height: 100px\">
                                 <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
-                                    <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">". $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
+                                    <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
                                     <div class=\"col-1 pt-4\"><b style=\"font-size: 15px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
-                                    <div class=\"col-1 pt-4\"><b style=\"font-size: 20px;\">". $totalWeight ."kg</b></div>
+                                    <div class=\"col-1 pt-4\"><b style=\"font-size: 20px;\">" . $totalWeight . "kg</b></div>
                             
                                     <div class=\"col-1 pt-3\"></div>
                             
-                                    <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">". $cartItem->getQuantity() ." * RM".$subPrice." = </b></div>
-                                    <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">". number_format($cartItem->getSubPrice(), 2) ."</span></b></div>
+                                    <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
+                                    <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
                                 </div>";
                             }
                             ?>
@@ -121,7 +121,7 @@ if (isset($_POST["submit"])) {
                     <label class="custom-file-label" for="receipt" data-browse="上传">请上传您的收据</label>
                 </div>
             </div>
-            <div class="text-center"><input class="btn btn-primary" type="submit" value="提交" name="submit" style="width: 200px"></div>
+            <div class="text-center"><input class="btn btn-primary" type="submit" value="提交" name="submit" style="width: 200px;"></div>
         </form>
 
     </div>
@@ -129,14 +129,78 @@ if (isset($_POST["submit"])) {
     <?php include "assets/block-user-page/footer.php"; ?>
     <script>
         $(document).ready(function() {
-            bsCustomFileInput.init() //For file uploaded name to show
-            // $("input[name=phoneNumberInputHead]").focus(e => {
-            //     $("#phoneNum_inputHead").append(`<div style="height: 100px; width: 400px; background-color: black; color: white; position: absolute; z-index: 2;"><p>Testing</p></div>`);
-            // });
+            let cur_count = 0;
+            let phone_code_arr = [], phone_code_arr_bool = [], flag = 0;
+            let container_str = `<div id="autocomplete_phoneNo" class="container" style="width: 320px; background-color: rgb(58, 57, 57); color: white; position: absolute; z-index: 2;"></div>`;
+            $("#phoneNum_inputHead").append(container_str);
+            $("#autocomplete_phoneNo").css("display", "none");
 
-            // $("input[name=phoneNumberInputHead]").blur(e => {
-            //     $("input[name=phoneNumberInputHead]").css("background-color", "white");
-            // });
+            //Add Phone Number Here
+            $("#autocomplete_phoneNo").append(generate_phone_code_container(6012, "Local Malaysia Phone Number", "马来西亚本地号码"));
+            $("#autocomplete_phoneNo").append(generate_phone_code_container(6018, "Local Malaysia Phone Number", "马来西亚本地号码"));
+            $("#autocomplete_phoneNo").append(generate_phone_code_container(605, "Singapore Phone Number", "新加坡国际号码"));
+            $("#autocomplete_phoneNo").append(generate_phone_code_container(86, "China Phone Number", "中国国际号码"));
+            bsCustomFileInput.init() //For file uploaded name to show
+
+            $("input[name=phoneNumberInputHead]").focus(e => {
+                $("#autocomplete_phoneNo").css("display", "block");
+            });
+
+            $("input[name=phoneNumberInputHead]").blur(e => {
+                flag = 0;
+                for(let i = 0; i < cur_count; i++){
+                    if(phone_code_arr_bool[i] == 1){
+                        $("input[name=phoneNumberInputHead]").val(phone_code_arr[i]);
+                        flag = 1;
+                    }
+                }
+                $("#autocomplete_phoneNo").css("display", "none");
+                if(flag == 0)
+                    $("input[name=phoneNumberInputHead]").val("");
+            });
+
+            function generate_phone_code_container(phone_code, english_country, chinese_country) {
+                phone_code_arr.push(phone_code);
+                phone_code_arr_bool.push(0);
+                return `
+                    <div class="row pt-3 pr-1" id="phone_code${cur_count++}">
+                        <div class="col-2">
+                            +${phone_code}
+                        </div>
+                        <div class="col-10">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div style="text-align: right;">
+                                        <p>${chinese_country}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div style="text-align: right;">
+                                        <p>${english_country}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            for (let i = 0; i < cur_count; i++) {
+                $(`#phone_code${i}`).mouseenter(e => {
+                    $(`#phone_code${i}`).css("background-color", "rgb(95, 93, 93)");
+                    phone_code_arr_bool[i] = 1;
+                });
+                $(`#phone_code${i}`).mouseleave(e => {
+                    $(`#phone_code${i}`).css("background-color", "rgb(58, 57, 57)");
+                    phone_code_arr_bool[i] = 0;
+                });
+                $(`#phone_code${i}`).on("click", e => {
+                    console.log("Me");
+                    $("#autocomplete_phoneNo").val(phone_code_arr[i]);
+                });
+            }
 
         })
     </script>
