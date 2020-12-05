@@ -1,12 +1,16 @@
 <?php
 
-/*  MVC Model Version: v0.1.0-alpha (To be released)
+/*  MVC Model Version: v0.1.1-alpha (To be released)
  *  Created by AhMing
  *  Github: https://github.com/ahming2000
  *
  *  Changing Log:
- *  1. Now you can insert table with one function, less confusion on inserting table.
- *  2.
+ *  v0.1.0
+ *  Now you can insert table with one function, less confusion on inserting table.
+ *
+ *  v0.1.1
+ *  Select Attribute function may cause error when null value (not found) is selected, respond on null value with return false to ignore the error.
+ *
  */
 
 require_once __DIR__."\\Dbh.class.php";
@@ -146,10 +150,10 @@ class Model extends Dbh{
         dbSelectAll: data[row(number)][column(column name)]
         dbSelectRow: data[row(number)][column(column name)]
         dbSelectColumn: data[column(column name)]
-        dbSelectAttribute: data (Auto use the first result as the main result)
+        dbSelectAttribute: data (Auto use the first result as the main result) (Return false when not found)
         dbSelectRow_MultiSearch: data[row(number)][column(column name)]
         dbSelectColumn_MultiSearch: data[column(column name)]
-        dbSelectAttribute_MultiSearch: data (Auto use the first result as the main result)
+        dbSelectAttribute_MultiSearch: data (Auto use the first result as the main result) (Return false when not found)
         dbSelectCount: data count
         dbSelectAttributeCount: data count
         dbSelectAttributeCount_MultiSearch: data count
