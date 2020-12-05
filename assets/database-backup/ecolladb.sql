@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 05, 2020 at 06:02 AM
+-- Generation Time: Dec 05, 2020 at 06:45 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `catogories` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `catogories`
@@ -82,10 +82,18 @@ INSERT INTO `classifications` (`i_id`, `cat_id`) VALUES
 DROP TABLE IF EXISTS `ecolla_website_config`;
 CREATE TABLE IF NOT EXISTS `ecolla_website_config` (
   `config_name` varchar(50) NOT NULL,
-  `config_value` varchar(200) NOT NULL,
-  `config_info` varchar(200) NOT NULL,
+  `config_value_text` varchar(200) DEFAULT NULL,
+  `config_value_float` float DEFAULT NULL,
+  `config_info` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`config_name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `ecolla_website_config`
+--
+
+INSERT INTO `ecolla_website_config` (`config_name`, `config_value_text`, `config_value_float`, `config_info`) VALUES
+('shipping_fee_per_kg', NULL, 4.77, 'Shipping Fee in RM (Malaysia Ringgit) per kilogram');
 
 -- --------------------------------------------------------
 
