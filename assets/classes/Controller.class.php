@@ -32,7 +32,7 @@ class Controller extends Model {
             $cat_id = $this->dbSelectAttribute("catogories", "cat_id", "cat_name", $catogory);
 
             // Insert the catogory if it does not exist in the database
-            if($result == null){
+            if($cat_id == null){
                 // Insert into catogories
                 $catogory_ready = [$catogory];
                 $this->dbInsert("catogories", $catogory_ready);

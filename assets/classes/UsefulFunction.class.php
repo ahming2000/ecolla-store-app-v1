@@ -188,7 +188,7 @@ class UsefulFunction{
 
         public static function uploadItemImage($filePtr, $i_id, $fileName, $mode){
             // To-do: if it is other image file, convert to jpg file
-            $dir =  "assets/images/items/".$i_id."/";
+            $dir =  "../assets/images/items/".$i_id."/";
             $fullPath = $dir.$fileName;
 
             UsefulFunction::upload($filePtr, $dir, $fileName);
@@ -221,6 +221,7 @@ class UsefulFunction{
             }
 
             // Upload file
+            @mkdir($targetDIR, 0700);
             if (!move_uploaded_file($filePtr["tmp_name"], $fullPath)) {
                 return "伺服器出错！请通过Whatapps联系客服来发送个人资料和单据。";
             }
@@ -238,6 +239,21 @@ class UsefulFunction{
             fclose($newPHPFile);
 
             return true;
+        }
+
+        public static function reArrayFiles(&$file_post) {
+
+            $file_ary = array();
+            $file_count = count($file_post['name']);
+            $file_keys = array_keys($file_post);
+
+            for ($i=0; $i<$file_count; $i++) {
+                foreach ($file_keys as $key) {
+                    $file_ary[$i][$key] = $file_post[$key][$i];
+                }
+            }
+
+            return $file_ary;
         }
 
     }

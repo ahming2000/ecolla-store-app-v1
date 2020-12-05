@@ -5,22 +5,60 @@
     <?php
     if(isset($_POST["submit"])){
 
+        // Convert file pointer to better array arrangement. Reference:
+        $filePtrArray = UsefulFunction::reArrayFiles($_FILES["item-image"]);
+        // Check list all image into an array
+        $generalImageList = array();
+        for($i = 0; $i < sizeof($filePtrArray); $i++){
+            if($filePtrArray[$i]["name"] != null){
+                //Used to rearrage the index for image upload later
+                array_push($generalImageList, $filePtrArray[$i]);
+            }
+        }
+
+        // Declare into item object
+        $item = new Item($_POST["name"], $_POST["description"], $_POST["brand"], $_POST["origin"], 0, sizeof($generalImageList));
+        // Declare into variety object
+        for($i = 0; $i < sizeof($_POST["variety"]); $i++){
+            if($_POST["variety"][$i]["property"] != ""){
+                $variety = new Variety($_POST["variety"][$i]["barcode"], $_POST['variety'][0]['property'], $_POST["variety-property-name"], $_POST["variety"][$i]["price"], $_POST["variety"][$i]["weight"], 1.0);
+
+                for($j = 0; $j < sizeof($_POST["variety"][$i]["inventory"]); $j++){
+                    if($_POST["variety"][$i]["inventory"][$j]["quantity"] != ""){
+                        $inventory = new Inventory($_POST["variety"][$i]["inventory"][$j]["expireDate"], $_POST["variety"][$i]["inventory"][$j]["quantity"]);
+                        $variety->addInventory($inventory); //Add inventory to variety
+                    }
+                }
+
+                $item->addVariety($variety); //Add variety to item
+            }
+        }
+        // Declare into catogories array
+        for($i = 0; $i < sizeof($_POST["catogory"]); $i++){
+            if($_POST["catogory"][$i] != ""){
+                $item->addCatogory($_POST["catogory"][$i]); //Add catogory to item
+            }
+        }
+
+        // Insert into database first to get item_id
+        $controller = new Controller();
+        $controller->insertNewItem($item);
+        $i_id = $view->getItemId($item);
 
 
-        // $item = new Item($_POST["name"], $_POST["brand"], $_POST["country"], 0, );
-        // $v = new Variety($_POST["barcode1"], $_POST["property1"], $_POST["propertyName1"], $_POST["price1"], $_POST["weight1"], $_POST["weightUnit1"], 1.0);
-        // $v->addInventory(new Inventory($_POST["expireDate1"], $_POST["quantity1"]));
-        // $item->addVariety($v);
-        // $item->addCatogory($_POST["catogory"]);
-        //
-        // $controller = new Controller();
-        // $controller->insertNewItem($item);
+
+        // Image upload
+        for($i = 0; $i < sizeof($generalImageList); $i++){
+            UsefulFunction::uploadItemImage($generalImageList[$i], $i_id, $i, "crop");
+        }
+
 
         if(isset($_POST['mini_database'])){
             $obj = json_decode($_POST['mini_database']);
             UsefulFunction::createPHPFile($_POST["name"], $_POST["brand"], $obj);
             header("location: ../items/".$_POST["brand"]."-".$_POST["name"].".php");
         }
+
     }
 
 
@@ -40,7 +78,7 @@
             <div class="row">
 
                 <div class="col-sm-12 col-md-10">
-                    <form action="" method="post">
+                    <form action="" method="post" enctype="multipart/form-data">
                         <div class="h1">创建新商品</div>
 
                         <div class="h2" id="step-one">基本资讯</div>
@@ -143,7 +181,7 @@
 
                                     <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
                                         <div class="row" id="property-section">
-                                            <div class="col-12 mb-1"><input type="text" class="form-control variety-property-main" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100"/></div>
+                                            <div class="col-12 mb-1"><input type="text" class="form-control variety-property-main" name="variety[0][property]" aria-describedby="variety-property" maxlength="100"/></div>
                                         </div>
                                     </div>
                                 </div>
@@ -167,10 +205,10 @@
 
                                         <tbody id="variety-section">
                                             <tr>
-                                                <td><input type="text" class="form-control variety-property" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100" disabled/></td>
-                                                <td><input type="text" class="form-control variety-barcode" name="variety[0]['barcode']" aria-describedby="variety-barcode" maxlength="20" required/></td>
-                                                <td><input type="number" class="form-control variety-price" name="variety[0]['price']" aria-describedby="variety-price" maxlength="10" required/></td>
-                                                <td><input type="number" class="form-control variety-weight" name="variety[0]['weight']" aria-describedby="variety-weight" maxlength="10" required/></td>
+                                                <td><input type="text" class="form-control variety-property" name="variety[0][property]" aria-describedby="variety-property" maxlength="100" disabled/></td>
+                                                <td><input type="text" class="form-control variety-barcode" name="variety[0][barcode]" aria-describedby="variety-barcode" maxlength="20" required/></td>
+                                                <td><input type="number" step="0.01" min="0" class="form-control variety-price" name="variety[0][price]" aria-describedby="variety-price" maxlength="10" required/></td>
+                                                <td><input type="number" step="0.001" min="0" class="form-control variety-weight" name="variety[0][weight]" aria-describedby="variety-weight" maxlength="10" required/></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -196,8 +234,8 @@
                                                 <td colspan="2">
                                                     <div class="form-row inventory-section-class">
                                                         <input type="number" value="1" class="inventory-count" hidden/>
-                                                        <div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[0]['inventory'][0]['expireDate']" aria-describedby="inventory-expire-date" required/></div>
-                                                        <div class="col-6"><input type="number" class="form-control inventory-quantity mb-1" name="variety[0]['inventory'][0]['quantity']" aria-describedby="inventory-quantity" required/></div>
+                                                        <div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[0][inventory][0][expireDate]" aria-describedby="inventory-expire-date" required/></div>
+                                                        <div class="col-6"><input type="number" min="0" class="form-control inventory-quantity mb-1" name="variety[0][inventory][0][quantity]" aria-describedby="inventory-quantity" required/></div>
                                                     </div>
                                                     <!-- Add extra inventory button -->
                                                     <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-class">添加更多库存</button></div>
@@ -236,7 +274,7 @@
 
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="item-image[2]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 2</div>
                                         </label>
@@ -244,7 +282,7 @@
 
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="item-image[3]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 3</div>
                                         </label>
@@ -252,7 +290,7 @@
 
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="item-image[4]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 4</div>
                                         </label>
@@ -260,7 +298,7 @@
 
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="item-image[5]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 5</div>
                                         </label>
@@ -268,7 +306,7 @@
 
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="item-image[6]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 6</div>
                                         </label>
@@ -276,7 +314,7 @@
 
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="item-image[7]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 7</div>
                                         </label>
@@ -284,7 +322,7 @@
 
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="item-image[8]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;">照片 8</div>
                                         </label>
@@ -302,16 +340,12 @@
                                 <div class="form-row" id="variety-image-section">
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
-                                            <input type="file" name="variety[0]['image']" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="variety[0][image]" class="image-file-selector" style="display:none;"/>
                                             <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
                                             <div style="text-align: center;" class="variety-property-caption"></div>
                                         </label>
                                     </div>
                                 </div>
-
-                            </div>
-
-                            <div class="col-12">
 
                             </div><!-- Variety image section -->
 
