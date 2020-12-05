@@ -85,7 +85,7 @@ if (isset($_POST['removeItem'])) {
                                 <?php $c = $cart;
                                 include "assets/block-user-page/order-summary-block.php"; ?>
                                 <form action="check-out.php" method="post">
-                                    <input class="btn btn-primary btn-block" type="submit" value="前往付款">
+                                    <input class="btn btn-primary btn-block" type="submit" value="前往付款" id="submit_btn">
                                 </form>
                             </div>
                         </div>
