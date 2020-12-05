@@ -61,17 +61,20 @@ if (isset($_POST["submit"])) {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-2">
                             <input type="radio" name="paymentServices" /><img src="assets/images/icon/pay-cash.png" alt="image" height="50" width="50"><label for="cash">Cash</label>
                         </div>
                         <div class="col-3">
-                            <input type="radio" name="paymentServices" /><img src="assets/images/icon/pay-boost.jpg" alt="image" height="50" width="50" style="padding-left: 5px;"><label for="boost" style="padding-left: 10px;">Boost Pay e-wallet</label>
+                            <input type="radio" name="paymentServices" id="qr_code_boost" /><img src="assets/images/icon/pay-boost.jpg" alt="image" height="50" width="50" style="padding-left: 5px;"><label for="boost" style="padding-left: 10px;">Boost Pay e-wallet</label>
                         </div>
                         <div class="col-3">
-                            <input type="radio" name="paymentServices" /><img src="assets/images/icon/pay-tnc.jpg" alt="image" height="50" width="50"><label for="touchNgo">Touch N'go e-wallet</label>
+                            <input type="radio" name="paymentServices" id="qr_code_tng" /><img src="assets/images/icon/pay-tnc.jpg" alt="image" height="50" width="50"><label for="touchNgo">Touch N'go e-wallet</label>
                         </div>
                         <div class="col-3">
                             <input type="radio" name="paymentServices" /><img src="assets/images/icon/pay-fpx.jpeg" alt="image" height="50" width="50"><label for="ebanking">Online banking services</label>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-primary" type="button" id="show_payment_method" style="display: none" onclick="pop_up_qr_payment()"> Make Payment</button>
                         </div>
                     </div>
                 </div>
@@ -94,22 +97,45 @@ if (isset($_POST["submit"])) {
                                 echo "<div class=\"row\" style=\"height: 100px\">
                                 <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
                                     <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
-                                    <div class=\"col-1 pt-4\"><b style=\"font-size: 15px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
-                                    <div class=\"col-1 pt-4\"><b style=\"font-size: 20px;\">" . $totalWeight . "kg</b></div>
+                                    <div class=\"col-2 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
                             
                                     <div class=\"col-1 pt-3\"></div>
                             
                                     <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
                                     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
                                 </div>";
+
+                                //backup
+                                // echo "<div class=\"row\" style=\"height: 100px\">
+                                // <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
+                                //     <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
+                                //     <div class=\"col-1 pt-4\"><b style=\"font-size: 15px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
+                                //     <div class=\"col-1 pt-4\"><b style=\"font-size: 20px;\">" . $totalWeight . "kg</b></div>
+                            
+                                //     <div class=\"col-1 pt-3\"></div>
+                            
+                                //     <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
+                                //     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
+                                // </div>";
                             }
                             ?>
+                        </div>
+                        <div class="row" style="height: 50px;">
+                            <div class="col-7"></div>
+                            <div class="col-3"><b style="font-size: 32px;float: right;">小计</b></div>
+                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getSubtotal(), 2)  ?></span></b></div>
+                        </div>
+                        <div class="row" style="height: 50px;">
+                            <div class="col-7"></div>
+                            <div class="col-3"><b style="font-size: 32px;float: right;">邮费 </b></div>
+                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getShippingFee(), 2)  ?></span></b></div>
                         </div>
                         <div class="row" style="width:auto;height:5px;background-color: black;"></div>
                         <div class="row" style="height: 50px;">
                             <div class="col-7"></div>
-                            <div class="col-3"><b style="font-size: 32px;float: right;">Total Price:</b></div>
-                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php echo $cart->getSubtotal()  ?></span></b></div>
+                            <div class="col-3"><b style="font-size: 32px;float: right;">总计 </b></div>
+                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php $total = $c->getSubtotal() + $c->getShippingFee();
+                            echo number_format($total, 2); ?></span></b></div>
                         </div>
                     </div>
                 </div>
@@ -128,9 +154,12 @@ if (isset($_POST["submit"])) {
 
     <?php include "assets/block-user-page/footer.php"; ?>
     <script>
+        let flag_for_btn = 0;
         $(document).ready(function() {
             let cur_count = 0;
-            let phone_code_arr = [], phone_code_arr_bool = [], flag = 0;
+            let phone_code_arr = [],
+                phone_code_arr_bool = [],
+                flag = 0;
             let container_str = `<div id="autocomplete_phoneNo" class="container" style="width: 320px; background-color: rgb(58, 57, 57); color: white; position: absolute; z-index: 2;"></div>`;
             $("#phoneNum_inputHead").append(container_str);
             $("#autocomplete_phoneNo").css("display", "none");
@@ -148,14 +177,14 @@ if (isset($_POST["submit"])) {
 
             $("input[name=phoneNumberInputHead]").blur(e => {
                 flag = 0;
-                for(let i = 0; i < cur_count; i++){
-                    if(phone_code_arr_bool[i] == 1){
+                for (let i = 0; i < cur_count; i++) {
+                    if (phone_code_arr_bool[i] == 1) {
                         $("input[name=phoneNumberInputHead]").val(phone_code_arr[i]);
                         flag = 1;
                     }
                 }
                 $("#autocomplete_phoneNo").css("display", "none");
-                if(flag == 0)
+                if (flag == 0)
                     $("input[name=phoneNumberInputHead]").val("");
             });
 
@@ -202,7 +231,28 @@ if (isset($_POST["submit"])) {
                 });
             }
 
-        })
+            $('input[name=paymentServices]').click(function() {
+                if($('#qr_code_boost').is(':checked')){
+                    $("#show_payment_method").css("display", "block");
+                }else if($('#qr_code_tng').is(':checked')){
+                    $("#show_payment_method").css("display", "block");
+                }else{
+                    $("#show_payment_method").css("display", "none");
+                }
+            });
+
+            $("form").submit(e => {
+                if((flag_for_btn == 0 && $('#qr_code_boost').is(':checked')) || (flag_for_btn == 0 && $('#qr_code_tng').is(':checked'))){
+                    e.preventDefault();
+                }
+            });
+
+        });
+        function pop_up_qr_payment(){
+            flag_for_btn = 1;
+            let url = "assets/images/random_qr_code.png";
+            window.open(url,'Image','width=400px,height=400px,resizable=1');
+        }
     </script>
 
 </body>
