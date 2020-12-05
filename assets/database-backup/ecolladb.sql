@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 01, 2020 at 07:33 AM
+-- Generation Time: Dec 05, 2020 at 06:02 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `catogories` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `catogories`
@@ -41,9 +41,9 @@ CREATE TABLE IF NOT EXISTS `catogories` (
 INSERT INTO `catogories` (`cat_id`, `cat_name`) VALUES
 (1, '饮料'),
 (2, '零食'),
-(25, '素食'),
-(26, '小零食'),
-(27, '能量饮品');
+(3, '素食'),
+(4, '小零食'),
+(5, '能量饮品');
 
 -- --------------------------------------------------------
 
@@ -65,14 +65,13 @@ CREATE TABLE IF NOT EXISTS `classifications` (
 
 INSERT INTO `classifications` (`i_id`, `cat_id`) VALUES
 (1, 1),
-(4, 1),
 (2, 2),
 (3, 2),
-(2, 25),
-(3, 25),
-(2, 26),
-(3, 26),
-(1, 27);
+(2, 3),
+(3, 3),
+(2, 4),
+(3, 4),
+(1, 5);
 
 -- --------------------------------------------------------
 
@@ -102,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `inventories` (
   `inv_quantity` int(11) NOT NULL,
   PRIMARY KEY (`inv_id`),
   KEY `inventories_FK_v_barcode` (`v_barcode`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `inventories`
@@ -124,8 +123,7 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (13, '6941025700138', '2021-01-01', 12),
 (14, '6941025701074', '2021-01-01', 14),
 (15, '6941025702019', '2021-01-01', 10),
-(41, '6902538004045', '2021-03-05', 100),
-(42, '6954645911153', '2020-11-20', 10);
+(16, '6902538004045', '2021-03-05', 100);
 
 -- --------------------------------------------------------
 
@@ -143,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_is_listed` tinyint(1) NOT NULL DEFAULT '0',
   `i_image_count` int(11) NOT NULL,
   PRIMARY KEY (`i_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `items`
@@ -152,8 +150,7 @@ CREATE TABLE IF NOT EXISTS `items` (
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_is_listed`, `i_image_count`) VALUES
 (1, '维生素功能饮料', '', '脉动', '中国', 1, 4),
 (2, '手撕素肉排', '', '好味屋', '中国', 1, 5),
-(3, '鹌鹑蛋', '', '湖湘贡', '中国', 1, 5),
-(4, '素食主义', '', '食为光', '中国', 0, 1);
+(3, '鹌鹑蛋', '', '湖湘贡', '中国', 1, 5);
 
 -- --------------------------------------------------------
 
@@ -248,8 +245,7 @@ INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_name`, `v_price`
 ('6941025700084', '香辣', '口味', 1.2, 0.02, 1, 3),
 ('6941025700138', '盐焗', '口味', 1.2, 0.02, 1, 3),
 ('6941025701074', '卤蛋', '口味', 1.2, 0.02, 1, 3),
-('6941025702019', '泡辣', '口味', 1.2, 0.02, 1, 3),
-('6954645911153', '海带丝', '口味', 1.3, 0.036, 1, 4);
+('6941025702019', '泡辣', '口味', 1.2, 0.02, 1, 3);
 
 --
 -- Constraints for dumped tables

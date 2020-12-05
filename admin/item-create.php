@@ -5,7 +5,7 @@
     <?php
     if(isset($_POST["submit"])){
 
-        // Convert file pointer to better array arrangement. Reference:
+        // Convert file pointer to better array arrangement. Reference: https://www.php.net/manual/en/features.file-upload.multiple.php#53240
         $filePtrArray = UsefulFunction::reArrayFiles($_FILES["item-image"]);
         // Check list all image into an array
         $generalImageList = array();
