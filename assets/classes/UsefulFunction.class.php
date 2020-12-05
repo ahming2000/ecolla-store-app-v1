@@ -186,9 +186,9 @@ class UsefulFunction{
             UsefulFunction::optimizeImage("assets/images/orders/".$orderId, strtolower(pathinfo($filePtr["name"], PATHINFO_EXTENSION)));
         }
 
-        public static function uploadItemImage($filePtr, $o_id, $fileName, $mode){
+        public static function uploadItemImage($filePtr, $i_id, $fileName, $mode){
             // To-do: if it is other image file, convert to jpg file
-            $dir =  "assets/images/items/".$o_id."/";
+            $dir =  "assets/images/items/".$i_id."/";
             $fullPath = $dir.$fileName;
 
             UsefulFunction::upload($filePtr, $dir, $fileName);
