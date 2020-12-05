@@ -7,7 +7,7 @@
 
 $view = new View();
 $item = $view->getItem($_GET["itemName"], $_GET["itemBrand"]);
-$item_id = $view->getItemId($item);
+$i_id = $view->getItemId($item);
 if($item == null) die("Error, fail to load parameter");
 
 if(isset($_POST["submit"])){
@@ -205,14 +205,13 @@ if(isset($_POST["submit"])){
                                                     "<td><input type=\"text\" class=\"form-control variety-property\" name=\"variety[".$i."]['property']\" aria-describedby=\"variety-property\" maxlength=\"100\" value=\"".$item->getVarieties()[$i]->getProperty()."\" disabled/></td>" .
                                                     "<td colspan=\"2\">" .
                                                         "<div class=\"form-row inventory-section-class\">";
+
                                                         $j = 0;
-                                                        for($j = 0; $j < sizeof($item->getVarieties()[$j]->getInventories()); $j++){
+                                                        for($j = 0; $j < sizeof($item->getVarieties()[$i]->getInventories()); $j++){
                                                             echo "<div class=\"col-6\"><input type=\"date\" class=\"form-control inventory-expire-date mb-1\" name=\"variety[".$i."]['inventory'][".$j."]['expireDate']\" aria-describedby=\"inventory-expire-date\" value=\"".$item->getVarieties()[$i]->getInventories()[$j]->getExpireDate()."\" required/></div>" .
                                                             "<div class=\"col-6\"><input type=\"number\" class=\"form-control inventory-quantity mb-1\" name=\"variety[".$i."]['inventory'][".$j."]['quantity']\" aria-describedby=\"inventory-quantity\" value=\"".$item->getVarieties()[$i]->getInventories()[$j]->getQuantity()."\" required/></div>";
                                                         }
                                                         echo "<input type=\"number\" value=\"".$j."\" class=\"inventory-count\" hidden/>";
-
-
 
                                                         echo "</div>" .
                                                         "<!-- Add extra inventory button -->" .
