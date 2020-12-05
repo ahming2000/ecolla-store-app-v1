@@ -97,22 +97,45 @@ if (isset($_POST["submit"])) {
                                 echo "<div class=\"row\" style=\"height: 100px\">
                                 <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
                                     <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
-                                    <div class=\"col-1 pt-4\"><b style=\"font-size: 15px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
-                                    <div class=\"col-1 pt-4\"><b style=\"font-size: 20px;\">" . $totalWeight . "kg</b></div>
+                                    <div class=\"col-2 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
                             
                                     <div class=\"col-1 pt-3\"></div>
                             
                                     <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
                                     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
                                 </div>";
+
+                                //backup
+                                // echo "<div class=\"row\" style=\"height: 100px\">
+                                // <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
+                                //     <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
+                                //     <div class=\"col-1 pt-4\"><b style=\"font-size: 15px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
+                                //     <div class=\"col-1 pt-4\"><b style=\"font-size: 20px;\">" . $totalWeight . "kg</b></div>
+                            
+                                //     <div class=\"col-1 pt-3\"></div>
+                            
+                                //     <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
+                                //     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
+                                // </div>";
                             }
                             ?>
+                        </div>
+                        <div class="row" style="height: 50px;">
+                            <div class="col-7"></div>
+                            <div class="col-3"><b style="font-size: 32px;float: right;">小计</b></div>
+                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getSubtotal(), 2)  ?></span></b></div>
+                        </div>
+                        <div class="row" style="height: 50px;">
+                            <div class="col-7"></div>
+                            <div class="col-3"><b style="font-size: 32px;float: right;">邮费 </b></div>
+                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getShippingFee(), 2)  ?></span></b></div>
                         </div>
                         <div class="row" style="width:auto;height:5px;background-color: black;"></div>
                         <div class="row" style="height: 50px;">
                             <div class="col-7"></div>
-                            <div class="col-3"><b style="font-size: 32px;float: right;">Total Price:</b></div>
-                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php echo $cart->getSubtotal()  ?></span></b></div>
+                            <div class="col-3"><b style="font-size: 32px;float: right;">总计 </b></div>
+                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php $total = $c->getSubtotal() + $c->getShippingFee();
+                            echo number_format($total, 2); ?></span></b></div>
                         </div>
                     </div>
                 </div>
