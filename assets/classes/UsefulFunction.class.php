@@ -256,6 +256,37 @@ class UsefulFunction{
             return $file_ary;
         }
 
+        public static function generateAlert($msg) {
+            echo "<script type='text/javascript'>alert('$msg');</script>";
+        }
+
+
+        /*  Listing condition (attributes must present)
+            1. Item: name, brand, origin, at least one variety
+            2. Variety: all attribute in Variety class and at least one inventory
+            3. Inventory: all attribute in Inventory class
+         */
+        public static function checkListingCondition($item){
+            if($item->getName() == null) return false;
+            if($item->getBrand() == null) return false;
+            if($item->getOrigin() == null) return false;
+            if($item->getVarieties()[0] == null) return false;
+            else {
+                if($item->getVarieties()[0]->getBarcode() == null) return false;
+                if($item->getVarieties()[0]->getProperty() == null) return false;
+                if($item->getVarieties()[0]->getPropertyName() == null) return false;
+                if($item->getVarieties()[0]->getPrice() == null) return false;
+                if($item->getVarieties()[0]->getWeight() == null) return false;
+                if($item->getVarieties()[0]->getInventories()[0] == null) return false;
+                else{
+                    if($item->getVarieties()[0]->getInventories()[0]->getExpireDate() == null) return false;
+                    if($item->getVarieties()[0]->getInventories()[0]->getQuantity() == null) return false;
+                }
+            }
+
+            return true;
+        }
+
     }
 
 

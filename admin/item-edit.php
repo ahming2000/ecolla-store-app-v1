@@ -13,14 +13,6 @@ if($item == null) die("Error, fail to load parameter");
 if(isset($_POST["submit"])){
 
 
-    // $item = new Item($_POST["name"], $_POST["brand"], $_POST["country"], isset($_POST["isListed"]) ? 1 : 0, 1);
-    // $v = new Variety($_POST["barcode1"], $_POST["property1"], $_POST["propertyName1"], $_POST["price1"], $_POST["weight1"], $_POST["weightUnit1"], 1.0);
-    // $v->addShelfLife(new ShelfLife($_POST["expireDate1"], $_POST["quantity1"]));
-    // $item->addVariety($v);
-    // $item->addCatogory($_POST["catogory"]);
-    //
-    // $controller = new Controller();
-
 }
 
  ?>
@@ -145,7 +137,7 @@ if(isset($_POST["submit"])){
                                     <div class="row" id="property-section">
                                         <?php
                                             for($i = 0; $i < sizeof($item->getVarieties()); $i++){
-                                                echo "<div class=\"col-12 mb-1\"><input type=\"text\" class=\"form-control variety-property-main\" name=\"variety[".$i."]['property']\" aria-describedby=\"variety-property\" maxlength=\"100\" value=\"".$item->getVarieties()[$i]->getProperty()."\"/></div>";
+                                                echo "<div class=\"col-12 mb-1\"><input type=\"text\" class=\"form-control variety-property-main\" name=\"variety[".$i."][property]\" aria-describedby=\"variety-property\" maxlength=\"100\" value=\"".$item->getVarieties()[$i]->getProperty()."\"/></div>";
                                             }
                                          ?>
                                     </div>
@@ -173,10 +165,10 @@ if(isset($_POST["submit"])){
                                         <?php
                                             for($i = 0; $i < sizeof($item->getVarieties()); $i++){
                                                 echo "<tr>".
-                                                    "<td><input type=\"text\" class=\"form-control variety-property\" name=\"variety[".$i."]['property']\" aria-describedby=\"variety-property\" maxlength=\"100\" value=\"".$item->getVarieties()[$i]->getProperty()."\" disabled/></td>" .
-                                                    "<td><input type=\"text\" class=\"form-control variety-barcode\" name=\"variety[".$i."]['barcode']\" aria-describedby=\"variety-barcode\" maxlength=\"20\" value=\"".$item->getVarieties()[$i]->getBarcode()."\" disabled/></td>".
-                                                    "<td><input type=\"number\" class=\"form-control variety-price\" name=\"variety[".$i."]['price']\" aria-describedby=\"variety-price\" maxlength=\"10\" value=\"".$item->getVarieties()[$i]->getPrice()."\" required/></td>".
-                                                    "<td><input type=\"number\" class=\"form-control variety-weight\" name=\"variety[".$i."]['weight']\" aria-describedby=\"variety-weight\" maxlength=\"10\" value=\"".$item->getVarieties()[$i]->getWeight()."\" required/></td>".
+                                                    "<td><input type=\"text\" class=\"form-control variety-property\" name=\"variety[".$i."][property]\" aria-describedby=\"variety-property\" maxlength=\"100\" value=\"".$item->getVarieties()[$i]->getProperty()."\" disabled/></td>" .
+                                                    "<td><input type=\"text\" class=\"form-control variety-barcode\" name=\"variety[".$i."][barcode]\" aria-describedby=\"variety-barcode\" maxlength=\"20\" value=\"".$item->getVarieties()[$i]->getBarcode()."\" disabled/></td>".
+                                                    "<td><input type=\"number\" class=\"form-control variety-price\" name=\"variety[".$i."][price]\" aria-describedby=\"variety-price\" maxlength=\"10\" value=\"".$item->getVarieties()[$i]->getPrice()."\" required/></td>".
+                                                    "<td><input type=\"number\" class=\"form-control variety-weight\" name=\"variety[".$i."][weight]\" aria-describedby=\"variety-weight\" maxlength=\"10\" value=\"".$item->getVarieties()[$i]->getWeight()."\" required/></td>".
                                                     "</tr>";
                                             }
                                          ?>
@@ -202,14 +194,14 @@ if(isset($_POST["submit"])){
                                         <?php
                                             for($i = 0; $i < sizeof($item->getVarieties()); $i++){
                                                 echo "<tr>" .
-                                                    "<td><input type=\"text\" class=\"form-control variety-property\" name=\"variety[".$i."]['property']\" aria-describedby=\"variety-property\" maxlength=\"100\" value=\"".$item->getVarieties()[$i]->getProperty()."\" disabled/></td>" .
+                                                    "<td><input type=\"text\" class=\"form-control variety-property\" name=\"variety[".$i."][property]\" aria-describedby=\"variety-property\" maxlength=\"100\" value=\"".$item->getVarieties()[$i]->getProperty()."\" disabled/></td>" .
                                                     "<td colspan=\"2\">" .
                                                         "<div class=\"form-row inventory-section-class\">";
 
                                                         $j = 0;
                                                         for($j = 0; $j < sizeof($item->getVarieties()[$i]->getInventories()); $j++){
-                                                            echo "<div class=\"col-6\"><input type=\"date\" class=\"form-control inventory-expire-date mb-1\" name=\"variety[".$i."]['inventory'][".$j."]['expireDate']\" aria-describedby=\"inventory-expire-date\" value=\"".$item->getVarieties()[$i]->getInventories()[$j]->getExpireDate()."\" required/></div>" .
-                                                            "<div class=\"col-6\"><input type=\"number\" class=\"form-control inventory-quantity mb-1\" name=\"variety[".$i."]['inventory'][".$j."]['quantity']\" aria-describedby=\"inventory-quantity\" value=\"".$item->getVarieties()[$i]->getInventories()[$j]->getQuantity()."\" required/></div>";
+                                                            echo "<div class=\"col-6\"><input type=\"date\" class=\"form-control inventory-expire-date mb-1\" name=\"variety[".$i."][inventory][".$j."][expireDate]\" aria-describedby=\"inventory-expire-date\" value=\"".$item->getVarieties()[$i]->getInventories()[$j]->getExpireDate()."\" required/></div>" .
+                                                            "<div class=\"col-6\"><input type=\"number\" class=\"form-control inventory-quantity mb-1\" name=\"variety[".$i."][inventory][".$j."][quantity]\" aria-describedby=\"inventory-quantity\" value=\"".$item->getVarieties()[$i]->getInventories()[$j]->getQuantity()."\" required/></div>";
                                                         }
                                                         echo "<input type=\"number\" value=\"".$j."\" class=\"inventory-count\" hidden/>";
 
@@ -239,8 +231,8 @@ if(isset($_POST["submit"])){
                                     <label>
                                         <input type="file" name="item-image[0]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/0.jpg")){
-                                                echo "../assets/images/items/".$item_id."/0.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/0.jpg")){
+                                                echo "../assets/images/items/".$i_id."/0.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -254,8 +246,8 @@ if(isset($_POST["submit"])){
                                     <label>
                                         <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/1.jpg")){
-                                                echo "../assets/images/items/".$item_id."/1.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/1.jpg")){
+                                                echo "../assets/images/items/".$i_id."/1.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -266,10 +258,10 @@ if(isset($_POST["submit"])){
 
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                     <label>
-                                        <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                        <input type="file" name="item-image[2]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/2.jpg")){
-                                                echo "../assets/images/items/".$item_id."/2.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/2.jpg")){
+                                                echo "../assets/images/items/".$i_id."/2.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -280,10 +272,10 @@ if(isset($_POST["submit"])){
 
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                     <label>
-                                        <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                        <input type="file" name="item-image[3]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/3.jpg")){
-                                                echo "../assets/images/items/".$item_id."/3.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/3.jpg")){
+                                                echo "../assets/images/items/".$i_id."/3.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -294,10 +286,10 @@ if(isset($_POST["submit"])){
 
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                     <label>
-                                        <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                        <input type="file" name="item-image[4]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/4.jpg")){
-                                                echo "../assets/images/items/".$item_id."/4.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/4.jpg")){
+                                                echo "../assets/images/items/".$i_id."/4.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -308,10 +300,10 @@ if(isset($_POST["submit"])){
 
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                     <label>
-                                        <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                        <input type="file" name="item-image[5]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/5.jpg")){
-                                                echo "../assets/images/items/".$item_id."/5.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/5.jpg")){
+                                                echo "../assets/images/items/".$i_id."/5.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -322,10 +314,10 @@ if(isset($_POST["submit"])){
 
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                     <label>
-                                        <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                        <input type="file" name="item-image[6]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/6.jpg")){
-                                                echo "../assets/images/items/".$item_id."/6.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/6.jpg")){
+                                                echo "../assets/images/items/".$i_id."/6.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -336,10 +328,10 @@ if(isset($_POST["submit"])){
 
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                     <label>
-                                        <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                        <input type="file" name="item-image[7]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/7.jpg")){
-                                                echo "../assets/images/items/".$item_id."/7.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/7.jpg")){
+                                                echo "../assets/images/items/".$i_id."/7.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -350,10 +342,10 @@ if(isset($_POST["submit"])){
 
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                     <label>
-                                        <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
+                                        <input type="file" name="item-image[8]" class="image-file-selector" style="display:none;"/>
                                         <img class="img-fluid image-preview" src="<?php
-                                            if(file_exists("../assets/images/items/".$item_id."/8.jpg")){
-                                                echo "../assets/images/items/".$item_id."/8.jpg";
+                                            if(file_exists("../assets/images/items/".$i_id."/8.jpg")){
+                                                echo "../assets/images/items/".$i_id."/8.jpg";
                                             } else {
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }
@@ -376,10 +368,10 @@ if(isset($_POST["submit"])){
                                     for($i = 0; $i < sizeof($item->getVarieties()); $i++){
                                         echo "<div class=\"col-xs-6 col-sm-4 col-md-3 col-lg-2\">" .
                                             "<label>" .
-                                                "<input type=\"file\" name=\"variety[".$i."]['image']\" class=\"image-file-selector\" style=\"display:none;\"/>" .
+                                                "<input type=\"file\" name=\"variety-image[".$i."]\" class=\"image-file-selector\" style=\"display:none;\"/>" .
                                                 "<img class=\"img-fluid image-preview\" src=\"";
-                                                if(file_exists("../assets/images/items/".$item_id."/".$item->getVarieties()[$i]->getBarcode().".jpg")){
-                                                    echo "../assets/images/items/".$item_id."/".$item->getVarieties()[$i]->getBarcode().".jpg";
+                                                if(file_exists("../assets/images/items/".$i_id."/".$item->getVarieties()[$i]->getBarcode().".jpg")){
+                                                    echo "../assets/images/items/".$i_id."/".$item->getVarieties()[$i]->getBarcode().".jpg";
                                                 } else{
                                                     echo "../assets/images/alt/image-upload-alt.png";
                                                 }

@@ -23,33 +23,32 @@ $(document).on("change", ".variety-property-main", function(e){
     $(".variety-property-caption").eq(propertyIndex).html(value);
 });
 
-$(document).ready(function(){
+// For separate image upload
+var selected;
+function loadImage(e){
+    selected.attr('src', e.target.result);
+}
 
-    // For separate image upload
-    var selected;
-    function loadImage(e){
-        selected.attr('src', e.target.result);
+$(document).on('change', ".image-file-selector", function () {
+    var imgPath = $(this)[0].value;
+    var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+
+    if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+        if (typeof (FileReader) != "undefined") {
+            selected = $(this).parent().find(".image-preview");
+            var reader = new FileReader();
+            reader.onload = loadImage;
+            reader.readAsDataURL($(this)[0].files[0]);
+        } else {
+            alert("您使用的浏览器不支持这个功能！");
+        }
+    } else if(imgPath != ""){
+        alert("照片必须是图片文档！");
     }
 
-    $(".image-file-selector").on('change', function () {
-        var imgPath = $(this)[0].value;
-        var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+});
 
-        if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
-            if (typeof (FileReader) != "undefined") {
-                selected = $(this).parent().find(".image-preview");
-                var reader = new FileReader();
-                reader.onload = loadImage;
-                reader.readAsDataURL($(this)[0].files[0]);
-            } else {
-                alert("您使用的浏览器不支持这个功能！");
-            }
-        } else if(imgPath != ""){
-            alert("照片必须是图片文档！");
-        }
-
-    });
-
+$(document).ready(function(){
     // For changing "active tag" when scrolling
     // Reference: https://www.steckinsights.com/change-active-menu-as-you-scroll-with-jquery/
     $(window).scroll(function() {
@@ -88,13 +87,12 @@ $(document).ready(function(){
     });
 
     // Extra property
-
     $("#extraProperty").on("click", function(){
         var propertyCount = $(".variety-property-main").length;
         var extraPropertyHTML = '<div class="col-12 mb-1"><input type="text" class="form-control variety-property-main" name="variety[' + propertyCount + '][property]" aria-describedby="property" maxlength="100"/></div>';
         var newVarietyTableRow = '<tr><td><input type="text" class="form-control variety-property" name="variety[' + propertyCount + '][property]" aria-describedby="variety-property" maxlength="100" disabled/></td><td><input type="text" class="form-control variety-barcode" name="variety[' + propertyCount + '][barcode]" aria-describedby="variety-barcode" maxlength="20" required/></td><td><input type="number" step="0.01" min="0" class="form-control variety-price" name="variety[' + propertyCount + '][price]" aria-describedby="variety-price" maxlength="10" required/></td><td><input type="number" step="0.001" min="0" class="form-control variety-weight" name="variety[' + propertyCount + '][weight]" aria-describedby="variety-weight" maxlength="10" required/></td></tr>';
         var newInventoryTableRow = '<tr><td><input type="text" class="form-control variety-property" name="variety[' + propertyCount + '][property]" aria-describedby="variety-property" maxlength="100" disabled/></td><td colspan="2"><div class="form-row inventory-section-class"><input type="number" value="1" class="inventory-count" hidden/><div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[' + propertyCount + '][inventory][0][expireDate]" aria-describedby="inventory-expire-date" required/></div><div class="col-6"><input type="number" min="0" class="form-control inventory-quantity mb-1" name="variety[' + propertyCount + '][inventory][0][quantity]" aria-describedby="inventory-quantity" required/></div></div><!-- Add extra inventory button --><div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-class">添加更多库存</button></div></td></tr>';
-        var newVarietyImageBox ='<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><label><input type="file" name="variety[' + propertyCount + '][image]" class="image-file-selector" style="display:none;"/><img class="img-thumbnail image-preview" src="../assets/images/alt/image-upload-alt.png"/><div style="text-align: center;" class="variety-property-caption"></div></label></div>';
+        var newVarietyImageBox ='<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><label><input type="file" name="variety-image[' + propertyCount + ']" class="image-file-selector" style="display:none;"/><img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/><div style="text-align: center;" class="variety-property-caption"></div></label></div>';
         $("#property-section").append(extraPropertyHTML);
         $('#variety-section').append(newVarietyTableRow);
         $('#inventory-table-section').append(newInventoryTableRow);
