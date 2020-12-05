@@ -35,3 +35,16 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
 <script src="<?php echo $upperDirectory; ?>assets/vendor/OwlCarousel2-2.3.4/dist/owl.carousel.min.js"></script>
 <script src="<?php echo $upperDirectory; ?>assets/vendor/jquery-mousewheel-master/jquery.mousewheel.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+<script>
+//Tawk.to Script
+    var Tawk_API = Tawk_API || {}, Tawk_LoadStart = new Date();
+    (function () {
+        var s1 = document.createElement("script"), s0 = document.getElementsByTagName("script")[0];
+        s1.async = true;
+        s1.src = 'https://embed.tawk.to/5f51ee8ef0e7167d000d5d3d/default';
+        s1.charset = 'UTF-8';
+        s1.setAttribute('crossorigin', '*');
+        s0.parentNode.insertBefore(s1, s0);
+    })();
+</script>
