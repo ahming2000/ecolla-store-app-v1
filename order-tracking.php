@@ -37,42 +37,39 @@ if(isset($_GET["orderId"])){
     <wrapper class="d-flex flex-column">
         <main class="flex-fill"> <!--put content-->
 
-            <div class="container-sm">
+            <div class="container-sm" style="margin-top: 50px">
 
                 <div class="row">
-                    <div class="col-12">
-                        <form action="order-tracking.php" method="get">
-                            <div class="form-group">
-                                <label for="order-id-input">请输入订单ID</label>
-                                <input type="text" class="form-control form-control-lg" name="orderId" aria-describedby="order-id-input-help" placeholder="e.g. ECOLLA20201130132713" required>
-                                <small id="order-id-input-help" class="form-text text-muted">订单ID来自上一次的结账界面</small>
-                            </div>
-                            <input type="submit" value="确认">
-                        </form>
-                    </div>
-                </div>
+                    <div class="col-sm-0 col-md-1 col-lg-2"></div> <!-- Side space -->
 
-                <div class="row">
-                    <div class="col-12">
-                        <div class="alert <?php
-                        if(isset($alertType)){
-                            echo $alertType;
-                        } ?>" role="alert"><?php
-                        if(isset($message)){
-                            echo $message;
-                        } ?></div>
-                    </div>
-                    <div class="col-4">
-                        <div class="text-center" style="font-size: large;">
-                            <?php if(@$_GET["orderId"] != null) echo $_GET["orderId"]; ?>
+                    <div class="col-sm-12 col-md-10 col-lg-8"> <!-- content -->
+
+                        <div class="col-12 mb-3"><img src="assets/images/deco/order-tracking-deco.jpg" style="width: 100%;" /></div>
+
+                        <div class="col-12">
+                            <form action="order-tracking.php" method="get">
+                                <div class="form-group">
+                                    <label for="order-id-input">请输入订单ID</label>
+                                    <input type="text" class="form-control form-control-lg" name="orderId" aria-describedby="order-id-input-help" value="<?php if(@$_GET["orderId"] != null) echo $_GET["orderId"]; ?>" placeholder="e.g. ECOLLA01234567890123" required>
+                                    <small id="order-id-input-help" class="form-text text-muted">订单ID来自上一次的结账界面</small>
+                                </div>
+                                <div class="text-center mb-3"><input class="btn btn-primary" type="submit" value="追踪" style="width: 100px;"></div>
+                            </form>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="alert <?php
+                            if(isset($alertType)){
+                                echo $alertType;
+                            } ?>" role="alert"><?php
+                            if(isset($message)){
+                                echo $message;
+                            } ?></div>
                         </div>
                     </div>
+
+                    <div class="col-sm-0 col-md-1 col-lg-2"></div> <!-- Side space -->
                 </div>
-
-
-
-
-
             </div>
 
 
