@@ -1,7 +1,7 @@
-<?php include "assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. 
+<?php include "assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed.
 ?>
 <?php $cart = new Cart();
-$view = new View(); //Must declare before html tag for php cookie 
+$view = new View(); //Must declare before html tag for php cookie
 ?>
 <?php
 
@@ -22,6 +22,10 @@ if (isset($_POST['minusItemQuantity'])) {
 if (isset($_POST['removeItem'])) {
     $obj = $_POST['removeItem'];
     $cart->removeItem($obj);
+}
+
+if(isset($_POST['changeRegion'])){
+    $cart->setEastMY($_POST['region'][0]);
 }
 ?>
 <!DOCTYPE html>
@@ -74,12 +78,30 @@ if (isset($_POST['removeItem'])) {
                             <div class="card-body bg-warning">
                                 <!-- Delivery Description -->
                                 <h5>邮寄服务</h5>
-                                <p class="text-muted">唯独金宝区免邮。</p>
+                                <p class="text-muted">
+                                西马邮寄费用：RM<?php echo number_format($view->getShippingFeeRate(false), 2); ?><br>
+                                东马马邮寄费用：RM<?php echo number_format($view->getShippingFeeRate(true), 2); ?><br>
+                                仅限金宝区免邮
+                                </p>
                             </div>
                         </div>
 
                     </div>
                     <div class="col-lg-4">
+
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="h5 mb-3">请选择您的地区：</div>
+                                <form action="" method="post">
+                                    <select class="mb-3" style="width: 100%;" name="region[]">
+                                        <option value="0" id="west">西马</option>
+                                        <option value="1" id="east">东马</option>
+                                    </select>
+                                    <input class="btn btn-primary btn-block" name="changeRegion" type="submit" value="修改">
+                                </form>
+                            </div>
+                        </div>
+
                         <div class="card mb-3">
                             <div class="card-body">
                                 <?php $c = $cart;
@@ -100,6 +122,17 @@ if (isset($_POST['removeItem'])) {
         <?php include "assets/block-user-page/footer.php"; ?>
 
     </wrapper>
+
+    <script>
+        var isEastMY = <?php echo $cart->isEastMY(); ?>;
+        if(isEastMY){
+            document.getElementById("east").setAttribute("selected", "selected");
+        } else{
+            document.getElementById("west").setAttribute("selected", "selected");
+        }
+
+    </script>
+
 </body>
 
 </html>

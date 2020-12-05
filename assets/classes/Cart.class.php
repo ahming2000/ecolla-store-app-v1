@@ -8,15 +8,20 @@ class Cart{
     private $cartCount; //Int
     private $subtotal; //Float
     private $shippingFee; //Float
+    private $isEastMY; // Flag
 
     public function __construct(){
         session_start();
+
         if(isset($_SESSION["cart"])){
+            // Resume last cart value
             $this->cartItems = $_SESSION["cart"]->cartItems;
             $this->cartCount = $_SESSION["cart"]->cartCount;
             $this->subtotal = $_SESSION["cart"]->subtotal;
             $this->shippingFee = $_SESSION["cart"]->shippingFee;
+            $this->isEastMY = $_SESSION["cart"]->isEastMY;
         } else{
+            // Initial cart if no value present in $_SESSION
             $this->initial();
         }
     }
@@ -26,8 +31,8 @@ class Cart{
         array_push($this->cartItems, $cartItem);
         $this->cartCount++;
 
-        $this->updateSubtotal();
-        $this->updateCookie();
+        $this->updateValue();
+        $this->updateCart();
     }
 
     public function removeItem($barcode){
@@ -35,8 +40,8 @@ class Cart{
             if($cartItem->getBarcode() === $barcode){
                 $this->cartItems = UsefulFunction::removeArrayElementE($this->cartItems, $cartItem);
                 $this->cartCount--;
-                $this->updateSubtotal();
-                $this->updateCookie();
+                $this->updateValue();
+                $this->updateCart();
                 return true;
             }
         }
@@ -47,12 +52,18 @@ class Cart{
         foreach ($this->cartItems as $cartItem) {
             if($cartItem->getBarcode() === $barcode){
                 $cartItem->setQuantity($cartItem->getQuantity() + $scale);
-                $this->updateSubtotal();
-                $this->updateCookie();
+                $this->updateValue();
+                $this->updateCart();
                 return true;
             }
         }
         return false; //If error or fail to edit quantity
+    }
+
+    public function setEastMY($isEastMY){
+        $this->isEastMY = $isEastMY;
+        $this->updateValue();
+        $this->updateCart();
     }
 
     public function resetCart(){
@@ -62,26 +73,33 @@ class Cart{
     }
 
     //Private useful function for cart
-    private function updateSubtotal(){
-        $total = 0;
-        foreach ($this->cartItems as $cartItem) {
-            $total += $cartItem->getSubPrice();
-        }
-        $this->subtotal = $total;
-    }
-
     private function initial(){
         $this->cartItems = array();
         $this->cartCount = 0;
         $this->subtotal = 0.0;
         $this->shippingFee = 0.0;
-        $this->updateCookie();
+        $this->isEastMY = 0;
+        $this->updateCart();
     }
 
-    private function updateCookie(){
+    private function updateValue(){
+        $subtotal = 0;
+        $totalWeight = 0;
+        foreach ($this->cartItems as $cartItem) {
+            $subtotal += $cartItem->getSubPrice();
+            $totalWeight += $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getWeight() * $cartItem->getQuantity();
+        }
+
+        // Update subtotal
+        $this->subtotal = $subtotal;
+
+        // Update shipping fee
+        $view = new View();
+        $this->shippingFee = ceil($totalWeight) * $view->getShippingFeeRate($this->isEastMY);
+    }
+
+    private function updateCart(){
         $_SESSION["cart"] = $this;
-        // $_SESSION["cart"] = array("cartItems" => UsefulFunction::jsonSerializeArray($this->cartItems), "cartCount" => $this->cartCount, "subtotal" => $this->subtotal, "shippingFee" => $this->shippingFee);
-        // setcookie("cart", json_encode($_SESSION["cart"]), time() + (86400 * 30), "/"); //Active 30 days (wrong)
     }
 
     //To-do: check duplicate item
@@ -119,6 +137,10 @@ class Cart{
 
     public function getShippingFee(){
         return $this->shippingFee;
+    }
+
+    public function isEastMY(){
+        return $this->isEastMY;
     }
 
 }

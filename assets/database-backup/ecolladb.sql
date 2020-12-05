@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 05, 2020 at 06:45 AM
+-- Generation Time: Dec 05, 2020 at 08:17 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -93,7 +93,8 @@ CREATE TABLE IF NOT EXISTS `ecolla_website_config` (
 --
 
 INSERT INTO `ecolla_website_config` (`config_name`, `config_value_text`, `config_value_float`, `config_info`) VALUES
-('shipping_fee_per_kg', NULL, 4.77, 'Shipping Fee in RM (Malaysia Ringgit) per kilogram');
+('shipping_fee_east_my', NULL, 5.66, 'Shipping Fee in RM (Malaysia Ringgit) per kilogram for west Malaysia'),
+('shipping_fee_west_my', NULL, 4.77, 'Shipping Fee in RM (Malaysia Ringgit) per kilogram for west Malaysia');
 
 -- --------------------------------------------------------
 

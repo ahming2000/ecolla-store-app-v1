@@ -206,8 +206,12 @@ class View extends Model{
         return $order;
     }
 
-    public function getShippingFeeRate(){
-        return $this->dbSelectAttribute("ecolla_website_config", "config_value_float", "config_name", "shipping_fee_per_kg");
+    public function getShippingFeeRate($isEastMY){
+        if($isEastMY){
+            return $this->dbSelectAttribute("ecolla_website_config", "config_value_float", "config_name", "shipping_fee_east_my");
+        } else{
+            return $this->dbSelectAttribute("ecolla_website_config", "config_value_float", "config_name", "shipping_fee_west_my");
+        }
     }
 
     public function getDeliveryId($orderId){
