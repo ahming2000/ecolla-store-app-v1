@@ -4,6 +4,7 @@
     <?php $view = new View(); ?>
     <?php
     function saveData(){
+        $view = new View();
         // Convert file pointer to better array arrangement. Reference: https://www.php.net/manual/en/features.file-upload.multiple.php#53240
         $generalImageListWithNull = UsefulFunction::reArrayFiles($_FILES["item-image"]);
         // Check list all image into an array
