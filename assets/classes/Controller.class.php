@@ -88,11 +88,34 @@ class Controller extends Model {
 
 
     public function deleteItem($item){
-        $this->deleteItemAttr("i_id", $item->getID());
-        foreach($item->getVarieties() as $variety){
-            $this->deleteVarietyAttr("v_barcode", $variety->getBarcode());
+        $view = new View();
+        $i_id = $view->getItemId($item);
+        if($i_id == false) return false;
+
+        if($this->dbDelete_MultiSearch("items", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()])){
+            //Delete general image
+            for($i = 0; $i < $item->getImgCount(); $i++){
+                if(file_exists("../assets/images/items/".$i_id."/".$i.".jpg")){
+                    unlink("../assets/images/items/".$i_id."/".$i.".jpg");
+                }
+            }
+
+            //Delete Variety image
+            for($i = 0; $i < $item->getVarieties(); $i++){
+                if(file_exists("../assets/images/items/".$i_id."/".$item->getVarieties()[$i]->getBarcode().".jpg")){
+                    unlink("../assets/images/items/".$i_id."/".$item->getVarieties()[$i]->getBarcode().".jpg");
+                }
+            }
+
+            //Remove directory
+            //rmdir("../assets/images/items/".$i_id."/");
+
+            //Delete webpage
+            unlink("../items/".$item->getBrand()."-".$item->getName().".php");
+        } else{
+            return false;
         }
-        //To-do: delete the img file from the directory
+
     }
 
 

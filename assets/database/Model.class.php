@@ -270,6 +270,25 @@ class Model extends Dbh{
         if(!$stmt->execute([$attrContentToUpdate, $attrContentToSearch])) die("Database updating ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
     }
 
+    /*  Delete database data
+        Syntax:
+        dbDelete: DELETE FROM {table name} WHERE {attribute to search} = {attribute content to search}
+
+    */
+    protected function dbDelete($tableName, $attrToSearch, $attrContentToSearch){
+        $sql = "DELETE FROM ".$tableName." WHERE ".$attrToSearch." = ?";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute([$attrContentToSearch])) die("Database deleting from ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        return true;
+    }
+
+    protected function dbDelete_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
+        if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+        $sql = "DELETE FROM ".$tableName." WHERE ".$this->clauseConnector($attrToSearchList, "AND");
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute($attrContentToSearchList)) die("Database deleting from ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        return true;
+    }
 
 
 

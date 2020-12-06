@@ -2,7 +2,7 @@
 <?php
 
 if(isset($_COOKIE["username"])){
-    echo "<br><br><br><br>"."<h3>Login successfull!</h3>"."<br>"."<a href=\"logout.php\">Logout</a>";
+    $message =  "<h3>登陆成功！</h3>"."<br>"."<a href=\"logout.php\">点击登出</a>";
 } else{
     header("location: login.php");
 }
@@ -17,7 +17,13 @@ if(isset($_COOKIE["username"])){
     <?php $upperDirectoryCount = 1; include "../assets/block-admin-page/header.php"; ?>
 
     <div class="container">
+        <br>
+        <?php
+            if(isset($message)){
+                echo $message;
+            }
 
+         ?>
 
     </div>
 </body>

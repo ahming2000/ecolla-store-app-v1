@@ -1,7 +1,15 @@
 <?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
-<?php if(!isset($_COOKIE["username"])) header("location: login.php"); $view = new View(); $itemList = $view->getAllItems(); ?>
-<!DOCTYPE html>
+<?php if(!isset($_COOKIE["username"])) header("location: login.php"); $view = new View(); $controller = new Controller(); $itemList = $view->getAllItems(); ?>
+    <?php
+        if(isset($_POST["deleteButton"])){
+            $item = $view->getItem($_POST["name"], $_POST["brand"]);
+            if(!$controller->deleteItem($item)){
+                UsefulFunction::generateAlert("删除失败");
+            }
+        }
 
+     ?>
+<!DOCTYPE html>
 <html>
 
 <head><?php $upperDirectoryCount = 1; $title = "商品管理"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
@@ -13,13 +21,17 @@
 
     <div class="container">
         <div class="h1">商品管理</div>
+        <form action="" method="post">
+            <div class="row">
+                <input type="text" name="name" id="name" value="" hidden/>
+                <input type="text" name="brand" id="brand" value="" hidden/>
+                <div class="col mb-3"><button onclick="addButtonClicked()" type="button" class="btn btn-primary btn-block" name="addButton" id="addButton">添加商品</button></div>
+                <div class="col mb-3"><button onclick="editButtonClicked()" type="button" class="btn btn-primary btn-block" name="editButton" id="editButton" disabled>编辑商品</button></div>
+                <div class="col mb-3"><button onclick="deleteButtonClicked()" type="submit" class="btn btn-primary btn-block" name="deleteButton" id="deleteButton" disabled>删除商品</button></div>
+            </div>
+        </form>
 
-        <div class="row">
-            <div class="col mb-3"><button onclick="addButtonClicked()" type="button" class="btn btn-primary btn-block" name="addButton" id="addButton">添加商品</button></div>
-            <div class="col mb-3"><button onclick="editButtonClicked()" type="button" class="btn btn-primary btn-block" name="editButton" id="editButton" disabled>编辑商品</button></div>
-            <div class="col mb-3"><button onclick="deleteButtonClicked()" type="button" class="btn btn-primary btn-block" name="deleteButton" id="deleteButton">删除商品</button></div>
 
-        </div>
 
         <table class="table table-bordered" id="item-table">
             <thead>
@@ -49,6 +61,7 @@
         var selectedRowIndex = null;
 
         function itemCheckBoxClicked(source){
+
             if(source.checked){
                 selectedCount++;
             } else{
@@ -58,8 +71,10 @@
             //Check to disable the edit button (Website cannot support multiple item editing)
             if(selectedCount != 1){
                 document.getElementById("editButton").setAttribute("disabled", "disabled");
+                document.getElementById("deleteButton").setAttribute("disabled", "disabled");
             } else{
                 document.getElementById("editButton").removeAttribute("disabled");
+                document.getElementById("deleteButton").removeAttribute("disabled");
             }
 
             //set the row selected
@@ -70,6 +85,9 @@
                         selectedRowIndex = i + 1;
                     }
                 }
+                var myTable = document.getElementById("item-table");
+                document.getElementsById("name").value = myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML;
+                document.getElementsById("brand").value = myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML;
             } else{
                 selectedRowIndex = null;
             }
@@ -85,34 +103,40 @@
             if(source.checked){
                 selectedCount = document.getElementsByClassName('item-check-box').length;
                 document.getElementById("editButton").setAttribute("disabled", "disabled");
+                document.getElementById("deleteButton").setAttribute("disabled", "disabled");
             } else{
                 selectedCount = 0;
                 document.getElementById("editButton").setAttribute("disabled", "disabled");
+                document.getElementById("deleteButton").setAttribute("disabled", "disabled");
             }
         }
 
 
             var myTable = document.getElementById("item-table");
 
-            function addButtonClicked(){
-                document.location.href = "item-create.php";
-            }
-
-            function editButtonClicked(){
+            function untickAll(){
                 //Untick all selection
                 for(var i = 0; i < document.getElementsByClassName('item-check-box').length; i++){
                     if(document.getElementsByClassName('item-check-box')[i].checked){
                         document.getElementsByClassName('item-check-box')[i].checked = false;
                     }
                 }
+            }
 
+            function addButtonClicked(){
+                untickAll();
+                document.location.href = "item-create.php";
+            }
+
+            function editButtonClicked(){
+                untickAll();
                 document.location.href = "item-edit.php?" +
                 "itemName=" + myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML + "&" +
                 "itemBrand=" + myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML;
             }
 
             function deleteButtonClicked(){
-
+                untickAll();
             }
 
         </script>
