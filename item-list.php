@@ -1,9 +1,30 @@
-<?php include "assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. ?>
-<?php $cart = new Cart(); $view = new View(); ?>
+<?php
+    include "assets/includes/class-auto-loader.inc.php";
+    $cart = new Cart();
+    $view = new View();
+
+
+    $pageName = "item-list.php";
+    $MAX_ITEMS = $view->getMaxItemsPerPage();
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $start = ($page - 1) * $MAX_ITEMS;
+
+    $itemCount = $view->getItemTotalCount();
+    $totalPage = ceil($itemCount / $MAX_ITEMS);
+
+    $previousPage = $page - 1;
+    $nextPage = $page + 1;
+
+    $items = $view->getItemsWithRange($start, $MAX_ITEMS);
+ ?>
+
 <!DOCTYPE html>
 <html>
     <head>
-        <?php $title = "商品列表 | Ecolla ε口乐"; include "assets/includes/stylesheet-script-declaration.inc.php" ?>
+        <?php
+            $title = "商品列表 | Ecolla ε口乐";
+            include "assets/includes/stylesheet-script-declaration.inc.php"
+         ?>
     </head>
 
     <body>
@@ -15,16 +36,28 @@
 
         <div class="container mt-5">
 
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-6">
-                            <!-- Item searching -->
+                            <form action="" method="get">
+
+                                <div class="form-row">
+                                    <div class="col-10">
+                                        <!-- Item searching -->
+                                        <input type="text" class="form-control" maxlength="20"/>
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="submit" class="btn btn-primary btn-block" name="searchButton" value="搜索"/>
+                                    </div>
+                                </div>
+
+                            </form>
                         </div>
 
-                        <div class="col-6 text-right">
+                        <div class="col-6">
                             <select name="catogory" id="catogorySelector" class="custom-select mb-3" style="width: 100%">
-                                <option <?php if (@$_GET["catogory"] == null) echo "selected"; ?>><?php echo "全部商品 (".$view->getItemTotalCount().")"; ?></option>
+                                <option <?php if (@$_GET["catogory"] == null) echo "selected"; ?>><?php echo "全部商品 (".$itemCount.")"; ?></option>
 
                                 <?php
                                 $catList = $view->getCatogoryList();
@@ -40,16 +73,12 @@
                 </div>
             </div>
 
-            <div class="row">
-
-
-
+            <div class="row mb-3">
                 <?php
 
-                    $itemList = $view->getAllItems();
 
-                    foreach($itemList as $i){
-                        $item = $i;
+
+                    foreach($items as $item){
                         $i_id = $view->getItemId($item);
                         if($item->isListed()){
                             if(isset($_GET["catogory"])){
@@ -67,8 +96,14 @@
                     }
 
                 ?>
-
             </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <?php include "assets/block-user-page/pagination-block.php"; ?>
+                </div>
+            </div>
+
         </div>
 
     </main>

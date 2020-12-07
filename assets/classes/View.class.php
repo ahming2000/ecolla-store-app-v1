@@ -71,6 +71,73 @@ class View extends Model{
         return $items;
     }
 
+    public function getItemsWithRange($start, $range){
+
+        // Create an empty array
+        $items = array();
+
+        // Get all items
+        // Query: SELECT * FROM items
+        $dbTable_items = $this->dbSelectRange("items", $start, $range);
+        // Return empty array if no item is found
+        if($dbTable_items == null) return array();
+
+        foreach($dbTable_items as $i){
+
+            // Create new Item object
+            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count']);
+
+            // Get classifications of current item
+            // Query: SELECT cat_id FROM classifications WHERE i_id = ?
+            $class = $this->dbSelectColumn("classifications", "cat_id", "i_id", $i["i_id"]);
+
+            foreach($class as $cat_id){
+
+                // Get catogories of current classification
+                // Query: SELECT cat_name FROM catogories WHERE cat_id = ?
+                $cat_name = $this->dbSelectAttribute("catogories", "cat_name", "cat_id", $cat_id);
+
+                // Add into item object
+                $item->addCatogory($cat_name);
+
+            }
+
+            // Get varieties of current item
+            // Query: SELECT * FROM varieties WHERE i_id = ?
+            $dbTable_varieties = $this->dbSelectRow("varieties", "i_id", $i["i_id"]);
+
+            foreach($dbTable_varieties as $v){
+
+                // Create new Variety object
+                $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
+
+                // Get inventories of current variety
+                // Query: SELECT * FROM inventories WHERE v_barcode = ?
+                $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $v['v_barcode']);
+
+                foreach($dbTable_inventories as $inv){
+
+                    // Create new Inventory object
+                    $inventory = new Inventory($inv["inv_expire_date"], $inv["inv_quantity"]);
+
+                    // Add into the variety object
+                    $variety->addInventory($inventory);
+
+                }
+
+                // Add into item object
+                $item->addVariety($variety);
+
+            }
+
+            // Push current item into items
+            array_push($items, $item);
+
+        }
+
+        return $items;
+    }
+
     public function getItemId($item){
         // Query: SELECT i_id FROM items WHERE i_name = ? AND i_brand = ?
         return $this->dbSelectAttribute_MultiSearch("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
@@ -204,6 +271,10 @@ class View extends Model{
         $order->importOrder($o["o_date_time"], $o["o_id"], $cart, $o["o_delivery_id"]);
 
         return $order;
+    }
+
+    public function getMaxItemsPerPage(){
+        return $this->dbSelectAttribute("ecolla_website_config", "config_value_float", "config_name", "max_items_per_page");
     }
 
     public function getShippingFeeRate($isEastMY){
