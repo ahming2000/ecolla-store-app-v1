@@ -65,11 +65,6 @@ class Model extends Dbh{
             "columnsCountToInsert" => 4
         ],
 
-        "ecolla_website_config" => [
-            "columnsToInsert" => "ecolla_website_config(config_name, congif_value, config_info)",
-            "columnsCountToInsert" => 3
-        ],
-
         "users" => [
             "columnsToInsert" => "users(user_name, user_password)",
             "columnsCountToInsert" => 2
@@ -136,6 +131,7 @@ class Model extends Dbh{
     /*  Select from database
         Syntax:
         dbSelectAll: SELECT * FROM {table name}
+        dbSelectRange: SELECT * FROM {table name} LIMIT {start from}, {how many times/range}
         dbSelectRow: SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search}
         dbSelectColumn: SELECT {attribute to select} FRM {table name} WHERE {attribute to search} = {attribute content to search}
         dbSelectAttribute: SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
@@ -148,6 +144,7 @@ class Model extends Dbh{
 
         Output: (To retrive the cell data)
         dbSelectAll: data[row(number)][column(column name)]
+        dbSelectRange: data[row(number)][column(column name)]
         dbSelectRow: data[row(number)][column(column name)]
         dbSelectColumn: data[column(column name)]
         dbSelectAttribute: data (Auto use the first result as the main result) (Return false when not found)
@@ -164,6 +161,14 @@ class Model extends Dbh{
     */
     protected function dbSelectAll($tableName){
         $sql = "SELECT * FROM ".$tableName;
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute()) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    protected function dbSelectRange($tableName, $start, $range){
+        $sql = "SELECT * FROM ".$tableName." LIMIT ".$start.", ".$range;
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute()) die("Database selecting ".$tableName." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetchAll();
