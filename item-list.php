@@ -16,29 +16,28 @@
         <div class="container mt-5">
 
             <div class="row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-6">
+                            <!-- Item searching -->
+                        </div>
 
+                        <div class="col-6 text-right">
+                            <select name="catogory" id="catogorySelector" class="custom-select mb-3" style="width: 100%">
+                                <option <?php if (@$_GET["catogory"] == null) echo "selected"; ?>><?php echo "全部商品 (".$view->getItemTotalCount().")"; ?></option>
 
-                <form action="item-list.php" method="get">
-
-
-                        <select name="catogory" class="custom-select mb-3" style="width: 300px;">
-                            <option value="<?php @$_GET["catogory"] != null? $_GET["catogory"]: ""; ?>" selected><?php if(@$_GET["catogory"] != null) echo $_GET["catogory"]; else echo "点击进行分类...";?></option>
-                            <?php
-                            $catList = $view->getCatogoryList();
-                            foreach($catList as $catogory){
-                                echo '<option value="'.$catogory["cat_name"].'">'.$catogory["cat_name"].'</option>';
-                            }
-                            ?>
-                        </select>
-                        <input class="btn btn-primary" value="搜查" type="submit">
-                        <button class="btn btn-secondary" type="button" onclick="removeCatogory()">取消分类</button>
-
-
-                </form>
-
-
-
-
+                                <?php
+                                $catList = $view->getCatogoryList();
+                                foreach($catList as $catogory){
+                                    echo "<option value='".$catogory["cat_name"]."'";
+                                    if (@$_GET["catogory"] == $catogory["cat_name"]) echo " selected";
+                                    echo ">".$catogory["cat_name"]." (".$view->getCatogoryTotalCount($catogory["cat_name"]).")</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
@@ -48,8 +47,6 @@
                 <?php
 
                     $itemList = $view->getAllItems();
-
-
 
                     foreach($itemList as $i){
                         $item = $i;
@@ -83,9 +80,13 @@
     </wrapper>
 
 <script>
-    function removeCatogory(){
-        window.location.href = "item-list.php";
-    }
+    $(document).ready(function(){
+        // Catogory bar onchange bar
+        $("#catogorySelector").on("change", function(){
+            window.location.href = "item-list.php?catogory=" + $("#catogorySelector option:selected").val();
+        });
+    });
+
 </script>
     </body>
 </html>

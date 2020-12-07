@@ -235,6 +235,15 @@ class View extends Model{
         return $catArray;
     }
 
+    public function getCatogoryTotalCount($catogoryName){
+        $cat_id = $this->dbSelectAttribute("catogories", "cat_id", "cat_name", $catogoryName);
+        return $this->dbSelectAttributeCount("classifications", "cat_id", $cat_id);
+    }
+
+    public function getItemTotalCount(){
+        return $this->dbSelectCount("items");
+    }
+
 }
 
 ?>
