@@ -1,4 +1,10 @@
 <?php
+
+/*  A few variable needed to declare first before include this pagination block
+    1. $upperDirectory : Retrieve global content need to get depth of the directories
+    2. $cart : Need to retrieve cart count to display the cart icon correctly
+*/
+
 //Set default value // '@' is to ignore the error message on null variable
 if (@$upperDirectoryCount == null) $upperDirectoryCount = 0;
 
@@ -8,11 +14,13 @@ $upperDirectory = "";
 for($i = 0; $i < $upperDirectoryCount; $i++){
     $upperDirectory = $upperDirectory.$SYMBOL;
 }
+
 ?>
+
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
     <div class="container">
-        <a class="navbar-brand" href="<?php echo $upperDirectory; ?>index.php">
-            <img src="<?php echo $upperDirectory; ?>assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+        <a class="navbar-brand" href="<?= $upperDirectory; ?>index.php">
+            <img src="<?= $upperDirectory; ?>assets/images/icon/ecolla_icon.png" width="30" height="30" class="d-inline-block align-top" alt="" loading="lazy">
             ε口乐
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -21,12 +29,12 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>index.php">主页</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>item-list.php">所有商品列表</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>payment-method.php">付款方式</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>about-us.php">关于我们</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>order-tracking.php">订单追踪</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?php echo $upperDirectory; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span><?php echo $c->getCartCount(); ?></span></a></li>
+            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>index.php">主页</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>item-list.php">所有商品列表</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>payment-method.php">付款方式</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>about-us.php">关于我们</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>order-tracking.php">订单追踪</a></li>
+            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span><?php echo $c->getCartCount(); ?></span></a></li>
         </ul>
     </div>
 </div>
