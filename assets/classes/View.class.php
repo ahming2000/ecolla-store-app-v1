@@ -95,7 +95,7 @@ class View extends Model{
 
         // Get the item
         // Query: SELECT * FROM items WHERE i_name = ? AND i_brand = ?
-        $dbTable_items = $this->dbSelectRow_MultiSearch("items", ["i_name", "i_brand"], [$itemName, $itemBrand]);
+        $dbTable_items = $this->dbSelectRow("items", ["i_name", "i_brand"], [$itemName, $itemBrand]);
         // Return null  if no item is found
         if($dbTable_items == null) return null;
 
@@ -105,7 +105,7 @@ class View extends Model{
 
     public function getItemId($item){
         // Query: SELECT i_id FROM items WHERE i_name = ? AND i_brand = ?
-        return $this->dbSelectAttribute_MultiSearch("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
+        return $this->dbSelectAttribute("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
     }
 
     public function getItemCount(){
@@ -137,7 +137,7 @@ class View extends Model{
 
             }
 
-            $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"]);
+            $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"], $o["c_state"], $o["c_area"], $o["c_postal_code"]);
             $order = new Order($customer);
             $order->importOrder($o["o_date_time"], $o["o_id"], $cart, $o["o_delivery_id"]);
 

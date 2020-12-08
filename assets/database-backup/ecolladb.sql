@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 07, 2020 at 12:37 PM
+-- Generation Time: Dec 08, 2020 at 03:42 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -177,6 +177,9 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `c_phone_mcc` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT '+60',
   `c_phone` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
   `c_address` varchar(300) COLLATE utf8_unicode_ci NOT NULL,
+  `c_state` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `c_area` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `c_postal_code` varchar(6) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`o_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 

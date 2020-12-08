@@ -12,7 +12,7 @@ class Controller extends Model {
             if($this->dbSelectRow("varieties", "v_barcode", $_v->getBarcode()) != null) return false;
         }
         // 2. Item name and item brand cannot duplicate
-        if($this->dbSelectRow_MultiSearch("items", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]) != null) return false;
+        if($this->dbSelectRow("items", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]) != null) return false;
 
         // Insert priority: items > catogories > classifications > varieties > inventories
 
@@ -22,7 +22,7 @@ class Controller extends Model {
 
         // Get item id from database
         // Query: SELECT i_id FROM items WHERE i_name = ? AND i_brand = ?
-        $i_id = $this->dbSelectAttribute_MultiSearch("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
+        $i_id = $this->dbSelectAttribute("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
 
 
         foreach($item->getCatogories() as $catogory){
@@ -125,7 +125,7 @@ class Controller extends Model {
 
     public function insertNewOrder($order){ //$order
 
-        $order_ready = [$order->getOrderId(), $order->getDateTime(), $order->getCustomer()->getName(), $order->getCustomer()->getPhoneMMC(), $order->getCustomer()->getPhone(), $order->getCustomer()->getAddress()];
+        $order_ready = [$order->getOrderId(), $order->getDateTime(), $order->getCustomer()->getName(), $order->getCustomer()->getPhoneMMC(), $order->getCustomer()->getPhone(), $order->getCustomer()->getAddress(), $order->getCustomer()->getState(), $order->getCustomer()->getArea(), $order->getCustomer()->getPostalCode()];
         $this->dbInsert("orders", $order_ready);
 
         foreach($order->getCart()->getCartItems() as $cartItem){
