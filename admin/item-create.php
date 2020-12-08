@@ -412,14 +412,14 @@
             $(function() {
                 $("form").on("submit", e => {
                     let name = $('input[name=name]').val() || "", brand = $('input[name=brand]').val() || "",
-                        type = $("input[name^='catogory']").eq(0).val() || "", barcode = $(`input[name^="variety"][name$="['barcode']"]`).val() || "",
-                        price = $(`input[name^="variety"][name$="['price']"]`).val() || "";
+                        type = $("input[name^='catogory']").eq(0).val() || "", barcode = $(`input[name="variety[0][barcode]"]`).val() || "",
+                        price = $(`input[name="variety[0][price]"]`).val();
                     let obj = {
                         name: $('input[name=name]').val() || "",
                         brand: $('input[name=brand]').val() || "",
                         type: $("input[name^='catogory']").eq(0).val() || "",
-                        barcode: $(`input[name^="variety"][name$="['barcode']"]`).val() || "",
-                        price: $(`input[name^="variety"][name$="['price']"]`).val() || "",
+                        barcode:  $(`input[name="variety[0][barcode]"]`).val() || "",
+                        price: $(`input[name="variety[0][price]"]`).val() || "",
                         html_markup: itemPage_html_string(name, brand, price, barcode, type)
                     }
 
