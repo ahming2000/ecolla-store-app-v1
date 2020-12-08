@@ -3,19 +3,16 @@
     $cart = new Cart();
     $view = new View();
 
-
     $pageName = "item-list.php";
+
     $MAX_ITEMS = $view->getMaxItemsPerPage();
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $start = ($page - 1) * $MAX_ITEMS;
 
-    $itemCount = $view->getItemTotalCount();
+    $itemCount = isset($_GET['catogory']) ? $view->getCatogoryTotalCount($_GET['catogory']) : $view->getItemTotalCount();
     $totalPage = ceil($itemCount / $MAX_ITEMS);
 
-    $previousPage = $page - 1;
-    $nextPage = $page + 1;
-
-    $items = $view->getItemsWithRange($start, $MAX_ITEMS);
+    $items = isset($_GET['catogory']) ? $view->getItemWithSpecificCatogory($_GET['catogory'], $start, $MAX_ITEMS) : $view->getItemsWithRange($start, $MAX_ITEMS);
  ?>
 
 <!DOCTYPE html>
@@ -57,7 +54,7 @@
 
                         <div class="col-6">
                             <select name="catogory" id="catogorySelector" class="custom-select mb-3" style="width: 100%">
-                                <option <?php if (@$_GET["catogory"] == null) echo "selected"; ?>><?php echo "全部商品 (".$itemCount.")"; ?></option>
+                                <option value="" <?php if (@$_GET["catogory"] == null) echo "selected"; ?>><?php echo "全部商品 (".$view->getItemTotalCount().")"; ?></option>
 
                                 <?php
                                 $catList = $view->getCatogoryList();
@@ -81,17 +78,7 @@
                     foreach($items as $item){
                         $i_id = $view->getItemId($item);
                         if($item->isListed()){
-                            if(isset($_GET["catogory"])){
-                                foreach($i->getCatogories() as $catogory){
-                                    if($catogory == $_GET["catogory"]){
-                                        include "assets/block-user-page/item-block.php";
-                                        break;
-                                    }
-                                }
-                            } else{
-                                include "assets/block-user-page/item-block.php";
-                            }
-
+                            include "assets/block-user-page/item-block.php";
                         }
                     }
 
@@ -100,7 +87,21 @@
 
             <div class="row">
                 <div class="col-12">
-                    <?php include "assets/block-user-page/pagination-block.php"; ?>
+
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item <?= $page == 1 ? "disabled" : ""; ?>">
+                                <a class="page-link" href="<?= isset($_GET['catogory']) ? $pageName . "?catogory=" . $_GET['catogory'] . "&page=" . ($page - 1) : $pageName . "?page=" . ($page - 1); ?>" id="previous-button" <?= $page == 1 ? "tabindex='1' aria-disabled='true'" : ""; ?>>上一页</a>
+                            </li>
+                            <?php for($i = 1; $i <= $totalPage; $i++) : ?>
+                                <li class="page-item <?= $page == $i ? "active" : ""; ?>"><a class="page-link" href="<?= isset($_GET['catogory']) ? $pageName . "?catogory=" . $_GET['catogory'] . "&page=" . $i : $pageName . "?page=" . $i; ?>"><?= $i; ?></a></li>
+                            <?php endfor; ?>
+                            <li class="page-item<?= $page == $totalPage ? " disabled" : ""; ?>">
+                                <a class="page-link" href="<?= isset($_GET['catogory']) ? $pageName . "?catogory=" . $_GET['catogory'] . "&page=" . ($page + 1) : $pageName . "?page=" . ($page + 1); ?>" id="next-button" <?= $page == $totalPage ? "tabindex='1' aria-disabled='true'" : ""; ?>>下一页</a>
+                            </li>
+                        </ul>
+                    </nav>
+
                 </div>
             </div>
 
@@ -118,7 +119,12 @@
     $(document).ready(function(){
         // Catogory bar onchange bar
         $("#catogorySelector").on("change", function(){
-            window.location.href = "item-list.php?catogory=" + $("#catogorySelector option:selected").val();
+            if($("#catogorySelector option:selected").val() !== ""){
+                window.location.href = "item-list.php?catogory=" + $("#catogorySelector option:selected").val();
+            } else{
+                window.location.href = "item-list.php";
+            }
+
         });
     });
 

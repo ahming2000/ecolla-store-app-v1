@@ -4,10 +4,67 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 
 class View extends Model{
 
-    public function getAllItems(){
+    private function toItemObjList($dbTable_items){
 
-        // Create an empty array
         $items = array();
+
+        foreach($dbTable_items as $i){
+
+            // Create new Item object
+            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count']);
+
+            // Get classifications of current item
+            // Query: SELECT cat_id FROM classifications WHERE i_id = ?
+            $class = $this->dbSelectColumn("classifications", "cat_id", "i_id", $i["i_id"]);
+
+            foreach($class as $cat_id){
+
+                // Get catogories of current classification
+                // Query: SELECT cat_name FROM catogories WHERE cat_id = ?
+                $cat_name = $this->dbSelectAttribute("catogories", "cat_name", "cat_id", $cat_id);
+
+                // Add into item object
+                $item->addCatogory($cat_name);
+
+            }
+
+            // Get varieties of current item
+            // Query: SELECT * FROM varieties WHERE i_id = ?
+            $dbTable_varieties = $this->dbSelectRow("varieties", "i_id", $i["i_id"]);
+
+            foreach($dbTable_varieties as $v){
+
+                // Create new Variety object
+                $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
+
+                // Get inventories of current variety
+                // Query: SELECT * FROM inventories WHERE v_barcode = ?
+                $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $v['v_barcode']);
+
+                foreach($dbTable_inventories as $inv){
+
+                    // Create new Inventory object
+                    $inventory = new Inventory($inv["inv_expire_date"], $inv["inv_quantity"]);
+
+                    // Add into the variety object
+                    $variety->addInventory($inventory);
+
+                }
+
+                // Add into item object
+                $item->addVariety($variety);
+
+            }
+
+            // Push current item into items
+            array_push($items, $item);
+
+        }
+
+        return $items;
+    }
+
+    public function getAllItems(){
 
         // Get all items
         // Query: SELECT * FROM items
@@ -15,66 +72,10 @@ class View extends Model{
         // Return empty array if no item is found
         if($dbTable_items == null) return array();
 
-        foreach($dbTable_items as $i){
-
-            // Create new Item object
-            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count']);
-
-            // Get classifications of current item
-            // Query: SELECT cat_id FROM classifications WHERE i_id = ?
-            $class = $this->dbSelectColumn("classifications", "cat_id", "i_id", $i["i_id"]);
-
-            foreach($class as $cat_id){
-
-                // Get catogories of current classification
-                // Query: SELECT cat_name FROM catogories WHERE cat_id = ?
-                $cat_name = $this->dbSelectAttribute("catogories", "cat_name", "cat_id", $cat_id);
-
-                // Add into item object
-                $item->addCatogory($cat_name);
-
-            }
-
-            // Get varieties of current item
-            // Query: SELECT * FROM varieties WHERE i_id = ?
-            $dbTable_varieties = $this->dbSelectRow("varieties", "i_id", $i["i_id"]);
-
-            foreach($dbTable_varieties as $v){
-
-                // Create new Variety object
-                $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
-
-                // Get inventories of current variety
-                // Query: SELECT * FROM inventories WHERE v_barcode = ?
-                $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $v['v_barcode']);
-
-                foreach($dbTable_inventories as $inv){
-
-                    // Create new Inventory object
-                    $inventory = new Inventory($inv["inv_expire_date"], $inv["inv_quantity"]);
-
-                    // Add into the variety object
-                    $variety->addInventory($inventory);
-
-                }
-
-                // Add into item object
-                $item->addVariety($variety);
-
-            }
-
-            // Push current item into items
-            array_push($items, $item);
-
-        }
-
-        return $items;
+        return $this->toItemObjList($dbTable_items);
     }
 
     public function getItemsWithRange($start, $range){
-
-        // Create an empty array
-        $items = array();
 
         // Get all items
         // Query: SELECT * FROM items
@@ -82,65 +83,12 @@ class View extends Model{
         // Return empty array if no item is found
         if($dbTable_items == null) return array();
 
-        foreach($dbTable_items as $i){
-
-            // Create new Item object
-            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count']);
-
-            // Get classifications of current item
-            // Query: SELECT cat_id FROM classifications WHERE i_id = ?
-            $class = $this->dbSelectColumn("classifications", "cat_id", "i_id", $i["i_id"]);
-
-            foreach($class as $cat_id){
-
-                // Get catogories of current classification
-                // Query: SELECT cat_name FROM catogories WHERE cat_id = ?
-                $cat_name = $this->dbSelectAttribute("catogories", "cat_name", "cat_id", $cat_id);
-
-                // Add into item object
-                $item->addCatogory($cat_name);
-
-            }
-
-            // Get varieties of current item
-            // Query: SELECT * FROM varieties WHERE i_id = ?
-            $dbTable_varieties = $this->dbSelectRow("varieties", "i_id", $i["i_id"]);
-
-            foreach($dbTable_varieties as $v){
-
-                // Create new Variety object
-                $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
-
-                // Get inventories of current variety
-                // Query: SELECT * FROM inventories WHERE v_barcode = ?
-                $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $v['v_barcode']);
-
-                foreach($dbTable_inventories as $inv){
-
-                    // Create new Inventory object
-                    $inventory = new Inventory($inv["inv_expire_date"], $inv["inv_quantity"]);
-
-                    // Add into the variety object
-                    $variety->addInventory($inventory);
-
-                }
-
-                // Add into item object
-                $item->addVariety($variety);
-
-            }
-
-            // Push current item into items
-            array_push($items, $item);
-
-        }
-
-        return $items;
+        return $this->toItemObjList($dbTable_items);
     }
 
-    public function getItemId($item){
-        // Query: SELECT i_id FROM items WHERE i_name = ? AND i_brand = ?
-        return $this->dbSelectAttribute_MultiSearch("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
+    public function getItemWithSpecificCatogory($catogoryName, $start, $range){
+        $dbTable_items_catogories = $this->dbSelectRow_JoinTable("items", "classifications", "catogories", "i_id", "cat_id", "cat_name", $catogoryName, $start, $range);
+        return $this->toItemObjList($dbTable_items_catogories);
     }
 
     public function getItem($itemName, $itemBrand){
@@ -152,55 +100,12 @@ class View extends Model{
         if($dbTable_items == null) return null;
 
         // Take default first row (Assume only one item is found, not duplicated)
-        $i = $dbTable_items[0];
+        return $this->toItemObjList($dbTable_items)[0];
+    }
 
-        // Create new Item object
-        $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count']);
-
-        // Get classifications of current item
-        // Query: SELECT cat_id FROM classifications WHERE i_id = ?
-        $class = $this->dbSelectColumn("classifications", "cat_id", "i_id", $i["i_id"]);
-
-        foreach($class as $cat_id){
-
-            // Get catogories of current classification
-            // Query: SELECT cat_name FROM catogories WHERE cat_id = ?
-            $cat_name = $this->dbSelectAttribute("catogories", "cat_name", "cat_id", $cat_id);
-
-            // Add into item object
-            $item->addCatogory($cat_name);
-
-        }
-
-        // Get varieties of current item
-        // Query: SELECT * FROM varieties WHERE i_id = ?
-        $dbTable_varieties = $this->dbSelectRow("varieties", "i_id", $i["i_id"]);
-
-        foreach($dbTable_varieties as $v){
-
-            // Create new Variety object
-            $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
-
-            // Get inventories of current variety
-            // Query: SELECT * FROM inventories WHERE v_barcode = ?
-            $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $v['v_barcode']);
-
-            foreach($dbTable_inventories as $inv){
-
-                // Create new Inventory object
-                $inventory = new Inventory($inv["inv_expire_date"], $inv["inv_quantity"]);
-
-                // Add into the variety object
-                $variety->addInventory($inventory);
-
-            }
-
-            // Add into item object
-            $item->addVariety($variety);
-
-        }
-
-        return $item;
+    public function getItemId($item){
+        // Query: SELECT i_id FROM items WHERE i_name = ? AND i_brand = ?
+        return $this->dbSelectAttribute_MultiSearch("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
     }
 
     public function getItemCount(){
