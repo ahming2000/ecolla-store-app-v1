@@ -236,6 +236,14 @@ class Model extends Dbh{
         else return null;
     }
 
+    protected function dbSelectRow_JoinTable($tableNameA, $tableNameB, $tableNameC, $foreignKeyAB, $foreignKeyBC, $attrToSearch, $attrContentToSearch, $start, $range){
+        $sql = "SELECT * FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch = ? LIMIT $start, $range";
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableNameA." or ".$tableNameB." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
     protected function dbSelectCount($tableName){
         $sql = "SELECT COUNT(*) AS count FROM ".$tableName;
         $stmt = $this->connect()->prepare($sql);
