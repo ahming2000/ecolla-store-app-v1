@@ -164,7 +164,7 @@ class Model extends Dbh{
         return $results;
     }
 
-    protected function dbSelectRange($tableName, $start, $range){
+    protected function dbSelectAllRange($tableName, $start, $range){
         $sql = "SELECT * FROM $tableName LIMIT ".$start.", ".$range;
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute()) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
@@ -180,6 +180,25 @@ class Model extends Dbh{
             $sql = "SELECT * FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
         } else {
             $sql = "SELECT * FROM $tableName WHERE $attrToSearch = ?";
+        }
+
+        $stmt = $this->connect()->prepare($sql);
+
+        //  Follow the mysql syntax
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting $tableName error. MySQL error message: " . $stmt->errorInfo()[2] . "<br>");
+
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    protected function dbSelectRowRange($tableName, $attrToSearch, $attrContentToSearch, $start, $range){
+        // Check is multiple search or not
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            // Make number of attribute and number of content are the same
+            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+            $sql = "SELECT * FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND") . " LIMIT $start, $range";
+        } else {
+            $sql = "SELECT * FROM $tableName WHERE $attrToSearch = ? LIMIT $start, $range";
         }
 
         $stmt = $this->connect()->prepare($sql);
@@ -238,10 +257,66 @@ class Model extends Dbh{
         else return null;
     }
 
-    protected function dbSelectRow_JoinTable($tableNameA, $tableNameB, $tableNameC, $foreignKeyAB, $foreignKeyBC, $attrToSearch, $attrContentToSearch, $start, $range){
-        $sql = "SELECT * FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch = ? LIMIT $start, $range";
+    protected function dbSelectAllRange_JoinTable($tableNameA, $tableNameB, $tableNameC, $foreignKeyAB, $foreignKeyBC, $attrToSearch, $attrContentToSearch, $start, $range){
+        // Check is multiple search or not
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            // Make number of attribute and number of content are the same
+            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+            $sql = "SELECT * FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND " . $this->clauseConnector($attrToSearch, "AND") . " LIMIT $start, $range";
+        } else {
+            $sql = "SELECT * FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch = ? LIMIT $start, $range";
+        }
+
         $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute([$attrContentToSearch])) die("Database selecting ".$tableNameA." or ".$tableNameB." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting ".$tableNameA." or ".$tableNameB." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    protected function dbSelectRow_JoinTable($tableNameMain, $tableNameA, $tableNameB, $foreignKeyFromTableA, $foreignKeyFromTableB, $attrToSelect, $attrToSearch, $attrContentToSearch){
+        // Check is multiple search or not
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            // Make number of attribute and number of content are the same
+            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+            $sql = "SELECT $attrToSelect FROM $tableNameMain JOIN ($tableNameA, $tableNameB) USING ($foreignKeyFromTableA, $foreignKeyFromTableB) WHERE " . $this->clauseConnector($attrToSearch, "AND");
+        } else {
+            $sql = "SELECT $attrToSelect FROM $tableNameMain JOIN ($tableNameA, $tableNameB) USING ($foreignKeyFromTableA, $foreignKeyFromTableB) WHERE $attrToSearch = ?";
+        }
+
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting ".$tableNameA." or ".$tableNameB." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    protected function dbSelectRow_JoinTable_Modern($tableNameA, $tableNameB, $tableNameC, $foreignKeyAB, $foreignKeyBC, $attrToSelect, $attrToSearch, $attrContentToSearch){
+        // Check is multiple search or not
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            // Make number of attribute and number of content are the same
+            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+            $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND " . $this->clauseConnector($attrToSearch, "AND");
+        } else {
+            $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch = ?";
+        }
+
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting ".$tableNameA." or ".$tableNameB." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    protected function dbSelectRowRange_JoinTable($tableNameA, $tableNameB, $tableNameC, $foreignKeyAB, $foreignKeyBC, $attrToSelect, $attrToSearch, $attrContentToSearch, $start, $range){
+        // Check is multiple search or not
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            // Make number of attribute and number of content are the same
+            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+            $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND " . $this->clauseConnector($attrToSearch, "AND") . " LIMIT $start, $range";
+        } else {
+            $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch = ? LIMIT $start, $range";
+        }
+
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting ".$tableNameA." or ".$tableNameB." error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetchAll();
         return $results;
     }
