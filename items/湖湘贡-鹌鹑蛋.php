@@ -1,7 +1,7 @@
 <?php $upperDirectoryCount = 1;
-include "../assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. 
+include "../assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed.
 ?>
-<?php $cart = new Cart(); //Must declare first before have any output to continue the session 
+<?php $cart = new Cart(); //Must declare first before have any output to continue the session
 ?>
 <?php
 $view = new View();
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <p class="lead font-weight-bold">湖湘贡鹌鹑蛋</p>
 
                             <!-- Star Rating System -->
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-6">
                                     <div class="rating">
                                         <div class="fa fa-star" id="star1" style="color: grey;">
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 <div class="col-6">
                                     Rating: <span id="rate_points">0.00</span> / 5.00
                                 </div>
-                            </div><br>
+                            </div><br> -->
 
                             <form action="" method="post">
                                 <div class="row">
