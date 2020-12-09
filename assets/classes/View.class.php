@@ -79,7 +79,7 @@ class View extends Model{
 
         // Get all items
         // Query: SELECT * FROM items
-        $dbTable_items = $this->dbSelectRange("items", $start, $range);
+        $dbTable_items = $this->dbSelectRowRange("items", "i_is_listed", 1, $start, $range);
         // Return empty array if no item is found
         if($dbTable_items == null) return array();
 
@@ -87,7 +87,7 @@ class View extends Model{
     }
 
     public function getItemWithSpecificCatogory($catogoryName, $start, $range){
-        $dbTable_items_catogories = $this->dbSelectRow_JoinTable("items", "classifications", "catogories", "i_id", "cat_id", "cat_name", $catogoryName, $start, $range);
+        $dbTable_items_catogories = $this->dbSelectAllRange_JoinTable("items", "classifications", "catogories", "i_id", "cat_id", ["cat_name", "i_is_listed"], [$catogoryName, 1], $start, $range);
         return $this->toItemObjList($dbTable_items_catogories);
     }
 
@@ -212,12 +212,16 @@ class View extends Model{
     }
 
     public function getCatogoryTotalCount($catogoryName){
-        $cat_id = $this->dbSelectAttribute("catogories", "cat_id", "cat_name", $catogoryName);
-        return $this->dbSelectAttributeCount("classifications", "cat_id", $cat_id);
+        $cat_id = $this->dbSelectRow_JoinTable("classifications", "items", "catogories", "i_id", "cat_id", "cat_id", ["cat_name", "i_is_listed"], [$catogoryName, 1]);
+        return sizeof($cat_id);
     }
 
     public function getItemTotalCount(){
         return $this->dbSelectCount("items");
+    }
+
+    public function getItemTotalCountListed(){
+        return $this->dbSelectAttributeCount("items", "i_is_listed", 1);
     }
 
 }

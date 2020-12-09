@@ -9,7 +9,7 @@
     $page = isset($_GET['page']) ? $_GET['page'] : 1;
     $start = ($page - 1) * $MAX_ITEMS;
 
-    $itemCount = isset($_GET['catogory']) ? $view->getCatogoryTotalCount($_GET['catogory']) : $view->getItemTotalCount();
+    $itemCount = isset($_GET['catogory']) ? $view->getCatogoryTotalCount($_GET['catogory']) : $view->getItemTotalCountListed();
     $totalPage = ceil($itemCount / $MAX_ITEMS);
 
     $items = isset($_GET['catogory']) ? $view->getItemWithSpecificCatogory($_GET['catogory'], $start, $MAX_ITEMS) : $view->getItemsWithRange($start, $MAX_ITEMS);
@@ -54,7 +54,7 @@
 
                         <div class="col-6">
                             <select name="catogory" id="catogorySelector" class="custom-select mb-3" style="width: 100%">
-                                <option value="" <?php if (@$_GET["catogory"] == null) echo "selected"; ?>><?php echo "全部商品 (".$view->getItemTotalCount().")"; ?></option>
+                                <option value="" <?php if (@$_GET["catogory"] == null) echo "selected"; ?>><?php echo "全部商品 (".$view->getItemTotalCountListed().")"; ?></option>
 
                                 <?php
                                 $catList = $view->getCatogoryList();
