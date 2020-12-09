@@ -9,6 +9,7 @@ class Item {
     private $origin; //String
     private $isListed; //Boolean
     private $imgCount; //Integer
+    private $viewCount; //Integer
 
     //Array variable
     private $catogories; //Array //String
@@ -17,13 +18,14 @@ class Item {
     //Utility variable
     private $catogoryCount; //Integer
 
-    public function __construct($name, $description, $brand, $origin, $isListed, $imgCount){
+    public function __construct($name, $description, $brand, $origin, $isListed, $imgCount, $viewCount){
         $this->name = $name;
         $this->description = $description;
         $this->brand = $brand;
         $this->origin = $origin;
         $this->isListed = $isListed;
         $this->imgCount = $imgCount;
+        $this->viewCount = $viewCount;
 
         $this->catogories = array();
         $this->varieties = array();
@@ -129,6 +131,16 @@ class Item {
         $this->catogoryCount = $catogoryCount;
         return $this;
     }
+
+    public function getViewCount() {
+        return $this->viewCount;
+    }
+
+    public function setViewCount($viewCount) {
+        $this->viewCount = $viewCount;
+        return $this;
+    }
+
 }
 
 ?>

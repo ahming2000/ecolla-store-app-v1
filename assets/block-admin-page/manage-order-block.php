@@ -13,7 +13,7 @@
     <td><?php
     $count = 1;
     foreach($order->getCart()->getCartItems() as $cartItem){
-        echo "商品 ".$count."：".$cartItem->getItem()->getCountry().$cartItem->getItem()->getBrand().$cartItem->getItem()->getName()." ";
+        echo "商品 ".$count."：".$cartItem->getItem()->getOrigin().$cartItem->getItem()->getBrand().$cartItem->getItem()->getName()." ";
         echo $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty()."<br>";
         echo "价钱：RM".number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate(), 2);
         echo " x ".$cartItem->getQuantity()."<br>";

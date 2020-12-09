@@ -11,7 +11,7 @@ class View extends Model{
         foreach($dbTable_items as $i){
 
             // Create new Item object
-            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count']);
+            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count'], $i['i_view_count']);
 
             // Get classifications of current item
             // Query: SELECT cat_id FROM classifications WHERE i_id = ?
@@ -222,6 +222,21 @@ class View extends Model{
 
     public function getItemTotalCountListed(){
         return $this->dbSelectAttributeCount("items", "i_is_listed", 1);
+    }
+
+    public function getTotalPurchaseCount($item){
+        // Get all barcode from same item
+        $i_id = $this->getItemId($item);
+        $barcodes = $this->dbSelectColumn("varieties", "v_barcode", "i_id", $i_id);
+
+        // Get all quantity from order items table (Using array or loop)
+        $count = 0;
+        foreach($barcodes as $barcode){
+            $count += $this->dbSelectAttribute("order_items", "oi_quantity", "v_barcode", $barcode);
+        }
+
+        //Return the total quantity purchased.
+        return $count;
     }
 
 }

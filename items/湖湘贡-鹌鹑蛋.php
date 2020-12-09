@@ -7,6 +7,9 @@ include "../assets/includes/class-auto-loader.inc.php"; //Auto include classes w
 $view = new View();
 $item = $view->getItem("鹌鹑蛋", "湖湘贡");
 $i_id = $view->getItemId($item);
+
+$controller = new Controller();
+$controller->addViewCount($item);
 ?>
 <?php
 
