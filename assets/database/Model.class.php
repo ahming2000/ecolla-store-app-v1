@@ -34,8 +34,8 @@ class Model extends Dbh{
     private $DATABASE_TABLE = [
 
         "items" => [
-            "columnsToInsert" => "items(i_name, i_desc, i_brand, i_origin, i_is_listed, i_image_count)",
-            "columnsCountToInsert" => 6
+            "columnsToInsert" => "items(i_name, i_desc, i_brand, i_origin, i_is_listed, i_image_count, i_view_count)",
+            "columnsCountToInsert" => 7
         ],
 
         "varieties" => [
@@ -59,8 +59,8 @@ class Model extends Dbh{
         ],
 
         "orders" => [
-            "columnsToInsert" => "orders(o_id, o_date_time, c_name, c_phone_mcc, c_phone, c_address)",
-            "columnsCountToInsert" => 6
+            "columnsToInsert" => "orders(o_id, o_date_time, c_name, c_phone_mcc, c_phone, c_address, c_state, c_area, c_postal_code)",
+            "columnsCountToInsert" => 9
         ],
 
         "order_items" => [
@@ -359,10 +359,34 @@ class Model extends Dbh{
         dbUpdate: UPDATE {table name} SET {attribute to update} = {attribute content to update} WHERE {attribute to search} = {attribute content to search}
     */
     protected function dbUpdate($tableName, $attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
-        $sql = "UPDATE $tableName SET ".$attrToUpdate." = ? WHERE ".$attrToSearch." = ?";
+        // Check is multiple search or not
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            // Make number of attribute and number of content are the same
+            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+            $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE " . $this->clauseConnector($attrToSearch, "AND");
+        } else {
+            $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $attrToSearch = ?";
+        }
+
         $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute([$attrContentToUpdate, $attrContentToSearch])) die("Database updating $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+
+        $variables = array();
+        $variables[] = $attrContentToUpdate;
+
+        if(is_array($attrContentToSearch)){
+            foreach($attrContentToSearch as $element){
+                $variables[] = $element;
+            }
+        } else{
+            $variables[] = $attrContentToSearch;
+        }
+
+        if(!$stmt->execute($variables)) die("Database updating $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
     }
+
+
+
+
 
     /*  Delete database data
         Syntax:
