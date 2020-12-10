@@ -101,7 +101,7 @@ class Controller extends Model {
             }
 
             //Delete Variety image
-            for($i = 0; $i < $item->getVarieties(); $i++){
+            for($i = 0; $i < sizeof($item->getVarieties()); $i++){
                 if(file_exists("../assets/images/items/".$i_id."/".$item->getVarieties()[$i]->getBarcode().".jpg")){
                     unlink("../assets/images/items/".$i_id."/".$item->getVarieties()[$i]->getBarcode().".jpg");
                 }
@@ -111,11 +111,12 @@ class Controller extends Model {
             //rmdir("../assets/images/items/".$i_id."/");
 
             //Delete webpage
-            unlink("../items/".$item->getBrand()."-".$item->getName().".php");
+            if(file_exists("../items/".$item->getBrand()."-".$item->getName().".php")) unlink("../items/".$item->getBrand()."-".$item->getName().".php");
         } else{
             return false;
         }
 
+        return true;
     }
 
 

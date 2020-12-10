@@ -5,6 +5,8 @@
             $item = $view->getItem($_POST["name"], $_POST["brand"]);
             if(!$controller->deleteItem($item)){
                 UsefulFunction::generateAlert("删除失败");
+            } else{
+                UsefulFunction::generateAlert("删除成功");
             }
         }
 
@@ -86,8 +88,8 @@
                     }
                 }
                 var myTable = document.getElementById("item-table");
-                document.getElementsById("name").value = myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML;
-                document.getElementsById("brand").value = myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML;
+                document.getElementById("name").value = myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML;
+                document.getElementById("brand").value = myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML;
             } else{
                 selectedRowIndex = null;
             }
