@@ -232,10 +232,27 @@ class View extends Model{
         // Get all quantity from order items table (Using array or loop)
         $count = 0;
         foreach($barcodes as $barcode){
-            $count += $this->dbSelectAttribute("order_items", "oi_quantity", "v_barcode", $barcode);
+            // Make sure all barcode (repeated) counting into the count variable
+            $quantityList = $this->dbSelectColumn("order_items", "oi_quantity", "v_barcode", $barcode);
+            foreach($quantityList as $quantity){
+                $count += $quantity;
+            }
         }
 
         //Return the total quantity purchased.
+        return $count;
+    }
+
+    public function getPurchaseCount($barcode){
+        $count = 0;
+        foreach($barcodes as $barcode){
+            // Make sure all barcode (repeated) counting into the count variable
+            $quantityList = $this->dbSelectColumn("order_items", "oi_quantity", "v_barcode", $barcode);
+            foreach($quantityList as $quantity){
+                $count += $quantity;
+            }
+        }
+
         return $count;
     }
 
