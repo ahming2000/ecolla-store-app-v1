@@ -37,6 +37,13 @@
 
 
     </div>
+
+    <script>
+    function viewReceipt(source){
+        let url = source.value;
+        window.open(url,'Image','width=400px,height=400px,resizable=1');
+    }
+    </script>
 </body>
 
 </html>

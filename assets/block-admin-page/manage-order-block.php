@@ -1,6 +1,9 @@
 <tr>
 
-    <td><?php echo $order->getOrderId()."<br><a href='../assets/images/orders/".$order->getOrderId().".jpg'>点击查看账单</a>"; ?></td>
+    <td>
+        <?= $order->getOrderId(); ?><br>
+        <button type='button' class='btn btn-sm btn-primary' value='<?= "../assets/images/orders/".$order->getOrderId().".jpg"; ?>' onclick='viewReceipt(this)'>查看账单</button>
+    </td>
 
     <td><?php echo $order->getDateTime(); ?></td>
 
