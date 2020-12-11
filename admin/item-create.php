@@ -17,7 +17,7 @@
         }
 
         // Declare into item object
-        $item = new Item($_POST["name"], $_POST["description"], $_POST["brand"], $_POST["origin"], 0, sizeof($generalImageList));
+        $item = new Item($_POST["name"], $_POST["description"], $_POST["brand"], $_POST["origin"], 0, sizeof($generalImageList), 0);
         // Declare into variety object
         for($i = 0; $i < sizeof($_POST["variety"]); $i++){
             if($_POST["variety"][$i]["property"] != ""){
