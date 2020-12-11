@@ -7,7 +7,18 @@
                 UsefulFunction::generateAlert("删除失败");
             } else{
                 UsefulFunction::generateAlert("删除成功");
+                header("refresh: 0"); //Refresh page immediately
             }
+        }
+
+        if(isset($_POST['list'])){
+            $controller = new Controller();
+            $controller->changeListStatus($_POST['name'], $_POST['brand']);
+            header("refresh: 0");
+        }
+
+        if(isset($_POST['edit'])){
+            header("location: item-edit.php?itemName=" . $_POST['name'] . "&itemBrand=" . $_POST['brand']);
         }
 
      ?>
@@ -23,10 +34,10 @@
 
     <div class="container">
         <div class="h1">商品管理</div>
-        <form action="" method="post">
+        <form action="" method="post" id="action-form">
             <div class="row">
-                <input type="text" name="name" id="name" value="" hidden/>
-                <input type="text" name="brand" id="brand" value="" hidden/>
+                <input type="text" name="name" id="selectedName" value="" hidden/>
+                <input type="text" name="brand" id="selectedBrand" value="" hidden/>
                 <div class="col mb-3"><button onclick="addButtonClicked()" type="button" class="btn btn-primary btn-block" name="addButton" id="addButton">添加商品</button></div>
                 <div class="col mb-3"><button onclick="editButtonClicked()" type="button" class="btn btn-primary btn-block" name="editButton" id="editButton" disabled>编辑商品</button></div>
                 <div class="col mb-3"><button onclick="deleteButtonClicked()" type="submit" class="btn btn-primary btn-block" name="deleteButton" id="deleteButton" disabled>删除商品</button></div>
@@ -38,14 +49,14 @@
         <table class="table table-bordered" id="item-table">
             <thead>
                 <tr>
-                    <th scope="col"><input type="checkbox" onclick="selectAll(this)"> 全选</th>
-                    <th scope="col">出产国家</th>
-                    <th scope="col">品牌</th>
+                    <th scope="col"><input type="checkbox" onclick="selectAll(this)"></th>
                     <th scope="col">名称</th>
-                    <th scope="col">规格名称</th>
-                    <th scope="col">Barcode</th>
+                    <th scope="col">规格</th>
+                    <th scope="col">货号</th>
                     <th scope="col">价格</th>
-                    <th scope="col">商品总数量</th>
+                    <th scope="col">数量</th>
+                    <th scope="col">销售</th>
+                    <th scope="col">操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,11 +98,13 @@
                         selectedRowIndex = i + 1;
                     }
                 }
-                var myTable = document.getElementById("item-table");
-                document.getElementById("name").value = myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML;
-                document.getElementById("brand").value = myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML;
+                // Must use [0] to get first class selected
+                document.getElementById("selectedName").value = source.parentNode.getElementsByClassName("infoBoxItemName")[0].value;
+                document.getElementById("selectedBrand").value = source.parentNode.getElementsByClassName("infoBoxItemBrand")[0].value;
             } else{
                 selectedRowIndex = null;
+                document.getElementById("selectedName").value = "";
+                document.getElementById("selectedBrand").value = "";
             }
 
         }
@@ -110,6 +123,8 @@
                 selectedCount = 0;
                 document.getElementById("editButton").setAttribute("disabled", "disabled");
                 document.getElementById("deleteButton").setAttribute("disabled", "disabled");
+                document.getElementById("selectedName").value = "";
+                document.getElementById("selectedBrand").value = "";
             }
         }
 
@@ -132,9 +147,10 @@
 
             function editButtonClicked(){
                 untickAll();
+
                 document.location.href = "item-edit.php?" +
-                "itemName=" + myTable.rows.item(selectedRowIndex).cells.item(3).innerHTML + "&" +
-                "itemBrand=" + myTable.rows.item(selectedRowIndex).cells.item(2).innerHTML;
+                "itemName=" + document.getElementById("selectedName").value + "&" +
+                "itemBrand=" + document.getElementById("selectedBrand").value;
             }
 
             function deleteButtonClicked(){

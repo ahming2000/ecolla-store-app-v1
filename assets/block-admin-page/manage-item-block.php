@@ -1,7 +1,9 @@
 <tr>
-    <td><input class="item-check-box" name="item-check-box" onclick="itemCheckBoxClicked(this)" type="checkbox"></td>
-    <td><?php echo $item->getOrigin(); ?></td>
-    <td><?php echo $item->getBrand(); ?></td>
+    <td>
+        <input class="item-check-box" name="item-check-box" onclick="itemCheckBoxClicked(this)" type="checkbox">
+        <input type="text" name="name" class="infoBoxItemName" value="<?= $item->getName() ?>" hidden/>
+        <input type="text" name="brand" class="infoBoxItemBrand" value="<?= $item->getBrand() ?>" hidden/>
+    </td>
     <td><?php echo $item->getName(); ?></td>
 
     <td><?php
@@ -31,4 +33,21 @@
         echo $totalQuantity."<br>";
     }
     ?></td>
+
+    <td><?php
+    foreach($item->getVarieties() as $variety){
+        echo $view->getPurchaseCount($variety->getBarcode()) . "<br>";
+    }
+     ?></td>
+
+     <td>
+         <form action="" method="post">
+            <input type="text" name="name" value="<?= $item->getName() ?>" hidden/>
+            <input type="text" name="brand" value="<?= $item->getBrand() ?>" hidden/>
+            <button class="btn btn-outline-secondary" type="submit" name="list"><?= $item->isListed() ? "下架" : "上架"; ?></button>
+            <button class="btn btn-outline-secondary" type="submit" name='edit'>编辑</button>
+         </form>
+
+
+     </td>
 </tr>

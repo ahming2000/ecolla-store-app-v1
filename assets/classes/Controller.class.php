@@ -155,6 +155,93 @@ class Controller extends Model {
     public function addViewCount($item){
         $this->dbUpdate("items", "i_view_count", $item->getViewCount() + 1, ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
     }
+
+    public function changeListStatus($itemName, $itemBrand){
+
+        $isFail = false;
+
+        $dbTable_items = $this->dbSelectRow("items", ["i_name", "i_brand"], [$itemName, $itemBrand]);
+        $i_id = $dbTable_items[0]['i_id'];
+        $view = new View();
+        $items = $view->toItemObjList($dbTable_items);
+        $item = $items[0];
+
+        $message_fail = "上传失败，请符合以下条件：\\n";
+        $message_success = "上架/下架成功！";
+
+        //print_r($item);die();
+        if($item->isListed() == 0) {
+            // Check variety information is completed
+            if(sizeof($item->getVarieties()) == 0){
+                $message_fail = $message_fail . "请先添加至少一个规格！\\n";
+            } else{
+                $i = 1;
+                foreach($item->getVarieties() as $variety){
+                    if($variety->getBarcode() == ""){
+                        $message_fail = $message_fail . "请添加规格 $i 的商品货号！\\n";
+                        $isFail = true;
+                    } else{
+                        if($variety->getProperty() == ""){
+                            $message_fail = $message_fail . "货号 " . $variety->getBarcode() . " 的规格选择不可为空！\\n";
+                            $isFail = true;
+                        }
+
+                        if($variety->getPropertyName() == "") {
+                            $message_fail = $message_fail . "货号 " . $variety->getBarcode() . " 的规格名称不可为空！\\n";
+                            $isFail = true;
+                        }
+
+                        if($variety->getPrice() == "") {
+                            $message_fail = $message_fail . "货号 " . $variety->getBarcode() . " 的规格价钱不可为空！\\n";
+                            $isFail = true;
+                        }
+
+                        if($variety->getWeight() == "") {
+                            $message_fail = $message_fail . "货号 " . $variety->getBarcode() . " 的规格重量不可为空！\\n";
+                            $isFail = true;
+                        }
+
+                        if(sizeof($item->getVarieties()) == 0){
+                            $message_fail = $message_fail . "货号 " . $variety->getBarcode() . "：请添加至少一个库存！\\n";
+                            $isFail = true;
+                        } else{
+                            $j = 0;
+                            foreach($variety->getInventories() as $inventory){
+                                if($inventory->getExpireDate() == ""){
+                                    $message_fail = $message_fail . "货号 " . $variety->getBarcode() . " 的库存 $j 的过期日期不可为空！\\n";
+                                    $isFail = true;
+                                }
+                            }
+                            $j++;
+                        }
+                    }
+                    $i++;
+                }
+            }
+
+
+            // Check inventory information is completed
+
+            // Check cover image is existed
+            if(!file_exists("../assets/images/items/$i_id/0.jpg" && $item->getImgCount() == 0)){
+                $message_fail = $message_fail . "请先上传封面照片！";
+                $isFail  = true;
+            }
+
+        }
+
+        // Approve to list or unlist
+        if($isFail){
+            UsefulFunction::generateAlert($message_fail);
+        } else{
+            // To-do: generate new webpage (replace)
+            $this->dbUpdate("items", "i_is_listed", $item->isListed() ? 0 : 1, "i_id", $i_id);
+            UsefulFunction::generateAlert($message_success);
+        }
+
+    }
+
+
 }
 
 ?>

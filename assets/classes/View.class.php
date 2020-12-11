@@ -4,7 +4,7 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 
 class View extends Model{
 
-    private function toItemObjList($dbTable_items){
+    public function toItemObjList($dbTable_items){
 
         $items = array();
 
@@ -245,12 +245,10 @@ class View extends Model{
 
     public function getPurchaseCount($barcode){
         $count = 0;
-        foreach($barcodes as $barcode){
-            // Make sure all barcode (repeated) counting into the count variable
-            $quantityList = $this->dbSelectColumn("order_items", "oi_quantity", "v_barcode", $barcode);
-            foreach($quantityList as $quantity){
-                $count += $quantity;
-            }
+        // Make sure all barcode (repeated) counting into the count variable
+        $quantityList = $this->dbSelectColumn("order_items", "oi_quantity", "v_barcode", $barcode);
+        foreach($quantityList as $quantity){
+            $count += $quantity;
         }
 
         return $count;
