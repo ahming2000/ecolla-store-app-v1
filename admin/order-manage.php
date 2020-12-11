@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 
-<head><?php $upperDirectoryCount = 1; $title = "订单管理"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
+<head><?php $upperDirectoryCount = 1; $title = "订单管理"; $mode = "admin"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
 
 <body>
     <?php $upperDirectoryCount = 1; include "../assets/block-admin-page/header.php"; ?>

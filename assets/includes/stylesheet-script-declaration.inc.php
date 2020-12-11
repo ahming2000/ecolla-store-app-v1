@@ -1,6 +1,14 @@
 <?php
+
+/*  Stylesheet and Script Declaration
+    1. $mode ("user" or "admin") (Dfault: "user")
+    2. $title
+
+ */
+
 //Set default value // '@' is to ignore the error message on null variable
 if (@$upperDirectoryCount == null) $upperDirectoryCount = 0;
+if (@$mode == null) $mode = "user";
 
 //Initial
 $SYMBOL = "../";
@@ -37,7 +45,7 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
 
 
-
+<?php if($mode == "user") : ?>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
@@ -51,3 +59,4 @@ var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
 })();
 </script>
 <!--End of Tawk.to Script-->
+<?php endif; ?>

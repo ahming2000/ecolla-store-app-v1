@@ -17,7 +17,7 @@ if(isset($_POST["submit"])){
 
  ?>
 
-<head><?php $upperDirectoryCount = 1; $title = "编辑 ".$_GET["itemBrand"].'-'.$_GET["itemName"]; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
+<head><?php $upperDirectoryCount = 1; $title = "编辑 ".$_GET["itemBrand"].'-'.$_GET["itemName"]; $mode = "admin"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
 
 <body>
     <?php include_once "../assets/block-admin-page/header.php"; ?>

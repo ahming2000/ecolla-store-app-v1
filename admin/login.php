@@ -19,7 +19,7 @@
 <!DOCTYPE html>
 <html>
 
-<head><?php $upperDirectoryCount = 1; $title = "登录"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
+<head><?php $upperDirectoryCount = 1; $title = "登录"; $mode = "admin"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
 
 <style>
 .form_container {margin-top: 100px;}

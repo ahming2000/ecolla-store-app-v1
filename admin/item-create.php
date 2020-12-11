@@ -89,7 +89,7 @@
     <!DOCTYPE html>
     <html>
     <head>
-        <?php $upperDirectoryCount = 1; $title = "创建新商品"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?>
+        <?php $upperDirectoryCount = 1; $title = "创建新商品"; $mode = "admin"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?>
     </head>
 
     <body>
