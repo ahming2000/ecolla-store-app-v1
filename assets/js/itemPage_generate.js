@@ -300,6 +300,6 @@ function itemPage_html_string(item_name, brand, pricePerItem, barcode, itemType)
 // "鹌鹑蛋","湖湘贡",1.2,"6941025700084", "零食"
 // "维生素功能饮料", "脉动", 4.32, "6902538004045", "饮料"
 
-// console.log(itemPage_html_string("手撕素肉排", "好味屋", 1.5, "6931754804900", "零食"));
+// console.log(itemPage_html_string("手撕素肉排", "好味屋", "1.5", "6931754804900", "零食"));
 // console.log(itemPage_html_string("鹌鹑蛋","湖湘贡",1.2,"6941025700084"));
 // console.log(itemPage_html_string("维生素功能饮料", "脉动", 4.32, "6902538004045", "饮料"));

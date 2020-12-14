@@ -50,9 +50,27 @@ if (isset($_POST["submit"])) {
             <div class="form-row">
                 <div class="col-12 mb-3">
                     <label for="addressInputLine">地址</label>
-                    <input type="text" class="form-control" name="addressInputLine" placeholder="e.g. 123, Jalan 20, Taman Baru, 82000 Kampar, Perak" required>
                 </div>
             </div>
+
+            <div class="form-row">
+                <div class="col-1"><label class="control-label" for="house_num">No: </label></div>
+                <div class="col-3"><input type="text" name="house_num" class="form-control" placeholder="e.g. 12" autocomplete="off" required /></div>
+                <div class="col-1"><label class="control-label" for="jalan">Road: </label></div>
+                <div class="col-3"><input type="text" name="jalan" class="form-control" placeholder="e.g. Jalan 20" autocomplete="off" required /></div>
+                <div class="col-1"><label class="control-label" for="taman">Taman: </label></div>
+                <div class="col-3"><input type="text" name="taman" class="form-control" placeholder="e.g. Taman Baru" autocomplete="off" required /></div>
+            </div>
+
+            <div class="form-row">
+                <div class="col-1"><label class="control-label" for="State">State: </label></div>
+                <div class="col-3" id="state_input"><input type="text" name="state" class="form-control" placeholder="e.g. Perak" autocomplete="off" required /></div>
+                <div class="col-1"><label class="control-label" for="City">City: </label></div>
+                <div class="col-3" id="city_input"><input type="text" name="city" class="form-control" placeholder="e.g. Kampar" disabled autocomplete="off" required /></div>
+                <div class="col-1"><label class="control-label" for="ZipCode">Zip Code: </label></div>
+                <div class="col-3" id="zipCode_input"><input type="text" name="zipCode" class="form-control" placeholder="e.g. 82000"disabled autocomplete="off" required /></div>
+            </div>
+
             <div class="form-row">
                 <div class="col-12">
                     <div class="row">
@@ -95,7 +113,7 @@ if (isset($_POST["submit"])) {
                                 $subPrice = $cartItem->getSubPrice();
 
                                 echo "<div class=\"row\" style=\"height: 100px\">
-                                <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
+                                    <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
                                     <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
                                     <div class=\"col-2 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
                             
@@ -103,7 +121,7 @@ if (isset($_POST["submit"])) {
                             
                                     <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
                                     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
-                                </div>";
+                                    </div>";
 
                                 //backup
                                 // echo "<div class=\"row\" style=\"height: 100px\">
@@ -111,9 +129,9 @@ if (isset($_POST["submit"])) {
                                 //     <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
                                 //     <div class=\"col-1 pt-4\"><b style=\"font-size: 15px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
                                 //     <div class=\"col-1 pt-4\"><b style=\"font-size: 20px;\">" . $totalWeight . "kg</b></div>
-                            
+
                                 //     <div class=\"col-1 pt-3\"></div>
-                            
+
                                 //     <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
                                 //     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
                                 // </div>";
@@ -135,7 +153,7 @@ if (isset($_POST["submit"])) {
                             <div class="col-7"></div>
                             <div class="col-3"><b style="font-size: 32px;float: right;">总计 </b></div>
                             <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php $total = $c->getSubtotal() + $c->getShippingFee();
-                            echo number_format($total, 2); ?></span></b></div>
+                                                                                                                echo number_format($total, 2); ?></span></b></div>
                         </div>
                     </div>
                 </div>
@@ -226,34 +244,36 @@ if (isset($_POST["submit"])) {
                     phone_code_arr_bool[i] = 0;
                 });
                 $(`#phone_code${i}`).on("click", e => {
-                    console.log("Me");
                     $("#autocomplete_phoneNo").val(phone_code_arr[i]);
                 });
             }
 
             $('input[name=paymentServices]').click(function() {
-                if($('#qr_code_boost').is(':checked')){
+                if ($('#qr_code_boost').is(':checked')) {
                     $("#show_payment_method").css("display", "block");
-                }else if($('#qr_code_tng').is(':checked')){
+                } else if ($('#qr_code_tng').is(':checked')) {
                     $("#show_payment_method").css("display", "block");
-                }else{
+                } else {
                     $("#show_payment_method").css("display", "none");
                 }
             });
 
             $("form").submit(e => {
-                if((flag_for_btn == 0 && $('#qr_code_boost').is(':checked')) || (flag_for_btn == 0 && $('#qr_code_tng').is(':checked'))){
+                if ((flag_for_btn == 0 && $('#qr_code_boost').is(':checked')) || (flag_for_btn == 0 && $('#qr_code_tng').is(':checked'))) {
                     e.preventDefault();
                 }
             });
 
         });
-        function pop_up_qr_payment(){
+
+        function pop_up_qr_payment() {
             flag_for_btn = 1;
             let url = "assets/images/random_qr_code.png";
-            window.open(url,'Image','width=400px,height=400px,resizable=1');
+            window.open(url, 'Image', 'width=400px,height=400px,resizable=1');
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="assets/js/post_code.js"></script>
 
 </body>
 
