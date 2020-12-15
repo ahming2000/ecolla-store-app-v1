@@ -34,7 +34,7 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
             <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>payment-method.php">付款方式</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>about-us.php">关于我们</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>order-tracking.php">订单追踪</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span><?php echo $c->getCartCount(); ?></span></a></li>
+            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span><?php echo $cart->getCartCount(); ?></span></a></li>
         </ul>
     </div>
 </div>
