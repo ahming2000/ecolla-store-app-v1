@@ -4,7 +4,7 @@
             <img src="assets/images/items/<?php echo $i_id; ?>/0.jpg" class="card-img-top" alt="image">
         </a>
         <div class="card-body">
-            <h5 class="card-title"><?php echo $item->getBrand() . " " . $item->getName() ?></h5>
+            <h5 class="card-title text-truncate"><?php echo $item->getBrand() . " " . $item->getName() ?></h5>
             <span style="color: brown;">
                 <?php
                     $price = $item->getVarieties()[0]->getPrice() * $item->getVarieties()[0]->getDiscountRate();
