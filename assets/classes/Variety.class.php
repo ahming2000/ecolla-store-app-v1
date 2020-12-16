@@ -32,6 +32,14 @@ class Variety {
         UsefulFunction::removeArrayElementI($this->inventories, $index);
     }
 
+    public function getTotalQuantity(){
+        $total = 0;
+        foreach($this->inventories as $inventory){
+            $total += $inventory->getQuantity();
+        }
+        return $total;
+    }
+
     public function getInventories(){
         return $this->inventories;
     }
