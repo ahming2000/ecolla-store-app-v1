@@ -2,6 +2,19 @@ body, wrapper {
     min-height:150vh;
  }
 
+/* Space between header and content */
+body main {
+    margin-top: 70px;
+}
+
+.breadcrumb {
+    background-color: white;
+}
+
+body {
+     background-color: #EEEEEE;
+ }
+
 /*header.php*/
 .navbar{
     background-color:#303136;
