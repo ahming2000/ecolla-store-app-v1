@@ -8,8 +8,13 @@ var slider = tns({
     navContainer: '.slider-nav',
     navAsThumbnails: true,
 
-    loop: false,
+    autoplay: true,
+    autoplayHoverPause: true,
+    autoplayButtonOutput: false,
 });
+
+// Start autoplay
+slider.play();
 
 var sliderNav = tns({
     container: '.slider-nav',
