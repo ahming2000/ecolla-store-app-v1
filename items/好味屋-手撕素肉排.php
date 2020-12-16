@@ -2,7 +2,6 @@
 /* Initialization */
 // Standard variable declaration
 $upperDirectoryCount = 1;
-$title = "好味屋 手撕素肉排 | Ecolla ε口乐";
 
 // Auto loader for classes
 include "../assets/includes/class-auto-loader.inc.php";
@@ -14,7 +13,9 @@ $controller = new Controller();
 
 // Get item information
 $item = $view->getItem("手撕素肉排", "好味屋");
+
 $i_id = $view->getItemId($item);
+$title = $item->getBrand() . " " . $item->getName() . " | Ecolla ε口乐";
 
 /* Operation */
 // Add view count to database
