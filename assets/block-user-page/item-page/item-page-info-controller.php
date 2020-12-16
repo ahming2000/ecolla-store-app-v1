@@ -21,6 +21,19 @@ $(document).ready(function() {
         var selectedVarietyInventory = $(this).children(".variety-inventory").val();
         $("#inventory").val(selectedVarietyInventory);
 
+        // Navigate to selected variety image
+        var totalGeneralImg = $(".slider-container").children(".general-img").length - 2; // Get the total number of images
+        var selectedImageIndex = totalGeneralImg; // Initialize
+        for (i = 0; i < $(".variety-selector li").length; i++){ // Get index of the image
+            var v = $(".variety-selector li").eq(i).children(".variety-barcode").val();
+            if($("#img-" + v).val() != undefined){
+                selectedImageIndex++;
+                if (v === selectedVarietyBarcode){
+                    break;
+                }
+            }
+        }
+        if ($("#img-" + selectedVarietyBarcode).val() != undefined) slider.goTo(selectedImageIndex); // Make sure image is existed before use goto function
     });
 
     // Quantity controller
