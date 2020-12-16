@@ -1,264 +1,135 @@
-<?php $upperDirectoryCount = 1;
-include "../assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed.
-?>
-<?php $cart = new Cart(); //Must declare first before have any output to continue the session
-?>
 <?php
+/* Initialization */
+// Standard variable declaration
+$upperDirectoryCount = 1;
+
+// Auto loader for classes
+include "../assets/includes/class-auto-loader.inc.php";
+
+// Database Interaction
+$cart = new Cart();
 $view = new View();
-$item = $view->getItem("鹌鹑蛋", "湖湘贡");
-$i_id = $view->getItemId($item);
-
 $controller = new Controller();
+
+// Get item information
+$item = $view->getItem("鹌鹑蛋", "湖湘贡");
+
+$i_id = $view->getItemId($item);
+$title = $item->getBrand() . " " . $item->getName() . " | Ecolla ε口乐";
+
+/* Operation */
+// Add view count to database
 $controller->addViewCount($item);
-?>
-<?php
 
-$max_count = 10;
-
+// Add to cart action
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $cartItem = new CartItem($item, $_POST['itemQuantity'], $_POST['variety'], "");
+    $cartItem = new CartItem($item, $_POST['quantity'], $_POST['barcode'], "");
+    $inventoryQuantity = $item->getVarieties()[$cartItem->getVarietyIndex()]->getTotalQuantity();
+
     if ($cart->isDuplicated($cartItem)) {
 
-        $cur_count = $_POST['itemQuantity'];
-        $existing_item_count = $cart->getSpecificCartItem($_POST['variety'])->getQuantity();
+        $cur_count = $_POST['quantity'];
+        $existing_item_count = $cart->getSpecificCartItem($_POST['barcode'])->getQuantity();
 
-        if ($cur_count + $existing_item_count <= $max_count) // if the existing item count and current count does not exceed max_count
-            $cart->editQuantity($_POST['variety'], $cur_count);
+        if ($cur_count + $existing_item_count <= $inventoryQuantity) // if the existing item count and current count does not exceed max_count
+            $cart->editQuantity($_POST['barcode'], $cur_count);
         else // This adds item to the max_count since they already added more than 10
-            $cart->editQuantity($_POST['variety'], 10 - $existing_item_count);
+            $cart->editQuantity($_POST['barcode'], 10 - $existing_item_count);
 
         //Will work on disabling the add item, or show a notification if existing item count has already exceeded the max value
     } else {
         $cart->addItem($cartItem);
     }
 }
+
+
 ?>
+
 <!DOCTYPE html>
 <html>
 
 <head>
-    <?php $upperDirectoryCount = 1;
-    $title = "湖湘贡 鹌鹑蛋 | Ecolla ε口乐";
-    include "../assets/includes/stylesheet-script-declaration.inc.php" ?>
+    <?php include "../assets/includes/stylesheet.inc.php" ?>
     <!-- To-do: Meta for google searching -->
 </head>
 
+<style>
+.slider-nav li {
+    display: inline;
+}
+
+</style>
+
 <body>
 
-    <?php $c = $cart;
-    $upperDirectoryCount = 1;
-    include __DIR__ . "\\..\\assets\\block-user-page\\header.php"; ?>
+    <?php include "../assets/includes/script.inc.php"; ?>
 
-    <wrapper class="d-flex flex-column">
-        <main class="flex-fill">
-            <!--put content-->
+    <header><?php include "../assets/block-user-page/header.php"; ?></header>
 
-            <?php $i = $item;
-            include_once __DIR__ . "\\..\\assets\\block-user-page\\breadcrumb-block.php"; ?>
+    <main class="container">
 
-            <div class="container">
-                <!--Grid row-->
+        <!-- Breadcrumb -->
+        <?php include "../assets/block-user-page/item-page/breadcrumb.php"; ?>
+        <!-- Breadcrumb -->
+
+        <!-- Item Information -->
+        <div class="row">
+            <!-- Item Images Slider -->
+            <div class="col-md-5 mb-4">
+                <div class="row">
+                    <?php include "../assets/block-user-page/item-page/item-images-slider.php"; ?>
+                </div>
+            </div><!-- Item Images Slider -->
+
+            <!-- Item Purchasing Option -->
+            <div class="col-md-7 mb-4 p-4">
                 <div class="row">
 
-                    <!--Grid column-->
-                    <div class="col-md-6 mb-4">
+                    <!-- Item catogory badge -->
+                    <?php include "../assets/block-user-page/item-page/item-catogory-badge.php"; ?>
+                    <!-- Item catogory badge -->
 
-                        <?php include "../assets/block-user-page/carousel-block-item-page.php"; ?>
+                    <!-- Item information -->
+                    <?php include "../assets/block-user-page/item-page/item-info.php"; ?>
+                    <!-- Item information -->
 
-                    </div>
-                    <!--Grid column-->
-
-                    <!--Grid column-->
-                    <div class="col-md-6 mb-4">
-
-                        <!--Content-->
-                        <div class="p-4">
-
-                            <div class="mb-3">
-                                <a href="">
-                                    <span class="badge purple mr-1">零食</span>
-                                </a>
-                                <!-- <a href="">
-                                <span class="badge blue mr-1">新品</span>
-                            </a> -->
-                                <a href="">
-                                    <span class="badge red mr-1">畅销</span>
-                                </a>
+                    <div class="col-12">
+                        <form action="" method="post">
+                            <div class="row mb-3">
+                                <!-- Property selector -->
+                                <?php include "../assets/block-user-page/item-page/item-property-selector.php"; ?>
+                                <!-- Property selector -->
                             </div>
 
-                            <p class="lead">
-                                <!-- <span class="mr-1  font-weight-bold">
-                            <del>RM 3.00</del>
-                        </span> -->
-                                <span class="font-weight-bold" style="color:red;">RM 1.20</span>
-                            </p>
+                            <div class="row mb-3 text-center">
+                                <!-- Quantity control interface -->
+                                <?php include "../assets/block-user-page/item-page/item-quantity-control-interface.php"; ?>
+                                <!-- Quantity control interface -->
 
-                            <p class="lead font-weight-bold">湖湘贡鹌鹑蛋</p>
-
-                            <!-- Star Rating System -->
-                            <!-- <div class="row">
-                                <div class="col-6">
-                                    <div class="rating">
-                                        <div class="fa fa-star" id="star1" style="color: grey;">
-                                        </div>
-                                        <div class="fa fa-star" id="star2" style="color: grey;">
-                                        </div>
-                                        <div class="fa fa-star" id="star3" style="color: grey;">
-                                        </div>
-                                        <div class="fa fa-star" id="star4" style="color: grey;">
-                                        </div>
-                                        <div class="fa fa-star" id="star5" style="color: grey;">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-6">
-                                    Rating: <span id="rate_points">0.00</span> / 5.00
-                                </div>
-                            </div><br> -->
-
-                            <form action="" method="post">
-                                <div class="row">
-
-                                    <div class="col-xs-12 col-sm-4">
-                                        <div class="h5">口味：</div>
-                                    </div>
-
-                                    <input id="variety" type="text" name="variety" value="6941025700084" hidden></input>
-
-                                    <div class="col-xs-12 col-sm-8">
-                                        <ol class="list-group">
-                                            <?php
-                                            for ($i = 0; $i < sizeof($item->getVarieties()); $i++) {
-                                                echo '<li class="list-group-item';
-                                                if ($i == 0) echo ' active';
-                                                echo '">' . $item->getVarieties()[$i]->getProperty() . '</li>';
-                                            }
-                                            ?>
-                                        </ol>
-                                    </div>
-
-                                </div><br>
-
-                                <div class="d-flex justify-content-left">
-                                    <!-- Default input -->
-                                    <div class="col-xs-12 col-sm-8 quantity-button-control">
-                                        <button type="button" class="btn btn-primary dropButton btn-sm mx-3 my-3" disabled>-</button>
-                                        <input id="itemQuantity" name="itemQuantity" type="number" class="mx-3 my-3" value="1" style="width: 45px;">
-                                        <button type="button" class="btn btn-primary addButton btn-sm mx-3 my-3">+</button>
-                                    </div>
-                                    <button class="btn btn-md my-0 p ml-1" style="color:white; background-color: #3c3e44;" type="submit">加入购物车
-                                        <i class="fas fa-shopping-cart ml-1"></i>
+                                <!-- Submit button -->
+                                <div class="col-xs-12 col-sm-5 col-lg-6">
+                                    <button class="btn secondary-color" type="submit">
+                                        加入购物车<i class="fas fa-shopping-cart ml-1"></i>
                                     </button>
-
-                                </div>
-
-                            </form>
-                        </div>
-                        <!--Content-->
-
+                                </div><!-- Submit button -->
+                            </div>
+                        </form>
                     </div>
-                    <!--Grid column-->
 
                 </div>
-                <!--Grid row-->
-            </div>
-        </main>
+            </div><!-- Item Purchasing Option -->
 
-        <?php $upperDirectoryCount = 1;
-        include "../assets/block-user-page/footer.php"; ?>
 
-    </wrapper>
+        </div><!-- Item Information -->
 
-    <script>
-        $(document).ready(function() {
-            // For the item list to change the active properties
-            $(".list-group li").on("click", function() {
-                $(".list-group li").removeClass("active");
-                $(this).addClass("active");
+    </main>
 
-                <?php
-                for ($i = 0; $i < sizeof($item->getVarieties()); $i++) {
-                    if ($i != 0) {
-                        echo "else ";
-                    }
+    <footer><?php include "../assets/block-user-page/footer.php"; ?></footer>
 
-                    echo "if ($('.list-group li:nth-child(".($i + 1).
-                    ")').hasClass('active')) $('#variety').val('".$item->getVarieties()[$i]->getBarcode().
-                    "');";
+    <?php include "../assets/block-user-page/item-page/item-images-slider-config.php"; ?>
 
-                }
-                ?>
-            });
+    <?php include "../assets/block-user-page/item-page/item-page-info-controller.php"; ?>
 
-            $(".quantity-button-control button").on("click", function() {
-
-                let MAX_COUNT = 10;
-
-                var count = $(this).parent().children('input').val();
-
-                if ($(this).hasClass("addButton")) {
-                    $(this).parent().children('input').val(++count);
-
-                    if ($(this).parent().children('input').val() == MAX_COUNT) {
-                        $(this).attr('disabled', 'disabled');
-                        $(this).parent().children('.dropButton').removeAttr('disabled');
-                    } else {
-                        $(this).removeAttr('disabled');
-                        $(this).parent().children('.dropButton').removeAttr('disabled');
-                    }
-                } else if ($(this).hasClass("dropButton")) {
-                    $(this).parent().children('input').val(--count);
-
-                    if ($(this).parent().children('input').val() == 1) {
-                        $(this).parent().children('.addButton').removeAttr('disabled');
-                        $(this).attr('disabled', 'disabled');
-                    } else {
-                        $(this).parent().children('.addButton').removeAttr('disabled');
-                        $(this).removeAttr('disabled');
-                    }
-                }
-
-            });
-
-            //Star-Rating System
-            let flag = [0, 0, 0, 0, 0, 0];
-
-            for (let i = 1; i <= 5; i++) {
-                $(`#star${i}`).hover(e => {
-                    for (let k = i; k >= 1; k--) {
-                        if (flag[k] == 0){
-                            $(`#star${k}`).css("color", "orange");
-                            $("#rate_points").html(`${parseInt(i).toFixed(2)}`);
-                        }
-                    }
-                }, e => {
-                    for (let k = i; k >= 1; k--) {
-                        if (flag[k] == 0){
-                            $(`#star${k}`).css("color", "grey");
-                            $("#rate_points").html("0.00");
-                        }
-                    }
-                });
-
-                $(`#star${i}`).on("click", e => {
-                    reset();
-                    for (let k = i; k >= 1; k--) {
-                        $(`#star${k}`).css("color", "orange");
-                        flag[k] = 1;
-                    }
-                    $("#rate_points").html(`${parseInt(i).toFixed(2)}`);
-                });
-            }
-
-            function reset() {
-                for (let i = 1; i <= 5; i++) {
-                    flag[i] = 0;
-                    $(`#star${i}`).css("color", "grey");
-                }
-            }
-
-        });
-    </script>
 </body>
 
 </html>
