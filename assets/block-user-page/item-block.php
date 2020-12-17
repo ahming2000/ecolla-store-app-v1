@@ -12,8 +12,8 @@
                 ?>
             </span>
             <div class="row">
-                <div class="col-6 text-left">已售出 <?= $view->getTotalPurchaseCount($item); ?> 个</div>
-                <div class="col-6 text-right"><i class="icofont-eye"> <?= $item->getViewCount(); ?></i></div>
+                <div class="col text-left">已售出 <?= $view->getTotalPurchaseCount($item); ?> 个</div>
+                <div class="col text-right"><i class="icofont-eye"> <?= $item->getViewCount(); ?></i></div>
             </div>
         </div>
     </div>

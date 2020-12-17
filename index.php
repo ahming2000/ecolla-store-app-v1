@@ -1,5 +1,12 @@
 <?php
+/* Initialization */
+// Standard variable declaration
+$title = "Ecolla ε口乐零食店官网";
+
+// Auto loader for classes
 include "assets/includes/class-auto-loader.inc.php";
+
+// Database Interaction
 $cart = new Cart();
 ?>
 
@@ -7,10 +14,7 @@ $cart = new Cart();
 <html>
 
 <head>
-    <?php
-    $title = "Ecolla ε口乐零食店官网";
-    include "assets/includes/stylesheet-script-declaration.inc.php"
-    ?>
+    <?php include "assets/includes/stylesheet.inc.php"; ?>
     <!-- To-do: Meta for google searching -->
 </head>
 
@@ -33,9 +37,11 @@ $cart = new Cart();
 
 <body>
 
+    <?php include "assets/includes/script.inc.php"; ?>
+
     <header>
         <div class="headtext">欢迎来到 <div class="headtext1">Ecolla ε口乐 </div>零食店官网</div>
-        <?php $c = $cart; include "assets/block-user-page/header.php"; ?>
+        <?php include "assets/block-user-page/header.php"; ?>
     </header>
 
     <main>
@@ -105,9 +111,7 @@ $cart = new Cart();
     });
     </script>
 
-    <footer>
-        <?php include "assets/block-user-page/footer.php"; ?>
-    </footer>
+    <footer><?php include "assets/block-user-page/footer.php"; ?></footer>
 
 </body>
 
