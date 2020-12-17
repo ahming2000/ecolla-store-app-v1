@@ -3,7 +3,9 @@ var slider = tns({
     container: '.slider-container',
     items: 1,
 
-    controls: false,
+    controlsContainer: '.slider-control-main-container',
+    prevButton: '.slider-control-prev',
+    nextButton: '.slider-control-next',
 
     navContainer: '.slider-nav',
     navAsThumbnails: true,
@@ -19,7 +21,7 @@ slider.play();
 var sliderNav = tns({
     container: '.slider-nav',
 
-    controlsContainer: '.slider-control-container',
+    controlsContainer: '.slider-control-nav-container',
     prevButton: '.slider-nav-control-prev',
     nextButton: '.slider-nav-control-next',
 
