@@ -208,7 +208,7 @@ $(function () {
             }
         }
 
-        if (city_flag == 0) {
+        if (city_flag == 0 && !$("input[name='city']").val()) {
             $("input[name='city']").val("");
             $("input[name='zipCode']").val("");
             $("input[name='zipCode']").attr('disabled', 'disabled');
@@ -296,7 +296,7 @@ $(function () {
             }
         }
 
-        if (zipCode_flag == 0) {
+        if (zipCode_flag == 0 && !$("input[name='zipCode']").val()) {
             $("input[name='zipCode']").val("");
         }
 
