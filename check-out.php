@@ -147,7 +147,7 @@ if (isset($_POST["submit"])) {
                     <!-- Phone number -->
                     <div class="form-row mb-3">
                         <div class="col-12"><label>电话号码</label></div>
-                        <div class="col-sm-4 col-md-3 col-lg-2" id="phoneNum_inputHead"><input type="text" class="form-control" name="phoneNumberInputHead" placeholder="+60" required autocomplete="off"></div>
+                        <div class="col-sm-4 col-md-3 col-lg-2"><select class="form-control" name="phoneNumberInputHead" id="phoneNum_inputHead"></select></div>
                         <div class="col-sm-8 col-md-5 col-lg-4"><input type="text" class="form-control" name="phoneNumberInputTail" placeholder="12 12345678" required></div>
                         <div class="col-12"><small id="nameHelp" class="form-text text-muted">电话号码格式：+60 12-1234 5678</small></div>
                     </div><!-- Phone number -->
@@ -158,7 +158,7 @@ if (isset($_POST["submit"])) {
                         <div class="col-12 mb-1"><input type="text" name="address" class="form-control" placeholder="门牌/路名" autocomplete="off" required /></div>
                         <div class="col-xs-4 col-sm-3 mb-1" id="state_input"><input type="text" name="state" class="form-control" placeholder="州属" autocomplete="off" required /></div>
                         <div class="col-xs-4 col-sm-3 mb-1" id="city_input"><input type="text" name="city" class="form-control" placeholder="地区/城市" disabled autocomplete="off" required /></div>
-                        <div class="col-xs-4 col-sm-3 mb-1" id="zipCode_input"><input type="text" name="zipCode" class="form-control" placeholder="邮政编号"disabled autocomplete="off" required /></div>
+                        <div class="col-xs-4 col-sm-3 mb-1" id="zipCode_input"><input type="text" name="zipCode" class="form-control" placeholder="邮政编号" disabled autocomplete="off" required /></div>
                     </div><!-- Address (House Number and Street) -->
 
                     <!-- Upload Receipt -->
@@ -187,79 +187,13 @@ if (isset($_POST["submit"])) {
     <script>
         let flag_for_btn = 0;
         $(document).ready(function() {
-            let cur_count = 0;
-            let phone_code_arr = [],
-                phone_code_arr_bool = [],
-                flag = 0;
-            let container_str = `<div id="autocomplete_phoneNo" class="container" style="width: 320px; background-color: rgb(58, 57, 57); color: white; position: absolute; z-index: 2;"></div>`;
-            $("#phoneNum_inputHead").append(container_str);
-            $("#autocomplete_phoneNo").css("display", "none");
-
-            //Add Phone Number Here
-            $("#autocomplete_phoneNo").append(generate_phone_code_container(6012, "Local Malaysia Phone Number", "马来西亚本地号码"));
-            $("#autocomplete_phoneNo").append(generate_phone_code_container(6018, "Local Malaysia Phone Number", "马来西亚本地号码"));
-            $("#autocomplete_phoneNo").append(generate_phone_code_container(605, "Singapore Phone Number", "新加坡国际号码"));
-            $("#autocomplete_phoneNo").append(generate_phone_code_container(86, "China Phone Number", "中国国际号码"));
             bsCustomFileInput.init() //For file uploaded name to show
 
-            $("input[name=phoneNumberInputHead]").focus(e => {
-                $("#autocomplete_phoneNo").css("display", "block");
-            });
-
-            $("input[name=phoneNumberInputHead]").blur(e => {
-                flag = 0;
-                for (let i = 0; i < cur_count; i++) {
-                    if (phone_code_arr_bool[i] == 1) {
-                        $("input[name=phoneNumberInputHead]").val(phone_code_arr[i]);
-                        flag = 1;
-                    }
-                }
-                $("#autocomplete_phoneNo").css("display", "none");
-                if (flag == 0)
-                    $("input[name=phoneNumberInputHead]").val("");
-            });
-
-            function generate_phone_code_container(phone_code, english_country, chinese_country) {
-                phone_code_arr.push(phone_code);
-                phone_code_arr_bool.push(0);
-                return `
-                    <div class="row pt-3 pr-1" id="phone_code${cur_count++}">
-                        <div class="col-2">
-                            +${phone_code}
-                        </div>
-                        <div class="col-10">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div style="text-align: right;">
-                                        <p>${chinese_country}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <div style="text-align: right;">
-                                        <p>${english_country}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-
-            for (let i = 0; i < cur_count; i++) {
-                $(`#phone_code${i}`).mouseenter(e => {
-                    $(`#phone_code${i}`).css("background-color", "rgb(95, 93, 93)");
-                    phone_code_arr_bool[i] = 1;
-                });
-                $(`#phone_code${i}`).mouseleave(e => {
-                    $(`#phone_code${i}`).css("background-color", "rgb(58, 57, 57)");
-                    phone_code_arr_bool[i] = 0;
-                });
-                $(`#phone_code${i}`).on("click", e => {
-                    $("#autocomplete_phoneNo").val(phone_code_arr[i]);
-                });
-            }
+            //add phone number 
+            add_phoneNum("+6012");
+            add_phoneNum("+6018");
+            add_phoneNum("+605");
+            add_phoneNum("+86");
 
             $('input[name=paymentServices]').click(function() {
                 if ($('#qr_code_boost').is(':checked')) {
@@ -278,6 +212,16 @@ if (isset($_POST["submit"])) {
             });
 
         });
+
+        function add_phoneNum(phone_no_head) {
+            let str =
+            `
+                <option value="${phone_no_head}">
+                    ${phone_no_head}
+                </option>
+            `;
+            $("#phoneNum_inputHead").append(str);
+        }
 
         function pop_up_qr_payment() {
             flag_for_btn = 1;
