@@ -1,8 +1,5 @@
-body, wrapper {
-    min-height:150vh;
- }
 
-/* Tiny slider control button css */
+/* Item page */
 .slider-control-prev, .slider-nav-control-prev, .slider-control-next, .slider-nav-control-next {
   position: absolute;
   background-color: rgba(211,211,211, 0.5);
@@ -30,18 +27,14 @@ body, wrapper {
     margin-right: 17px;
 }
 
-/* Space between header and content */
-body main {
-    margin-top: 70px;
-}
-
 .breadcrumb {
     background-color: white;
 }
 
-body {
-     background-color: #EEEEEE;
- }
+/* Check out */
+div.payment-method.active {
+    border:2px solid #00BFFF;
+}
 
 /*header.php*/
 .navbar{
@@ -139,3 +132,13 @@ display: inline;
 html {
   scroll-padding-top: 65px; /* height of sticky header */
 }
+
+/* Space between header and content */
+body main {
+    margin-top: 90px;
+}
+
+/* Global background color */
+body {
+     background-color: #EEEEEE;
+ }

@@ -27,27 +27,10 @@ $cart = new Cart();
         <div class="container">
             <h1 class="mt-4 mb-3">付款方式</h1>
             <p>这是我们能接受的付款通道</p>
-            <div class="row shadow p-3 m-2 mx-auto">
-                <div class="col-6 col-md-3 col-sm-6">
-                    <img src="assets/images/icon/pay-cash.png" alt="image" height="100" width="100">
-                </div>
-                <div class="col-6 col-md-9 col-sm-6 pt-4">
-                    <h5>Cash</h5>
-                </div>
-            </div>
 
             <div class="row shadow p-3 m-2 mx-auto">
                 <div class="col-6 col-md-3 col-sm-6">
-                    <img src="assets/images/icon/pay-boost.jpg" alt="image" height="100" width="100">
-                </div>
-                <div class="col-6 col-md-9 col-sm-6 pt-4">
-                    <h5>Boost</h5>
-                </div>
-            </div>
-
-            <div class="row shadow p-3 m-2 mx-auto">
-                <div class="col-6 col-md-3 col-sm-6">
-                    <img src="assets/images/icon/pay-tnc.jpg" alt="image" height="100" width="100">
+                    <img src="assets/images/payment/tng.png" alt="image" height="100" width="100">
                 </div>
                 <div class="col-6 col-md-9 col-sm-6 pt-4">
                     <h5>Touch 'n Go</h5>
@@ -56,10 +39,19 @@ $cart = new Cart();
 
             <div class="row shadow p-3 m-2 mx-auto">
                 <div class="col-6 col-md-3 col-sm-6">
-                    <img src="assets/images/icon/pay-fpx.jpeg" alt="image" height="100" width="100">
+                    <img src="assets/images/payment/boost.png" alt="image" height="100" width="100">
                 </div>
                 <div class="col-6 col-md-9 col-sm-6 pt-4">
-                    <h5>Online Banking</h5>
+                    <h5>Boost</h5>
+                </div>
+            </div>
+
+            <div class="row shadow p-3 m-2 mx-auto">
+                <div class="col-6 col-md-3 col-sm-6">
+                    <img src="assets/images/payment/bank-transfer.png" alt="image" height="100" width="100">
+                </div>
+                <div class="col-6 col-md-9 col-sm-6 pt-4">
+                    <h5>Bank Transfer</h5>
                 </div>
             </div>
         </div>

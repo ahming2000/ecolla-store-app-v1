@@ -110,28 +110,22 @@ if (isset($_POST["submit"])) {
                 <form action="" method="post" enctype="multipart/form-data">
 
                     <!-- Make Payment -->
-                    <div class="form-row mb-3">
+                    <div class="form-row mb-3 ml-3">
                         <div class="col-12">
                             <div class="row">
-                                <div class="col-12">
-                                    <label for="payment">付款方式</label>
+                                <input type="text" name="o_payment_method" id="selected-payment-method" value="TnG" hidden/>
+                                <div class="col-12"><label><strong>请点击付款方式进行付款</strong></label></div>
+                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 view zoom payment-method active">
+                                    <input type="text" value="TnG" hidden />
+                                    <img class="img-fluid" src="assets/images/payment/tng.png" alt="image">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-2">
-                                    <input type="radio" name="paymentServices" /><img src="assets/images/icon/pay-cash.png" alt="image" height="50" width="50"><label for="cash">Cash</label>
+                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 view zoom payment-method">
+                                    <input type="text" value="Boost" hidden />
+                                    <img class="img-fluid" src="assets/images/payment/boost.png" alt="image">
                                 </div>
-                                <div class="col-3">
-                                    <input type="radio" name="paymentServices" id="qr_code_boost" /><img src="assets/images/icon/pay-boost.jpg" alt="image" height="50" width="50" style="padding-left: 5px;"><label for="boost" style="padding-left: 10px;">Boost Pay e-wallet</label>
-                                </div>
-                                <div class="col-3">
-                                    <input type="radio" name="paymentServices" id="qr_code_tng" /><img src="assets/images/icon/pay-tnc.jpg" alt="image" height="50" width="50"><label for="touchNgo">Touch N'go e-wallet</label>
-                                </div>
-                                <div class="col-3">
-                                    <input type="radio" name="paymentServices" /><img src="assets/images/icon/pay-fpx.jpeg" alt="image" height="50" width="50"><label for="ebanking">Online banking services</label>
-                                </div>
-                                <div class="col-1">
-                                    <button class="btn btn-primary" type="button" id="show_payment_method" style="display: none" onclick="pop_up_qr_payment()"> Make Payment</button>
+                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 view zoom payment-method">
+                                    <input type="text" value="Bank Transfer" hidden />
+                                    <img class="img-fluid" src="assets/images/payment/bank-transfer.png" alt="image">
                                 </div>
                             </div>
                         </div>
@@ -189,11 +183,20 @@ if (isset($_POST["submit"])) {
         $(document).ready(function() {
             bsCustomFileInput.init() //For file uploaded name to show
 
-            //add phone number 
-            add_phoneNum("+6012");
-            add_phoneNum("+6018");
-            add_phoneNum("+605");
-            add_phoneNum("+86");
+            // For payment method select
+            $(".payment-method").on("click", function(){
+                $(".payment-method").removeClass('active');
+                $(this).addClass('active');
+
+                var method = $(this).children('input').val();
+                $('#selected-payment-method').val(method);
+                url = "assets/images/payment/pay_" + method.toLowerCase() + ".png";
+                window.open(url, 'Image', 'width=400px,height=400px,resizable=1');
+            });
+
+            //add phone number mmc
+            add_phoneNum("+60");
+            add_phoneNum("+65");
 
             $('input[name=paymentServices]').click(function() {
                 if ($('#qr_code_boost').is(':checked')) {
