@@ -5,7 +5,7 @@
     if(isset($_POST["login"])){
         if(!empty($_POST["username"]) && !empty($_POST["password"])){
             if($controller->checkUserPassword($_POST["username"], $_POST["password"])){
-                setcookie("username", $_POST["username"], time() + 3600, "/admin/");
+                setcookie("username", $_POST["username"], time() + (60 * 60 * 24), "/admin/"); // Cookie expire in 1 days (24 hours)
                 header("location: index.php");
                 die(); //To improve security
             } else{
