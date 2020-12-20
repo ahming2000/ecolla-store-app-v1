@@ -1,5 +1,5 @@
 <div class="col-xs-12 col-sm-4">
-    <div class="h5"><?= $item->getVarieties()[0]->getPropertyName(); ?>：</div>
+    <div class="h5"><?= $item->getPropertyName(); ?>：</div>
 </div>
 
 <input id="barcode" type="text" name="barcode" value="<?= $item->getVarieties()[0]->getBarcode(); ?>" hidden/>

@@ -7,6 +7,8 @@ class Item {
     private $description; //String
     private $brand; //String
     private $origin; //String
+    private $propertyName; //String //Type of describe way on propertys
+
     private $isListed; //Boolean
     private $imgCount; //Integer
     private $viewCount; //Integer
@@ -18,11 +20,13 @@ class Item {
     //Utility variable
     private $catogoryCount; //Integer
 
-    public function __construct($name, $description, $brand, $origin, $isListed, $imgCount, $viewCount){
+    public function __construct($name, $description, $brand, $origin, $propertyName, $isListed, $imgCount, $viewCount){
         $this->name = $name;
         $this->description = $description;
         $this->brand = $brand;
         $this->origin = $origin;
+        $this->propertyName = $propertyName;
+
         $this->isListed = $isListed;
         $this->imgCount = $imgCount;
         $this->viewCount = $viewCount;
@@ -141,6 +145,14 @@ class Item {
         return $this;
     }
 
+    public function getPropertyName() {
+        return $this->propertyName;
+    }
+
+    public function setPropertyName($propertyName) {
+        $this->propertyName = $propertyName;
+        return $this;
+    }
 }
 
 ?>

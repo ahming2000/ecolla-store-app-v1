@@ -11,7 +11,7 @@ class View extends Model{
         foreach($dbTable_items as $i){
 
             // Create new Item object
-            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_is_listed'], $i['i_image_count'], $i['i_view_count']);
+            $item = new Item($i['i_name'], $i["i_desc"], $i['i_brand'], $i['i_origin'], $i['i_property_name'], $i['i_is_listed'], $i['i_image_count'], $i['i_view_count']);
 
             // Get classifications of current item
             // Query: SELECT cat_id FROM classifications WHERE i_id = ?
@@ -35,7 +35,7 @@ class View extends Model{
             foreach($dbTable_varieties as $v){
 
                 // Create new Variety object
-                $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_property_name'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
+                $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
 
                 // Get inventories of current variety
                 // Query: SELECT * FROM inventories WHERE v_barcode = ?

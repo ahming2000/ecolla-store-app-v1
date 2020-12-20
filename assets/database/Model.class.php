@@ -37,13 +37,13 @@ class Model extends Dbh{
     private $DATABASE_TABLE = [
 
         "items" => [
-            "columnsToInsert" => "items(i_name, i_desc, i_brand, i_origin, i_is_listed, i_image_count, i_view_count)",
-            "columnsCountToInsert" => 7
+            "columnsToInsert" => "items(i_name, i_desc, i_brand, i_origin, i_property_name, i_is_listed, i_image_count, i_view_count)",
+            "columnsCountToInsert" => 8
         ],
 
         "varieties" => [
-            "columnsToInsert" => "varieties(v_barcode, v_property, v_property_name, v_price, v_weight, v_discount_rate, i_id)",
-            "columnsCountToInsert" => 7
+            "columnsToInsert" => "varieties(v_barcode, v_property, v_price, v_weight, v_discount_rate, i_id)",
+            "columnsCountToInsert" => 6
         ],
 
         "catogories" => [
