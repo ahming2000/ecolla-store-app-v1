@@ -82,7 +82,7 @@ if(isset($_POST['changeRegion'])){
                             }
                              ?>
 
-                            <?php if (empty($cartItems)) : ?>
+                            <?php if (!empty($cartItems)) : ?>
                                 <div class="col-12">
                                     <form action="" method="post">
                                         <button class="btn btn-primary btn-block" name="clearCart" type="submit">清空购物车</button>
