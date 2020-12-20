@@ -14,16 +14,16 @@ $controller = new Controller();
 /* Operation */
 if (isset($_POST["submit"])) {
 
-    $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["address"], $_POST["zipCode"], $_POST["city"], $_POST["state"]);
+    $customer = new Customer($_POST["c_name"], $_POST["c_phone_mcc"], $_POST["c_phone"], $_POST["c_address"], $_POST["c_state"], $_POST["c_area"], $_POST["c_postal_code"]);
     $order = new Order($customer);
-    // $order->orderNow($cart);
+    $order->orderNow($cart, $_POST['o_payment_method']);
     $cart->resetCart();
 
     UsefulFunction::uploadReceipt($_FILES["receipt"], $order->getOrderId());
 
 
     $controller->insertNewOrder($order);
-    header("location: order-tracking.php?orderId=" . $order->getOrderId() . "&checkOut=1");
+    header("location: order-successfully.php?orderId=" . $order->getOrderId());
 }
 ?>
 
@@ -65,7 +65,7 @@ if (isset($_POST["submit"])) {
                                         <div class=\"col-3 pt-3 \"><b style=\"font-size: 18px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
                                         <div class=\"col-2 pt-3 \"><b style=\"font-size: 18px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
 
-                                        
+
 
                                         <div class=\"col-3 pt-3 \"><b style=\"font-size: 20px; float: right;\"> " . $cartItem->getQuantity() . " * RM" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() . " = </b></div>
                                         <div class=\"col-2 pt-3 \"><b style=\"font-size: 20px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
@@ -110,7 +110,7 @@ if (isset($_POST["submit"])) {
                 <form action="" method="post" enctype="multipart/form-data">
 
                     <!-- Make Payment -->
-                    <div class="form-row mb-3 ml-3">
+                    <div class="form-row mb-3 p-3">
                         <div class="col-12">
                             <div class="row">
                                 <input type="text" name="o_payment_method" id="selected-payment-method" value="TnG" hidden/>
@@ -134,25 +134,25 @@ if (isset($_POST["submit"])) {
                     <!-- User name -->
                     <div class="form-group">
                         <label>名字（英文名）</label>
-                        <input type="text" class="form-control" name="name" aria-describedby="nameHelp" placeholder="e.g. Alex Lee" required>
+                        <input type="text" class="form-control" name="c_name" aria-describedby="nameHelp" placeholder="e.g. Alex Lee" required>
                         <small id="nameHelp" class="form-text text-muted">请输入可辨认的名字，我们将会以这个名字进行邮寄</small>
                     </div><!-- User name -->
 
                     <!-- Phone number -->
                     <div class="form-row mb-3">
                         <div class="col-12"><label>电话号码</label></div>
-                        <div class="col-sm-4 col-md-3 col-lg-2"><select class="form-control" name="phoneNumberInputHead" id="phoneNum_inputHead"></select></div>
-                        <div class="col-sm-8 col-md-5 col-lg-4"><input type="text" class="form-control" name="phoneNumberInputTail" placeholder="12 12345678" required></div>
-                        <div class="col-12"><small id="nameHelp" class="form-text text-muted">电话号码格式：+60 12-1234 5678</small></div>
+                        <div class="col-sm-4 col-md-3 col-lg-2"><select class="form-control" name="c_phone_mcc" id="c-phone-mcc"></select></div>
+                        <div class="col-sm-8 col-md-5 col-lg-4"><input type="text" class="form-control" name="c_phone" aria-describedby="phoneHelp" placeholder="电话号码" required></div>
+                        <div class="col-12"><small id="phoneHelp" class="form-text text-muted">电话号码格式：+60 12-1234 5678</small></div>
                     </div><!-- Phone number -->
 
                     <!-- Address (House Number and Street) -->
                     <div class="form-row mb-2">
                         <div class="col-12"><label>地址</label></div>
-                        <div class="col-12 mb-1"><input type="text" name="address" class="form-control" placeholder="门牌/路名" autocomplete="off" required /></div>
-                        <div class="col-xs-4 col-sm-3 mb-1" id="state_input"><input type="text" name="state" class="form-control" placeholder="州属" autocomplete="off" required /></div>
-                        <div class="col-xs-4 col-sm-3 mb-1" id="city_input"><input type="text" name="city" class="form-control" placeholder="地区/城市" disabled autocomplete="off" required /></div>
-                        <div class="col-xs-4 col-sm-3 mb-1" id="zipCode_input"><input type="text" name="zipCode" class="form-control" placeholder="邮政编号" disabled autocomplete="off" required /></div>
+                        <div class="col-12 mb-1"><input type="text" name="c_address" class="form-control" placeholder="门牌/路名" autocomplete="off" required /></div>
+                        <div class="col mb-1" id="c-state"><input type="text" name="c_state" class="form-control" placeholder="州属" autocomplete="off" required /></div>
+                        <div class="col mb-1" id="c-area"><input type="text" name="c_area" class="form-control" placeholder="地区/城市" disabled autocomplete="off" required /></div>
+                        <div class="col mb-1" id="c-postal-code"><input type="text" name="c_postal_code" class="form-control" placeholder="邮政编号" disabled autocomplete="off" required /></div>
                     </div><!-- Address (House Number and Street) -->
 
                     <!-- Upload Receipt -->
@@ -179,7 +179,7 @@ if (isset($_POST["submit"])) {
     <footer><?php include "assets/block-user-page/footer.php"; ?></footer>
 
     <script>
-        let flag_for_btn = 0;
+
         $(document).ready(function() {
             bsCustomFileInput.init() //For file uploaded name to show
 
@@ -191,46 +191,25 @@ if (isset($_POST["submit"])) {
                 var method = $(this).children('input').val();
                 $('#selected-payment-method').val(method);
                 url = "assets/images/payment/pay_" + method.toLowerCase() + ".png";
-                window.open(url, 'Image', 'width=400px,height=400px,resizable=1');
+                window.open(url, 'Image', 'width=400px, height=400px, resizable=1');
             });
 
             //add phone number mmc
-            add_phoneNum("+60");
-            add_phoneNum("+65");
-
-            $('input[name=paymentServices]').click(function() {
-                if ($('#qr_code_boost').is(':checked')) {
-                    $("#show_payment_method").css("display", "block");
-                } else if ($('#qr_code_tng').is(':checked')) {
-                    $("#show_payment_method").css("display", "block");
-                } else {
-                    $("#show_payment_method").css("display", "none");
-                }
-            });
-
-            $("form").submit(e => {
-                if ((flag_for_btn == 0 && $('#qr_code_boost').is(':checked')) || (flag_for_btn == 0 && $('#qr_code_tng').is(':checked'))) {
-                    e.preventDefault();
-                }
-            });
+            addPhoneMCC("+60");
+            addPhoneMCC("+65");
 
         });
 
-        function add_phoneNum(phone_no_head) {
+        function addPhoneMCC(option) {
             let str =
             `
-                <option value="${phone_no_head}">
-                    ${phone_no_head}
+                <option value="${option}">
+                    ${option}
                 </option>
             `;
-            $("#phoneNum_inputHead").append(str);
+            $("#c-phone-mcc").append(str);
         }
 
-        function pop_up_qr_payment() {
-            flag_for_btn = 1;
-            let url = "assets/images/random_qr_code.png";
-            window.open(url, 'Image', 'width=400px,height=400px,resizable=1');
-        }
     </script>
 
     <script src="assets/js/post_code.js"></script>
