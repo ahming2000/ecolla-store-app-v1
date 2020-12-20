@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 09, 2020 at 01:49 PM
+-- Generation Time: Dec 20, 2020 at 06:25 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -134,22 +134,22 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (3, '6902538007367', '2021-01-01', 20),
 (4, '6902538007381', '2021-01-01', 22),
 (5, '6902538007862', '2021-01-01', 22),
-(6, '6902538007886', '2021-01-01', 123),
-(7, '6931754804900', '2021-01-01', 123),
-(8, '6931754804917', '2021-01-01', 213),
+(6, '6902538007886', '2021-01-01', 12),
+(7, '6931754804900', '2021-01-01', 20),
+(8, '6931754804917', '2021-01-01', 30),
 (9, '6931754804924', '2021-01-01', 23),
 (10, '6931754804931', '2021-01-01', 23),
-(11, '6931754805655', '2021-01-01', 123),
+(11, '6931754805655', '2021-01-01', 14),
 (12, '6941025700084', '2021-01-01', 23),
 (13, '6941025700138', '2021-01-01', 12),
 (14, '6941025701074', '2021-01-01', 14),
-(15, '6941025702019', '2021-01-01', 10),
-(16, '6902538004045', '2021-03-05', 100),
+(15, '6941025702019', '2021-01-01', 19),
+(16, '6902538004045', '2021-03-05', 38),
 (17, '6935145301016', '2021-05-20', 20),
 (18, '6935145301030', '2021-05-20', 20),
 (19, '6935145301047', '2021-05-20', 20),
 (20, '6935145301061', '2021-05-20', 20),
-(21, '6935145301078', '2021-05-20', 20),
+(21, '6935145301078', '2021-05-20', 39),
 (22, '6935145343030', '2021-07-27', 20),
 (23, '6935145343047', '2021-07-27', 20),
 (24, '6935145343061', '2021-07-27', 20),
@@ -166,10 +166,11 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_id` int(11) NOT NULL AUTO_INCREMENT,
   `i_name` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `i_desc` varchar(3000) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `i_brand` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `i_brand` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `i_origin` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `i_property_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `i_is_listed` tinyint(1) NOT NULL DEFAULT '0',
-  `i_image_count` int(11) NOT NULL,
+  `i_image_count` int(11) NOT NULL DEFAULT '0',
   `i_view_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`i_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -178,12 +179,12 @@ CREATE TABLE IF NOT EXISTS `items` (
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '维生素功能饮料', '', '脉动', '中国', 1, 4, 13),
-(2, '手撕素肉排', '', '好味屋', '中国', 1, 5, 15),
-(3, '鹌鹑蛋', '', '湖湘贡', '中国', 1, 5, 12),
-(4, '鸡尾酒', '', 'RIO', '中国', 1, 3, 10),
-(5, '微醺鸡尾酒', '', 'RIO', '中国', 1, 1, 10);
+INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
+(1, '维生素功能饮料', '', '脉动', '中国', '口味', 1, 4, 31),
+(2, '手撕素肉排', '', '好味屋', '中国', '口味', 1, 5, 347),
+(3, '鹌鹑蛋', '', '湖湘贡', '中国', '口味', 1, 5, 61),
+(4, '鸡尾酒', '', 'RIO', '中国', '口味', 0, 3, 10),
+(5, '微醺鸡尾酒', '', 'RIO', '中国', '口味', 0, 1, 10);
 
 -- --------------------------------------------------------
 
@@ -195,6 +196,7 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders` (
   `o_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `o_date_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `o_note` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `o_delivery_id` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'This attribute will remain NULL before the order is being processed by admin.',
   `c_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Since the website does not have customer registration, customer information will combine with this table.',
   `c_phone_mcc` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT '+60',
@@ -210,8 +212,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`o_id`, `o_date_time`, `o_delivery_id`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_state`, `c_area`, `c_postal_code`) VALUES
-('ECOLLA_EXAMPLE', '2020-12-09 21:28:59', 'J&T20200912123456', 'Kee Sheng Ming', '+60', '143892199', 'example address', 'example', 'example', '12345');
+INSERT INTO `orders` (`o_id`, `o_date_time`, `o_note`, `o_delivery_id`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_state`, `c_area`, `c_postal_code`) VALUES
+('ECOLLA_EXAMPLE', '2020-12-09 21:28:59', 'Contactless delivery required.', 'J&T20200912123456', 'Kee Sheng Ming', '+60', '143892199', 'example address', 'example', 'example', '12345');
 
 -- --------------------------------------------------------
 
@@ -269,7 +271,6 @@ DROP TABLE IF EXISTS `varieties`;
 CREATE TABLE IF NOT EXISTS `varieties` (
   `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `v_property` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `v_property_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `v_price` float NOT NULL COMMENT 'Default currency unit is Ringgit Malaysia',
   `v_weight` float NOT NULL COMMENT 'Format in kilogram',
   `v_discount_rate` float NOT NULL DEFAULT '1',
@@ -282,31 +283,31 @@ CREATE TABLE IF NOT EXISTS `varieties` (
 -- Dumping data for table `varieties`
 --
 
-INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_name`, `v_price`, `v_weight`, `v_discount_rate`, `i_id`) VALUES
-('6902538004045', '青柠味600ml', '口味', 4.8, 0.6, 0.9, 1),
-('6902538005141', '水蜜桃味600ml', '口味', 4.8, 0.6, 0.9, 1),
-('6902538007367', '芒果味600ml', '口味', 4.8, 0.6, 0.9, 1),
-('6902538007381', '仙人掌青橘味600ml', '口味', 4.8, 0.6, 0.9, 1),
-('6902538007862', '竹子青提味500ml', '口味', 4.8, 0.5, 0.9, 1),
-('6902538007886', '卡曼橘味500ml', '口味', 4.8, 0.5, 0.9, 1),
-('6931754804900', '香辣味26g', '口味', 1.5, 0.026, 1, 2),
-('6931754804917', '黑椒味26g', '口味', 1.5, 0.026, 1, 2),
-('6931754804924', '山椒味26g', '口味', 1.5, 0.026, 1, 2),
-('6931754804931', '烧烤味26g', '口味', 1.5, 0.026, 1, 2),
-('6931754805655', '黑鸭味26g', '口味', 1.5, 0.026, 1, 2),
-('6935145301016', '青柠275ml', '口味', 11.5, 0.275, 1, 4),
-('6935145301030', '水蜜桃275ml', '口味', 11.5, 0.275, 1, 4),
-('6935145301047', '蓝玫瑰275ml', '口味', 11.5, 0.275, 1, 4),
-('6935145301061', '混合水果275ml', '口味', 11.5, 0.275, 1, 4),
-('6935145301078', '紫葡萄275ml', '口味', 11.5, 0.275, 1, 4),
-('6935145343030', '白桃+白兰地330ml', '口味', 8.8, 0.33, 1, 5),
-('6935145343047', '葡萄+白兰地330ml', '口味', 8.8, 0.33, 1, 5),
-('6935145343061', '玫瑰+荔枝330ml', '口味', 8.8, 0.33, 1, 5),
-('6935145343092', '果茶乐橘乌龙330ml', '口味', 8.8, 0.33, 1, 5),
-('6941025700084', '香辣味20g', '口味', 1.2, 0.02, 1, 3),
-('6941025700138', '盐焗味20g', '口味', 1.2, 0.02, 1, 3),
-('6941025701074', '卤蛋味20g', '口味', 1.2, 0.02, 1, 3),
-('6941025702019', '泡辣味20g', '口味', 1.2, 0.02, 1, 3);
+INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_price`, `v_weight`, `v_discount_rate`, `i_id`) VALUES
+('6902538004045', '青柠味600ml', 4.8, 0.6, 0.9, 1),
+('6902538005141', '水蜜桃味600ml', 4.8, 0.6, 0.9, 1),
+('6902538007367', '芒果味600ml', 4.8, 0.6, 0.9, 1),
+('6902538007381', '仙人掌青橘味600ml', 4.8, 0.6, 0.9, 1),
+('6902538007862', '竹子青提味500ml', 4.8, 0.5, 0.9, 1),
+('6902538007886', '卡曼橘味500ml', 4.8, 0.5, 0.9, 1),
+('6931754804900', '香辣味26g', 1.5, 0.026, 0.9, 2),
+('6931754804917', '黑椒味26g', 1.5, 0.026, 1, 2),
+('6931754804924', '山椒味26g', 1.5, 0.026, 1, 2),
+('6931754804931', '烧烤味26g', 1.5, 0.026, 1, 2),
+('6931754805655', '黑鸭味26g', 1.5, 0.026, 1, 2),
+('6935145301016', '青柠275ml', 11.5, 0.275, 1, 4),
+('6935145301030', '水蜜桃275ml', 11.5, 0.275, 1, 4),
+('6935145301047', '蓝玫瑰275ml', 11.5, 0.275, 1, 4),
+('6935145301061', '混合水果275ml', 11.5, 0.275, 1, 4),
+('6935145301078', '紫葡萄275ml', 11.5, 0.275, 1, 4),
+('6935145343030', '白桃+白兰地330ml', 8.8, 0.33, 1, 5),
+('6935145343047', '葡萄+白兰地330ml', 8.8, 0.33, 1, 5),
+('6935145343061', '玫瑰+荔枝330ml', 8.8, 0.33, 1, 5),
+('6935145343092', '果茶乐橘乌龙330ml', 8.8, 0.33, 1, 5),
+('6941025700084', '香辣味20g', 1.2, 0.02, 1, 3),
+('6941025700138', '盐焗味20g', 1.2, 0.02, 1, 3),
+('6941025701074', '卤蛋味20g', 1.2, 0.02, 1, 3),
+('6941025702019', '泡辣味20g', 1.2, 0.02, 1, 3);
 
 --
 -- Constraints for dumped tables
@@ -330,7 +331,7 @@ ALTER TABLE `inventories`
 --
 ALTER TABLE `order_items`
   ADD CONSTRAINT `order_items_FK_o_id` FOREIGN KEY (`o_id`) REFERENCES `orders` (`o_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `order_items_FK_v_barcode` FOREIGN KEY (`v_barcode`) REFERENCES `varieties` (`v_barcode`) ON DELETE CASCADE;
+  ADD CONSTRAINT `order_items_FK_v_barcode` FOREIGN KEY (`v_barcode`) REFERENCES `varieties` (`v_barcode`) ON DELETE NO ACTION;
 
 --
 -- Constraints for table `varieties`
