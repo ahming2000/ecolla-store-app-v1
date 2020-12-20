@@ -131,13 +131,27 @@ class Controller extends Model {
 
         foreach($order->getCart()->getCartItems() as $cartItem){
 
-            $order_items_ready = [$order->getOrderId(), $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getBarcode(), $cartItem->getQuantity(), $cartItem->getNote()];
+            $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode() , $cartItem->getQuantity(), $cartItem->getNote()];
             $this->dbInsert("order_items", $order_items_ready);
 
-            // TO-DO: Edit Inventory
+            // Edit Inventory
+            $this->editIventoryQuantity($cartItem->getBarcode(), $cartItem->getQuantity)
 
         }
 
+    }
+
+    private function editIventoryQuantity($barcode, $quantity){
+        $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $barcode);
+
+        $selected = 0;
+        for($i = 0; $i < sizeof($dbTable_inventories) - 1; $i++){
+            if($dbTable_inventories[$i]['inv_expire_date'] < $dbTable_inventories[$i + 1]['inv_expire_date']){
+                $selected = $i;
+            }
+        }
+
+        $this->dbUpdate("inventories", "inv_quantity", $dbTable_inventories[$selected]['inv_quantity'] - $quantity, "v_barcode", $barcode);
     }
 
     public function checkUserPassword($username, $password){
