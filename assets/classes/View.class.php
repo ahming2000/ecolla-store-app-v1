@@ -134,8 +134,9 @@ class View extends Model{
                 $item = $this->getItem($i_name, $i_brand);
                 $cartItem = new CartItem($item, $oi["oi_quantity"], $oi["v_barcode"], $oi["oi_note"]);
                 $cart->addItem($cartItem);
-
             }
+
+            $cart->setNote($o['o_note']);
 
             $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"], $o["c_state"], $o["c_area"], $o["c_postal_code"]);
             $order = new Order($customer);
@@ -170,6 +171,8 @@ class View extends Model{
             $cart->addItem($cartItem);
 
         }
+
+        $cart->setNote($o['o_note']);
 
         $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"]);
         $order = new Order($customer);

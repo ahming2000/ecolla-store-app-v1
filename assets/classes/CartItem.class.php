@@ -5,7 +5,6 @@ class CartItem {
     private $item;
     private $quantity;
     private $barcode; //Selected variety //Only one various can be selected in this class
-    private $note;
 
     private $subPrice;
     private $varietyIndex;
@@ -14,7 +13,6 @@ class CartItem {
         $this->item = $item;
         $this->quantity = $quantity;
         $this->barcode = $barcode;
-        $this->note = $note;
 
         //Assign variety index from barcode
         for($i = 0; $i < sizeof($item->getVarieties()); $i++){
@@ -37,10 +35,6 @@ class CartItem {
 
     public function getBarcode(){
         return $this->barcode;
-    }
-
-    public function getNote(){
-        return $this->note;
     }
 
     public function getSubPrice(){
@@ -66,10 +60,6 @@ class CartItem {
 
     private function setSubPrice(){
         return $this->quantity * ($this->item->getVarieties()[$this->varietyIndex]->getPrice() * $this->item->getVarieties()[$this->varietyIndex]->getDiscountRate());
-    }
-
-    public function setNote($note){
-        $this->note = $note;
     }
 }
 

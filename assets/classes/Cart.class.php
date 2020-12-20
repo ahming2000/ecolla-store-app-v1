@@ -8,7 +8,9 @@ class Cart{
     private $cartCount; //Int
     private $subtotal; //Float
     private $shippingFee; //Float
+    private $note; //String
     private $isEastMY; // Flag
+
 
     public function __construct(){
         session_start();
@@ -19,6 +21,7 @@ class Cart{
             $this->cartCount = $_SESSION["cart"]->cartCount;
             $this->subtotal = $_SESSION["cart"]->subtotal;
             $this->shippingFee = $_SESSION["cart"]->shippingFee;
+            $this->note = $_SESSION["cart"]->note;
             $this->isEastMY = $_SESSION["cart"]->isEastMY;
         } else{
             // Initial cart if no value present in $_SESSION
@@ -78,6 +81,7 @@ class Cart{
         $this->cartCount = 0;
         $this->subtotal = 0.0;
         $this->shippingFee = 0.0;
+        $this->note = "";
         $this->isEastMY = 0;
         $this->updateCart();
     }
@@ -112,7 +116,6 @@ class Cart{
     }
 
     //Xi En added this
-    // Just remove it if you feel its unnecessary
     public function getSpecificCartItem($barcode){
         foreach($this->cartItems as $cartItem){
             if($cartItem->getBarcode() == $barcode){
@@ -120,6 +123,11 @@ class Cart{
             }
         }
         return NULL;
+    }
+
+    // Retrieve cart note
+    public function setNote($note){
+        $this->note = $note;
     }
 
     //Getter
@@ -137,6 +145,10 @@ class Cart{
 
     public function getShippingFee(){
         return $this->shippingFee;
+    }
+
+    public function getNote() {
+        return $this->note;
     }
 
     public function isEastMY(){

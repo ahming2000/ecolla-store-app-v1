@@ -126,10 +126,11 @@ class Controller extends Model {
 
     public function insertNewOrder($order){ //$order
 
-        $order_ready = [$order->getOrderId(), $order->getDateTime(), $order->getCustomer()->getName(), $order->getCustomer()->getPhoneMMC(), $order->getCustomer()->getPhone(), $order->getCustomer()->getAddress(), $order->getCustomer()->getState(), $order->getCustomer()->getArea(), $order->getCustomer()->getPostalCode()];
+        $order_ready = [$order->getOrderId(), $order->getDateTime(), $order->getCart()->getNote(), $order->getCustomer()->getName(), $order->getCustomer()->getPhoneMMC(), $order->getCustomer()->getPhone(), $order->getCustomer()->getAddress(), $order->getCustomer()->getState(), $order->getCustomer()->getArea(), $order->getCustomer()->getPostalCode()];
         $this->dbInsert("orders", $order_ready);
 
         foreach($order->getCart()->getCartItems() as $cartItem){
+
             $order_items_ready = [$order->getOrderId(), $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getBarcode(), $cartItem->getQuantity(), $cartItem->getNote()];
             $this->dbInsert("order_items", $order_items_ready);
 
