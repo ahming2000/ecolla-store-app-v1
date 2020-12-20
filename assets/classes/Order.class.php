@@ -7,6 +7,7 @@ class Order {
     private $dateTime;
     private $orderId; // Unique format
     private $cart;
+    private $paymentMethod;
 
     private $deliveryId; // Key in after admin sent out the parcel
 
@@ -14,16 +15,18 @@ class Order {
         $this->customer = $customer;
     }
 
-    public function orderNow($cart){
+    public function orderNow($cart, $paymentMethod){
         $this->dateTime = date("Y-m-d H:i:s");
         $this->orderId = "ECOLLA".date_format(date_create($this->dateTime), "YmdHis");
         $this->cart = $cart;
+        $this->paymentMethod = $paymentMethod;
     }
 
-    public function importOrder($dateTime, $orderId, $cart, $deliveryId){
+    public function importOrder($dateTime, $orderId, $cart, $paymentMethod, $deliveryId){
         $this->dateTime = $dateTime;
         $this->orderId = $orderId;
         $this->cart = $cart;
+        $this->paymentMethod = $paymentMethod;
         $this->deliveryId = $deliveryId;
     }
 
@@ -58,6 +61,11 @@ class Order {
     public function getDeliveryId() {
         return $this->deliveryId;
     }
+
+    public function getPaymentMethod() {
+        return $this->paymentMethod;
+    }
+
 }
 
 ?>

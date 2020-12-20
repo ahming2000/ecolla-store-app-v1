@@ -112,11 +112,9 @@ class View extends Model{
         return $this->selectCount("items");
     }
 
-    public function getAllOrders(){
+    public function toOrderObjList($dbTable_orders){
 
         $orders = array();
-
-        $dbTable_orders = $this->dbSelectAll("orders");
 
         foreach($dbTable_orders as $o){
 
@@ -140,7 +138,7 @@ class View extends Model{
 
             $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"], $o["c_state"], $o["c_area"], $o["c_postal_code"]);
             $order = new Order($customer);
-            $order->importOrder($o["o_date_time"], $o["o_id"], $cart, $o["o_delivery_id"]);
+            $order->importOrder($o["o_date_time"], $o["o_id"], $cart, $o["o_payment_method"], $o["o_delivery_id"]);
 
             array_push($orders, $order);
         }
@@ -148,37 +146,19 @@ class View extends Model{
         return $orders;
     }
 
+    public function getAllOrders(){
+
+        $dbTable_orders = $this->dbSelectAll("orders");
+
+        return $this->toOrderObjList($dbTable_orders);
+    }
+
     public function getOrder($orderId){
 
         $dbTable_orders = $this->dbSelectRow("orders", "o_id", $orderId);
         if($dbTable_orders == null) return null;
 
-        $o = $dbTable_orders[0];
-
-        $cart = new Cart();
-        $cart->resetCart(); // Make sure session data is cleared
-
-        $dbTable_order_items = $this->dbSelectRow("order_items", "o_id", $o["o_id"]);
-
-        foreach($dbTable_order_items as $oi){
-
-            $i_id = $this->dbSelectAttribute("varieties", "i_id", "v_barcode", $oi["v_barcode"]);
-            $i_name = $this->dbSelectAttribute("items", "i_name", "i_id", $i_id);
-            $i_brand = $this->dbSelectAttribute("items", "i_brand", "i_id", $i_id);
-
-            $item = $this->getItem($i_name, $i_brand);
-            $cartItem = new CartItem($item, $oi["oi_quantity"], $oi["v_barcode"], $oi["oi_note"]);
-            $cart->addItem($cartItem);
-
-        }
-
-        $cart->setNote($o['o_note']);
-
-        $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"]);
-        $order = new Order($customer);
-        $order->importOrder($o["o_date_time"], $o["o_id"], $cart, $o["o_delivery_id"]);
-
-        return $order;
+        return $this->toOrderObjList($dbTable_orders)[0];
     }
 
     public function getMaxItemsPerPage(){

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 20, 2020 at 06:25 AM
+-- Generation Time: Dec 20, 2020 at 08:05 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_origin` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
   `i_property_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `i_is_listed` tinyint(1) NOT NULL DEFAULT '0',
-  `i_image_count` int(11) NOT NULL DEFAULT '0',
+  `i_image_count` int(11) NOT NULL,
   `i_view_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`i_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -180,9 +180,9 @@ CREATE TABLE IF NOT EXISTS `items` (
 --
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '维生素功能饮料', '', '脉动', '中国', '口味', 1, 4, 31),
-(2, '手撕素肉排', '', '好味屋', '中国', '口味', 1, 5, 347),
-(3, '鹌鹑蛋', '', '湖湘贡', '中国', '口味', 1, 5, 61),
+(1, '维生素功能饮料', '', '脉动', '中国', '口味', 1, 4, 32),
+(2, '手撕素肉排', '', '好味屋', '中国', '口味', 1, 5, 348),
+(3, '鹌鹑蛋', '', '湖湘贡', '中国', '口味', 1, 5, 63),
 (4, '鸡尾酒', '', 'RIO', '中国', '口味', 0, 3, 10),
 (5, '微醺鸡尾酒', '', 'RIO', '中国', '口味', 0, 1, 10);
 
@@ -196,6 +196,7 @@ DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders` (
   `o_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `o_date_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `o_payment_method` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `o_note` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `o_delivery_id` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'This attribute will remain NULL before the order is being processed by admin.',
   `c_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Since the website does not have customer registration, customer information will combine with this table.',
@@ -212,8 +213,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`o_id`, `o_date_time`, `o_note`, `o_delivery_id`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_state`, `c_area`, `c_postal_code`) VALUES
-('ECOLLA_EXAMPLE', '2020-12-09 21:28:59', 'Contactless delivery required.', 'J&T20200912123456', 'Kee Sheng Ming', '+60', '143892199', 'example address', 'example', 'example', '12345');
+INSERT INTO `orders` (`o_id`, `o_date_time`, `o_payment_method`, `o_note`, `o_delivery_id`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_state`, `c_area`, `c_postal_code`) VALUES
+('ECOLLA_EXAMPLE', '2020-12-09 21:28:59', 'Boost', 'Contactless delivery required.', 'J&T20200912123456', 'Kee Sheng Ming', '+60', '143892199', 'example address', 'example', 'example', '12345');
 
 -- --------------------------------------------------------
 

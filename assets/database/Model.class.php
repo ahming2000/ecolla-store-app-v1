@@ -37,8 +37,8 @@ class Model extends Dbh{
     private $DATABASE_TABLE = [
 
         "items" => [
-            "columnsToInsert" => "items(i_name, i_desc, i_brand, i_origin, i_property_name, i_is_listed, i_image_count, i_view_count)",
-            "columnsCountToInsert" => 8
+            "columnsToInsert" => "items(i_name, i_desc, i_brand, i_origin, i_property_name, i_image_count)",
+            "columnsCountToInsert" => 6
         ],
 
         "varieties" => [
@@ -62,8 +62,8 @@ class Model extends Dbh{
         ],
 
         "orders" => [
-            "columnsToInsert" => "orders(o_id, o_date_time, c_name, c_phone_mcc, c_phone, c_address, c_state, c_area, c_postal_code)",
-            "columnsCountToInsert" => 9
+            "columnsToInsert" => "orders(o_id, o_date_time, o_payment_method, o_note, c_name, c_phone_mcc, c_phone, c_address, c_state, c_area, c_postal_code)",
+            "columnsCountToInsert" => 11
         ],
 
         "order_items" => [
