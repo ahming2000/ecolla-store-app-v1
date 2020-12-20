@@ -58,6 +58,8 @@ $(document).ready(function() {
         $(".navbar-nav li:nth-child(4)").addClass("active");
     } else if (getCurentFileName() === "order-tracking.php") {
         $(".navbar-nav li:nth-child(5)").addClass("active");
+    } else if (getCurentFileName() === "cart.php") {
+        $(".navbar-nav li:nth-child(6)").addClass("active");
     }
 
 });
