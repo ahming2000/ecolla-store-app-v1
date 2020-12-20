@@ -1,77 +1,80 @@
-<?php include "assets/includes/class-auto-loader.inc.php"; //Auto include classes when needed. 
-?>
-<?php $cart = new Cart();
-$view = new View(); ?>
 <?php
+/* Initialization */
+// Standard variable declaration
+$title = "结账 | Ecolla e口乐";
+
+// Auto loader for classes
+include "assets/includes/class-auto-loader.inc.php";
+
+// Database Interaction
+$cart = new Cart();
+$view = new View();
+$controller = new Controller();
+
+/* Operation */
 if (isset($_POST["submit"])) {
 
-    $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["addressInputLine"], $_POST["addressInputPostalCode"], $_POST["addressInputCity"], $_POST["addressInputState"]);
+    $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["address"], $_POST["zipCode"], $_POST["city"], $_POST["state"]);
     $order = new Order($customer);
     $order->orderNow($cart);
     $cart->resetCart();
 
     UsefulFunction::uploadReceipt($_FILES["receipt"], $order->getOrderId());
 
-    $controller = new Controller();
+
     $controller->insertNewOrder($order);
     header("location: order-tracking.php?orderId=" . $order->getOrderId() . "&checkOut=1");
 }
 ?>
+
 <!DOCTYPE html>
 <html>
 
 <head>
-    <?php $title = "结账 | Ecolla e口乐";
-    include "assets/includes/stylesheet-script-declaration.inc.php" ?>
+    <?php include "assets/includes/stylesheet.inc.php"; ?>
 </head>
 
 <body>
 
-    <?php $c = $cart;
-    include "assets/block-user-page/header.php"; ?>
+    <?php include "assets/includes/script.inc.php"; ?>
 
-    <div class="container">
+    <header><?php include "assets/block-user-page/header.php"; ?></header>
+
+    <main class="container">
 
         <div class="h1">结账界面</div>
 
         <form action="" method="post" enctype="multipart/form-data">
             <div class="form-group">
-                <label for="nameInput">名字/昵称</label>
+                <label for="nameInput">名字/昵称（英文名字）</label>
                 <input type="text" class="form-control" name="nameInput" aria-describedby="nameHelp" placeholder="e.g. Alex Lee" required>
                 <small id="nameHelp" class="form-text text-muted">请输入可辨认的名字，我们将会以这个名字进行邮寄</small>
             </div>
             <div class="form-row mb-3">
                 <div class="col-12"><label for="phoneNumberInput">电话号码</label></div>
-                <div class="col-4" id="phoneNum_inputHead"><input type="text" class="form-control" name="phoneNumberInputHead" placeholder="e.g. 012" required autocomplete="off"></div>
-                <div class="col-1 text-center">-</div>
-                <div class="col-7"><input type="text" class="form-control" name="phoneNumberInputTail" placeholder="12345678" required></div>
+                <div class="col-1" id="phoneNum_inputHead"><input type="text" class="form-control" name="phoneNumberInputHead" placeholder="e.g. 012" required autocomplete="off"></div>
+                -<!-- <div class="col-1 text-center">-</div> -->
+                <div class="col-3"><input type="text" class="form-control" name="phoneNumberInputTail" placeholder="12345678" required></div>
                 <div class="col-12"><small id="nameHelp" class="form-text text-muted">电话号码格式：012-12345678</small></div>
             </div>
-            <div class="form-row">
-                <div class="col-12 mb-3">
+            <div class="form-row mb-3">
+                <div class="col-12">
                     <label for="addressInputLine">地址</label>
                 </div>
+                <div class="col-12"><input type="text" name="address" class="form-control" placeholder="e.g. 10, Jalan Seni, Taman Baru" autocomplete="off" required /></div>
             </div>
 
-            <div class="form-row">
-                <div class="col-1"><label class="control-label" for="house_num">No: </label></div>
-                <div class="col-3"><input type="text" name="house_num" class="form-control" placeholder="e.g. 12" autocomplete="off" required /></div>
-                <div class="col-1"><label class="control-label" for="jalan">Road: </label></div>
-                <div class="col-3"><input type="text" name="jalan" class="form-control" placeholder="e.g. Jalan 20" autocomplete="off" required /></div>
-                <div class="col-1"><label class="control-label" for="taman">Taman: </label></div>
-                <div class="col-3"><input type="text" name="taman" class="form-control" placeholder="e.g. Taman Baru" autocomplete="off" required /></div>
-            </div>
 
-            <div class="form-row">
-                <div class="col-1"><label class="control-label" for="State">State: </label></div>
+            <div class="form-row mb-3 text-center">
+                <div class="col-1"><label class="control-label" for="State">州属: </label></div>
                 <div class="col-3" id="state_input"><input type="text" name="state" class="form-control" placeholder="e.g. Perak" autocomplete="off" required /></div>
-                <div class="col-1"><label class="control-label" for="City">City: </label></div>
+                <div class="col-1"><label class="control-label" for="City">地区: </label></div>
                 <div class="col-3" id="city_input"><input type="text" name="city" class="form-control" placeholder="e.g. Kampar" disabled autocomplete="off" required /></div>
-                <div class="col-1"><label class="control-label" for="ZipCode">Zip Code: </label></div>
+                <div class="col-1"><label class="control-label" for="ZipCode">邮政编号: </label></div>
                 <div class="col-3" id="zipCode_input"><input type="text" name="zipCode" class="form-control" placeholder="e.g. 82000"disabled autocomplete="off" required /></div>
             </div>
 
-            <div class="form-row">
+            <div class="form-row mb-3">
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12">
@@ -99,9 +102,9 @@ if (isset($_POST["submit"])) {
             </div>
 
             <!--Havent do @media-->
-            <div class="form-row">
+            <div class="form-row mb-3">
                 <div class="col-12">
-                    <label for="Order_generated">Your Order: </label>
+                    <label for="Order_generated">您的订单： </label>
                     <div class="container border border-secondary">
                         <div id="order_item_list">
                             <?php
@@ -116,9 +119,9 @@ if (isset($_POST["submit"])) {
                                     <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
                                     <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
                                     <div class=\"col-2 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
-                            
+
                                     <div class=\"col-1 pt-3\"></div>
-                            
+
                                     <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
                                     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
                                     </div>";
@@ -168,9 +171,10 @@ if (isset($_POST["submit"])) {
             <div class="text-center"><input class="btn btn-primary" type="submit" value="提交" name="submit" style="width: 200px;"></div>
         </form>
 
-    </div>
+    </main>
 
-    <?php include "assets/block-user-page/footer.php"; ?>
+    <footer><?php include "assets/block-user-page/footer.php"; ?></footer>
+
     <script>
         let flag_for_btn = 0;
         $(document).ready(function() {
@@ -272,7 +276,7 @@ if (isset($_POST["submit"])) {
             window.open(url, 'Image', 'width=400px,height=400px,resizable=1');
         }
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <script src="assets/js/post_code.js"></script>
 
 </body>
