@@ -135,7 +135,7 @@ class Controller extends Model {
             $this->dbInsert("order_items", $order_items_ready);
 
             // Edit Inventory
-            $this->editIventoryQuantity($cartItem->getBarcode(), $cartItem->getQuantity)
+            $this->editIventoryQuantity($cartItem->getBarcode(), $cartItem->getQuantity);
 
         }
 
