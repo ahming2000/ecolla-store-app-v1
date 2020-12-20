@@ -1,6 +1,9 @@
 $(function () {
     console.log("Post_code.js has been loaded successfully!");
 
+    let name_x = "c_state", name_y = "c_area", name_z = "c_postal_code",
+    id_x = "c-state", id_y = "c-area", id_z = "c-postal-code";
+
     let post_code_data = [],
         states = ["Perlis", "Kedah", "Penang", "Kelantan", "Terengganu", "Pahang", "Selangor", "Perak", "Kuala Lumpur", "Putrajaya", "Negeri Sembilan", "Melaka", "Johor", "Labuan", "Sabah", "Sarawak"],
         state_id = 0, state_bool = [], state_flag = 0
@@ -38,14 +41,14 @@ $(function () {
         }
     });
 
-    $("input[name='state']").focus(e => {
+    $(`input[name='${name_x}']`).focus(e => {
         state_id = 0;
         state_bool = [];
 
         let cur_height = 0;
 
         //append the selection input box
-        $("#state_input").append(state_cnt);
+        $(`#${id_x}`).append(state_cnt);
 
         for (let i in states) {
             //Initialize state boolean flag as all false; This is to prevent blur function from overriding
@@ -75,9 +78,9 @@ $(function () {
         }
     });
 
-    $("input[name='state']").keyup(e => {
+    $(`input[name='${name_x}']`).keyup(e => {
         if ($("#state_cnt").length != 0) {
-            let input = $("input[name='state']").val() || "";
+            let input = $(`input[name='${name_x}']`).val() || "";
 
             input = input.toUpperCase();
 
@@ -102,43 +105,43 @@ $(function () {
         }
     });
 
-    $("input[name='state']").blur(e => {
+    $(`input[name='${name_x}']`).blur(e => {
         state_flag = 0; // used to allow empty values
 
         for (let i in states) {
             if (state_bool[i] == 1) {
-                $("input[name='state']").val(states[i]);
-                $("input[name='city']").val("");
-                $("input[name='zipCode']").val("");
-                $("input[name='city']").attr('disabled', 'disabled');
-                $("input[name='zipCode']").attr('disabled', 'disabled');
+                $(`input[name='${name_x}']`).val(states[i]);
+                $(`input[name='${name_y}']`).val("");
+                $(`input[name='${name_z}']`).val("");
+                $(`input[name='${name_y}']`).attr('disabled', 'disabled');
+                $(`input[name='${name_z}']`).attr('disabled', 'disabled');
                 state_flag = 1;
             }
         }
 
-        if (state_flag == 0 && !$("input[name='state']").val()) {
-            $("input[name='state']").val("");
-            $("input[name='city']").val("");
-            $("input[name='zipCode']").val("");
-            $("input[name='city']").attr('disabled', 'disabled');
-            $("input[name='zipCode']").attr('disabled', 'disabled');
+        if (state_flag == 0 && !$(`input[name='${name_x}']`).val()) {
+            $(`input[name='${name_x}']`).val("");
+            $(`input[name='${name_y}']`).val("");
+            $(`input[name='${name_z}']`).val("");
+            $(`input[name='${name_y}']`).attr('disabled', 'disabled');
+            $(`input[name='${name_z}']`).attr('disabled', 'disabled');
         }
 
-        if ($("input[name='state']").val()) {
-            $("input[name='city']").removeAttr('disabled');
+        if ($(`input[name='${name_x}']`).val()) {
+            $(`input[name='${name_y}']`).removeAttr('disabled');
         }
 
         $("#state_cnt").remove();
     });
 
-    $("input[name='city']").focus(e => {
+    $(`input[name='${name_y}']`).focus(e => {
         city_id = 0;
         city_bool = [];
 
-        let cur_state = $("input[name='state']").val(), arr = cities[cur_state], cur_height = 0;
+        let cur_state = $(`input[name='${name_x}']`).val(), arr = cities[cur_state], cur_height = 0;
 
         //append the selection input box
-        $("#city_input").append(city_cnt);
+        $(`#${id_y}`).append(city_cnt);
 
         for (let i in arr) {
             //Initialize city boolean flag as all false; This is to prevent blur function from overriding
@@ -167,9 +170,9 @@ $(function () {
         }
     });
 
-    $("input[name='city']").keyup(e => {
+    $(`input[name='${name_y}']`).keyup(e => {
         if ($("#city_cnt").length != 0) {
-            let input = $("input[name='city']").val() || "";
+            let input = $(`input[name='${name_y}']`).val() || "";
 
             input = input.toUpperCase();
 
@@ -194,41 +197,41 @@ $(function () {
         }
     });
 
-    $("input[name='city']").blur(e => {
-        let cur_state = $("input[name='state']").val(), arr = cities[cur_state];
+    $(`input[name='${name_y}']`).blur(e => {
+        let cur_state = $(`input[name='${name_x}']`).val(), arr = cities[cur_state];
 
         city_flag = 0; // used to allow empty values
 
         for (let i in arr) {
             if (city_bool[i] == 1) {
-                $("input[name='city']").val(arr[i]);
-                $("input[name='zipCode']").val("");
-                $("input[name='zipCode']").attr('disabled', 'disabled');
+                $(`input[name='${name_y}']`).val(arr[i]);
+                $(`input[name='${name_z}']`).val("");
+                $(`input[name='${name_z}']`).attr('disabled', 'disabled');
                 city_flag = 1;
             }
         }
 
-        if (city_flag == 0 && !$("input[name='city']").val()) {
-            $("input[name='city']").val("");
-            $("input[name='zipCode']").val("");
-            $("input[name='zipCode']").attr('disabled', 'disabled');
+        if (city_flag == 0 && !$(`input[name='${name_y}']`).val()) {
+            $(`input[name='${name_y}']`).val("");
+            $(`input[name='${name_z}']`).val("");
+            $(`input[name='${name_z}']`).attr('disabled', 'disabled');
         }
 
-        if ($("input[name='city']").val()) {
-            $("input[name='zipCode']").removeAttr('disabled');
+        if ($(`input[name='${name_y}']`).val()) {
+            $(`input[name='${name_z}']`).removeAttr('disabled');
         }
 
         $("#city_cnt").remove();
     });
 
-    $("input[name='zipCode']").focus(e => {
+    $(`input[name='${name_z}']`).focus(e => {
         zipCode_id = 0;
         zipCode_bool = [];
 
-        let cur_city = $("input[name='city']").val(), arr = zipCode[cur_city], cur_height = 0;
+        let cur_city = $(`input[name='${name_y}']`).val(), arr = zipCode[cur_city], cur_height = 0;
 
         //append the selection input box
-        $("#zipCode_input").append(zipCode_cnt);
+        $(`#${id_z}`).append(zipCode_cnt);
 
         for (let i in arr) {
             //Initialize city boolean flag as all false; This is to prevent blur function from overriding
@@ -257,9 +260,9 @@ $(function () {
         }
     });
 
-    $("input[name='zipCode']").keyup(e => {
+    $(`input[name='${name_z}']`).keyup(e => {
         if ($("#zipCode_cnt").length != 0) {
-            let input = $("input[name='zipCode']").val() || "";
+            let input = $(`input[name='${name_z}']`).val() || "";
 
             input = input.toUpperCase();
 
@@ -284,20 +287,20 @@ $(function () {
         }
     });
 
-    $("input[name='zipCode']").blur(e => {
-        let cur_city = $("input[name='city']").val(), arr = zipCode[cur_city];
+    $(`input[name='${name_z}']`).blur(e => {
+        let cur_city = $(`input[name='${name_y}']`).val(), arr = zipCode[cur_city];
 
         zipCode_flag = 0; // used to allow empty values
 
         for (let i in arr) {
             if (zipCode_bool[i] == 1) {
-                $("input[name='zipCode']").val(arr[i]);
+                $(`input[name='${name_z}']`).val(arr[i]);
                 zipCode_flag = 1;
             }
         }
 
-        if (zipCode_flag == 0 && !$("input[name='zipCode']").val()) {
-            $("input[name='zipCode']").val("");
+        if (zipCode_flag == 0 && !$(`input[name='${name_z}']`).val()) {
+            $(`input[name='${name_z}']`).val("");
         }
 
         $("#zipCode_cnt").remove();
