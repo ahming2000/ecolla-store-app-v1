@@ -31,6 +31,7 @@ if (isset($_POST['minusItemQuantity'])) {
 if (isset($_POST['removeItem'])) {
     $obj = $_POST['removeItem'];
     $cart->removeItem($obj);
+    $cartItems = $cart->getCartItems();
 }
 
 if(isset($_POST['changeRegion'])){

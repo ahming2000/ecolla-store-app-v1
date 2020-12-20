@@ -37,7 +37,7 @@
     let count_<?php echo $cartItem->getBarcode() ?> = $("#<?php echo $cartItem->getBarcode() ?> .quantity-number").val();
     if(count_<?php echo $cartItem->getBarcode() ?> >= max_count){
         $("#<?php echo $cartItem->getBarcode() ?> .increase-button").attr('disabled', 'disabled');
-    }else if(count_<?php echo $cartItem->getBarcode() ?> <= 0){
+    }else if(count_<?php echo $cartItem->getBarcode() ?> <= 1){
         $("#<?php echo $cartItem->getBarcode() ?> .decrease-button").attr('disabled', 'disabled');
     }
 </script>
