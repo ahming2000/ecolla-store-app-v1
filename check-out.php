@@ -155,7 +155,7 @@ if (isset($_POST["submit"])) {
                         <div class="row" style="height: 50px;">
                             <div class="col-7"></div>
                             <div class="col-3"><b style="font-size: 32px;float: right;">总计 </b></div>
-                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php $total = $c->getSubtotal() + $c->getShippingFee();
+                            <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php $total = $cart->getSubtotal() + $cart->getShippingFee();
                                                                                                                 echo number_format($total, 2); ?></span></b></div>
                         </div>
                     </div>
