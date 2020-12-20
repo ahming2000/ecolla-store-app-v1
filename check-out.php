@@ -16,7 +16,7 @@ if (isset($_POST["submit"])) {
 
     $customer = new Customer($_POST["nameInput"], $_POST["phoneNumberInputHead"], $_POST["phoneNumberInputTail"], $_POST["address"], $_POST["zipCode"], $_POST["city"], $_POST["state"]);
     $order = new Order($customer);
-    $order->orderNow($cart);
+    // $order->orderNow($cart);
     $cart->resetCart();
 
     UsefulFunction::uploadReceipt($_FILES["receipt"], $order->getOrderId());
@@ -61,14 +61,14 @@ if (isset($_POST["submit"])) {
                                     $subPrice = $cartItem->getSubPrice();
 
                                     echo "<div class=\"row\" style=\"height: 100px\">
-                                        <div class=\"col-1 p-1\"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
-                                        <div class=\"col-3 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
-                                        <div class=\"col-2 pt-3\"><b style=\"font-size: 26px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
+                                        <div class=\"col-2 p-1 \"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
+                                        <div class=\"col-3 pt-3 \"><b style=\"font-size: 18px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
+                                        <div class=\"col-2 pt-3 \"><b style=\"font-size: 18px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
 
-                                        <div class=\"col-1 pt-3\"></div>
+                                        
 
-                                        <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
-                                        <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
+                                        <div class=\"col-3 pt-3 \"><b style=\"font-size: 20px; float: right;\"> " . $cartItem->getQuantity() . " * RM" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() . " = </b></div>
+                                        <div class=\"col-2 pt-3 \"><b style=\"font-size: 20px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
                                         </div>";
 
                                     //backup
@@ -88,19 +88,19 @@ if (isset($_POST["submit"])) {
                             </div>
                             <div class="row" style="height: 50px;">
                                 <div class="col-7"></div>
-                                <div class="col-3"><b style="font-size: 32px;float: right;">小计</b></div>
-                                <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getSubtotal(), 2)  ?></span></b></div>
+                                <div class="col-3"><b style="font-size: 24px;float: right;">小计</b></div>
+                                <div class="col-2"><b style="font-size: 24px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getSubtotal(), 2)  ?></span></b></div>
                             </div>
                             <div class="row" style="height: 50px;">
                                 <div class="col-7"></div>
-                                <div class="col-3"><b style="font-size: 32px;float: right;">邮费 </b></div>
-                                <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getShippingFee(), 2)  ?></span></b></div>
+                                <div class="col-3"><b style="font-size: 24px;float: right;">邮费 </b></div>
+                                <div class="col-2"><b style="font-size: 24px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getShippingFee(), 2)  ?></span></b></div>
                             </div>
                             <div class="row" style="width:auto;height:5px;background-color: black;"></div>
                             <div class="row" style="height: 50px;">
                                 <div class="col-7"></div>
-                                <div class="col-3"><b style="font-size: 32px;float: right;">总计 </b></div>
-                                <div class="col-2"><b style="font-size: 32px;float: right;">RM<span id="t_price"><?php $total = $cart->getSubtotal() + $cart->getShippingFee();
+                                <div class="col-3"><b style="font-size: 24px;float: right;">总计 </b></div>
+                                <div class="col-2"><b style="font-size: 24px;float: right;">RM<span id="t_price"><?php $total = $cart->getSubtotal() + $cart->getShippingFee();
                                                                                                                     echo number_format($total, 2); ?></span></b></div>
                             </div>
                         </div>
