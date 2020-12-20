@@ -175,7 +175,7 @@ $(function () {
 
             let cur_height = 0;
 
-            for (let i = 0; i < states.length; i++) {
+            for (let i = 0; i < city_id; i++) {
                 let str = $(`#city${i}`).html();
 
                 if (str.toUpperCase().indexOf(input) > -1) {
@@ -265,7 +265,7 @@ $(function () {
 
             let cur_height = 0;
 
-            for (let i = 0; i < states.length; i++) {
+            for (let i = 0; i < zipCode_id; i++) {
                 let str = $(`#zipCode${i}`).html();
 
                 if (str.toUpperCase().indexOf(input) > -1) {
