@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 20, 2020 at 08:05 AM
+-- Generation Time: Dec 21, 2020 at 09:23 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -24,21 +24,21 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `catogories`
+-- Table structure for table `categories`
 --
 
-DROP TABLE IF EXISTS `catogories`;
-CREATE TABLE IF NOT EXISTS `catogories` (
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE IF NOT EXISTS `categories` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`cat_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
--- Dumping data for table `catogories`
+-- Dumping data for table `categories`
 --
 
-INSERT INTO `catogories` (`cat_id`, `cat_name`) VALUES
+INSERT INTO `categories` (`cat_id`, `cat_name`) VALUES
 (1, '饮料'),
 (2, '零食'),
 (3, '素食'),
@@ -181,8 +181,8 @@ CREATE TABLE IF NOT EXISTS `items` (
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
 (1, '维生素功能饮料', '', '脉动', '中国', '口味', 1, 4, 32),
-(2, '手撕素肉排', '', '好味屋', '中国', '口味', 1, 5, 348),
-(3, '鹌鹑蛋', '', '湖湘贡', '中国', '口味', 1, 5, 63),
+(2, '手撕素肉排', '', '好味屋', '中国', '口味', 1, 5, 362),
+(3, '鹌鹑蛋', '', '湖湘贡', '中国', '口味', 1, 5, 82),
 (4, '鸡尾酒', '', 'RIO', '中国', '口味', 0, 3, 10),
 (5, '微醺鸡尾酒', '', 'RIO', '中国', '口味', 0, 1, 10);
 
@@ -318,7 +318,7 @@ INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_price`, `v_weight`, `v_di
 -- Constraints for table `classifications`
 --
 ALTER TABLE `classifications`
-  ADD CONSTRAINT `classifications_FK_cat_id` FOREIGN KEY (`cat_id`) REFERENCES `catogories` (`cat_id`),
+  ADD CONSTRAINT `classifications_FK_cat_id` FOREIGN KEY (`cat_id`) REFERENCES `categories` (`cat_id`),
   ADD CONSTRAINT `classifications_FK_i_id` FOREIGN KEY (`i_id`) REFERENCES `items` (`i_id`) ON DELETE CASCADE;
 
 --
