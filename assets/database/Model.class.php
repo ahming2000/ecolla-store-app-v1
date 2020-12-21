@@ -1,26 +1,27 @@
 <?php
 
 /*  MVC Model Version: v0.1.1-alpha (To be released)
- *  Created by AhMing
- *  Github: https://github.com/ahming2000
- *
- *  Changing Log:
- *  v0.1.0-alpha
- *  Now you can insert table with one function, less confusion on inserting table.
- *
- *  v0.1.1-alpha
- *  Select column function may cause error when null value (not found) is selected, respond on null value with return false to ignore the error.
- *
- *  v0.1.2-alpha
- *  Multiple Search function now combine with the single search function, it will auto detect array
- *
- *  v0.2.0-alpha
- *  Joined table function added.
- *
- *  v0.2.1-alpha
- *  Minor improvement in dbInsert 
- *
- */
+*   Created by AhMing
+*   Github: https://github.com/ahming2000
+*
+*   Changing Log:
+*   v0.1.0-alpha
+*   Now you can insert table with one function, less confusion on inserting table.
+*
+*   v0.1.1-alpha
+*   Select column function may cause error when null value (not found) is selected, respond on null value with return false to ignore the error.
+*
+*   v0.1.2-alpha
+*   Multiple Search function now combine with the single search function, it will auto detect array
+*
+*   v0.2.0-alpha
+*   Column and row select function now divide into with WHERE CLAUSE and with attrToSelect or both
+*   Joined table preview function added.
+*
+*   v0.2.1-alpha
+*   Minor improvement in dbInsert
+*
+*/
 
 require_once __DIR__."\\Dbh.class.php";
 
@@ -35,7 +36,7 @@ class Model extends Dbh{
 
 
     /*  Database Table
-        Notice: PLEASE DEFINE YOUR TABLE ATTRIBUTE OVER HERE!
+    Notice: PLEASE DEFINE YOUR TABLE ATTRIBUTE OVER HERE!
     */
     private $DATABASE_TABLE = [
 
@@ -95,9 +96,9 @@ class Model extends Dbh{
 
     /*  Concat the symbol into a string
 
-        Example:
-        $primaryChar = '?'; $saperateWith = ', '; $count = 3;
-        $output = ?, ?, ?
+    Example:
+    $primaryChar = '?'; $saperateWith = ', '; $count = 3;
+    $output = ?, ?, ?
     */
     private function concatToStrChar($primaryChar, $saperateWith, $count){
         $str = "$primaryChar";
@@ -114,9 +115,9 @@ class Model extends Dbh{
 
     /*  Connect multiple attribute with clause by using this function
 
-        Example:
-        $attrArray = ["i_name", "i_brand"]; $clause = "AND";
-        $output = "i_name = ? AND i_brand = ?"
+    Example:
+    $attrArray = ["i_name", "i_brand"]; $clause = "AND";
+    $output = "i_name = ? AND i_brand = ?"
     */
     private function clauseConnector($attrArray, $clause){
         $str = $attrArray[0] . " = ?";
@@ -132,8 +133,8 @@ class Model extends Dbh{
 
 
     /*  Insert into database
-        Syntax:
-        dbInsert: INSERT INTO {table name} VALUE({number of '?' is equal to nnumber of column of the table})
+    Syntax:
+    dbInsert: INSERT INTO {table name} VALUE({number of '?' is equal to nnumber of column of the table})
     */
     protected function dbInsert($configName, $data){
         $sql = "INSERT INTO ".$this->DATABASE_TABLE[$configName]["columnsToInsert"]." VALUE(".$this->concatToStrChar('?', ', ', $this->DATABASE_TABLE[$configName]["columnsCountToInsert"]).")";
@@ -146,29 +147,29 @@ class Model extends Dbh{
 
 
     /*  Select from database
-        Syntax:
-        dbSelectAll: SELECT * FROM {table name}
-        dbSelectRange: SELECT * FROM {table name} LIMIT {start from}, {how many times/range}
-        dbSelectRow: SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search}
-        dbSelectColumn: SELECT {attribute to select} FRM {table name} WHERE {attribute to search} = {attribute content to search}
-        dbSelectAttribute: SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
-        dbSelectCount: SELECT COUNT(*) FROM {table name}
-        dbSelectAttributeCount: SELECT COUNT(*) FROM {table name} WHERE {attribute to search} = {attribute content to search}
-        dbSelectAttributeCount_MultiSearch: SELECT COUNT(*) FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
+    Syntax:
+    dbSelectAll: SELECT * FROM {table name}
+    dbSelectRange: SELECT * FROM {table name} LIMIT {start from}, {how many times/range}
+    dbSelectRow: SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search}
+    dbSelectColumn: SELECT {attribute to select} FRM {table name} WHERE {attribute to search} = {attribute content to search}
+    dbSelectAttribute: SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
+    dbSelectCount: SELECT COUNT(*) FROM {table name}
+    dbSelectAttributeCount: SELECT COUNT(*) FROM {table name} WHERE {attribute to search} = {attribute content to search}
+    dbSelectAttributeCount_MultiSearch: SELECT COUNT(*) FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
 
-        Output: (To retrive the cell data)
-        dbSelectAll: data[row(number)][column(column name)]
-        dbSelectRange: data[row(number)][column(column name)]
-        dbSelectRow: data[row(number)][column(column name)]
-        dbSelectColumn: data[column(column name)]
-        dbSelectAttribute: data (Auto use the first result as the main result) (Return false when not found)
-        dbSelectCount: data count
-        dbSelectAttributeCount: data count
-        dbSelectAttributeCount_MultiSearch: data count
+    Output: (To retrive the cell data)
+    dbSelectAll: data[row(number)][column(column name)]
+    dbSelectRange: data[row(number)][column(column name)]
+    dbSelectRow: data[row(number)][column(column name)]
+    dbSelectColumn: data[column(column name)]
+    dbSelectAttribute: data (Auto use the first result as the main result) (Return false when not found)
+    dbSelectCount: data count
+    dbSelectAttributeCount: data count
+    dbSelectAttributeCount_MultiSearch: data count
 
-        Coming soon:
-        1. Select function with clause ORDER BY
-        2. Select function with combined table (WIP)
+    Coming soon:
+    1. Select function with clause ORDER BY
+    2. Select function with combined table (WIP)
     */
     protected function dbSelectAll($tableName){
         $sql = "SELECT * FROM ".$tableName;
@@ -205,6 +206,24 @@ class Model extends Dbh{
         return $results;
     }
 
+    protected function dbSelectColumn($tableName, $attrToSelect){
+        $sql = "SELECT $attrToSelect FROM $tableName";
+
+        $stmt = $this->connect()->prepare($sql);
+
+        //  Follow the mysql syntax
+        if(!$stmt->execute()) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+
+        $results = $stmt->fetchAll();
+
+        // Convert value into ordered array
+        $columns = array();
+        foreach($results as $row){
+            array_push($columns, $row[$attrToSelect]);
+        }
+        return $columns;
+    }
+
     protected function dbSelectRowRange($tableName, $attrToSearch, $attrContentToSearch, $start, $range){
         // Check is multiple search or not
         if(is_array($attrToSearch) or is_array($attrContentToSearch)){
@@ -224,7 +243,27 @@ class Model extends Dbh{
         return $results;
     }
 
-    protected function dbSelectColumn($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
+    protected function dbSelectRowAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
+        // Check is multiple search or not
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            // Make number of attribute and number of content are the same
+            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+            $sql = "SELECT $attrToSelect FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
+        } else {
+            $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
+        }
+
+        $stmt = $this->connect()->prepare($sql);
+
+        //  Follow the mysql syntax
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+
+        $results = $stmt->fetchAll();
+
+        return $results;
+    }
+
+    protected function dbSelectColumnAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
         // Check is multiple search or not
         if(is_array($attrToSearch) or is_array($attrContentToSearch)){
             // Make number of attribute and number of content are the same
@@ -369,8 +408,8 @@ class Model extends Dbh{
 
 
     /*  Update database
-        Syntax:
-        dbUpdate: UPDATE {table name} SET {attribute to update} = {attribute content to update} WHERE {attribute to search} = {attribute content to search}
+    Syntax:
+    dbUpdate: UPDATE {table name} SET {attribute to update} = {attribute content to update} WHERE {attribute to search} = {attribute content to search}
     */
     protected function dbUpdate($tableName, $attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
         // Check is multiple search or not
@@ -403,8 +442,8 @@ class Model extends Dbh{
 
 
     /*  Delete database data
-        Syntax:
-        dbDelete: DELETE FROM {table name} WHERE {attribute to search} = {attribute content to search}
+    Syntax:
+    dbDelete: DELETE FROM {table name} WHERE {attribute to search} = {attribute content to search}
 
     */
     protected function dbDelete($tableName, $attrToSearch, $attrContentToSearch){
@@ -431,8 +470,8 @@ class Model extends Dbh{
 
 
     /*  MVC Model Version: v0.1.1-alpha
-     *  Old version code will remain until all codes are tested perfectly
-     */
+    *  Old version code will remain until all codes are tested perfectly
+    */
 
     protected function dbSelectRow_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
         if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");

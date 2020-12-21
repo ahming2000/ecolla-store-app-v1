@@ -15,7 +15,7 @@ class View extends Model{
 
             // Get classifications of current item
             // Query: SELECT cat_id FROM classifications WHERE i_id = ?
-            $class = $this->dbSelectColumn("classifications", "cat_id", "i_id", $i["i_id"]);
+            $class = $this->dbSelectColumnAttribute("classifications", "cat_id", "i_id", $i["i_id"]);
 
             foreach($class as $cat_id){
 
@@ -210,13 +210,13 @@ class View extends Model{
     public function getTotalPurchaseCount($item){
         // Get all barcode from same item
         $i_id = $this->getItemId($item);
-        $barcodes = $this->dbSelectColumn("varieties", "v_barcode", "i_id", $i_id);
+        $barcodes = $this->dbSelectColumnAttribute("varieties", "v_barcode", "i_id", $i_id);
 
         // Get all quantity from order items table (Using array or loop)
         $count = 0;
         foreach($barcodes as $barcode){
             // Make sure all barcode (repeated) counting into the count variable
-            $quantityList = $this->dbSelectColumn("order_items", "oi_quantity", "v_barcode", $barcode);
+            $quantityList = $this->dbSelectColumnAttribute("order_items", "oi_quantity", "v_barcode", $barcode);
             foreach($quantityList as $quantity){
                 $count += $quantity;
             }
@@ -229,7 +229,7 @@ class View extends Model{
     public function getPurchaseCount($barcode){
         $count = 0;
         // Make sure all barcode (repeated) counting into the count variable
-        $quantityList = $this->dbSelectColumn("order_items", "oi_quantity", "v_barcode", $barcode);
+        $quantityList = $this->dbSelectColumnAttribute("order_items", "oi_quantity", "v_barcode", $barcode);
         foreach($quantityList as $quantity){
             $count += $quantity;
         }

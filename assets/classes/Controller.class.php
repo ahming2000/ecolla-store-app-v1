@@ -256,6 +256,17 @@ class Controller extends Model {
 
     }
 
+    public function initializeItem($itemName){
+        $item_ready = [$itemName, "", "", "", "", "", 0];
+
+        // Check is duplicate
+        $dbTable_items = $this->dbSelectColumnAttribute("items", "i_name", "");
+
+        if(!$this->dbInsert("items", $item_ready)){
+
+        }
+    }
+
 
 }
 
