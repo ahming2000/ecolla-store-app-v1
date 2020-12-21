@@ -14,8 +14,11 @@
  *  v0.1.2-alpha
  *  Multiple Search function now combine with the single search function, it will auto detect array
  *
- *  v0.2.0-alpha (Upcoming)
+ *  v0.2.0-alpha
  *  Joined table function added.
+ *
+ *  v0.2.1-alpha
+ *  Minor improvement in dbInsert 
  *
  */
 
@@ -37,41 +40,49 @@ class Model extends Dbh{
     private $DATABASE_TABLE = [
 
         "items" => [
+            "tableName" => "items",
             "columnsToInsert" => "items(i_name, i_desc, i_brand, i_origin, i_property_name, i_image_count)",
             "columnsCountToInsert" => 6
         ],
 
         "varieties" => [
+            "tableName" => "varieties",
             "columnsToInsert" => "varieties(v_barcode, v_property, v_price, v_weight, v_discount_rate, i_id)",
             "columnsCountToInsert" => 6
         ],
 
-        "catogories" => [
-            "columnsToInsert" => "catogories(cat_name)",
+        "categories" => [
+            "tableName" => "categories",
+            "columnsToInsert" => "categories(cat_name)",
             "columnsCountToInsert" => 1
         ],
 
         "inventories" => [
+            "tableName" => "inventories",
             "columnsToInsert" => "inventories(v_barcode, inv_expire_date, inv_quantity)",
             "columnsCountToInsert" => 3
         ],
 
         "classifications" => [
+            "tableName" => "classifications",
             "columnsToInsert" => "classifications(i_id, cat_id)",
             "columnsCountToInsert" => 2
         ],
 
         "orders" => [
+            "tableName" => "orders",
             "columnsToInsert" => "orders(o_id, o_date_time, o_payment_method, o_note, c_name, c_phone_mcc, c_phone, c_address, c_state, c_area, c_postal_code)",
             "columnsCountToInsert" => 11
         ],
 
         "order_items" => [
+            "tableName" => "order_items",
             "columnsToInsert" => "order_items(o_id, v_barcode, oi_quantity, oi_note)",
             "columnsCountToInsert" => 4
         ],
 
         "users" => [
+            "tableName" => "users",
             "columnsToInsert" => "users(user_name, user_password)",
             "columnsCountToInsert" => 2
         ]
@@ -124,10 +135,10 @@ class Model extends Dbh{
         Syntax:
         dbInsert: INSERT INTO {table name} VALUE({number of '?' is equal to nnumber of column of the table})
     */
-    protected function dbInsert($tableName, $data){
-        $sql = "INSERT INTO ".$this->DATABASE_TABLE[$tableName]["columnsToInsert"]." VALUE(".$this->concatToStrChar('?', ', ', $this->DATABASE_TABLE[$tableName]["columnsCountToInsert"]).")";
+    protected function dbInsert($configName, $data){
+        $sql = "INSERT INTO ".$this->DATABASE_TABLE[$configName]["columnsToInsert"]." VALUE(".$this->concatToStrChar('?', ', ', $this->DATABASE_TABLE[$configName]["columnsCountToInsert"]).")";
         $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute($data)) die("Database inserting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        if(!$stmt->execute($data)) die("Database inserting " . $this->DATABASE_TABLE["$configName"]["tableName"] . "error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
     }
 
 

@@ -17,10 +17,10 @@ $MAX_ITEMS = $view->getMaxItemsPerPage();
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $start = ($page - 1) * $MAX_ITEMS;
 
-$itemCount = isset($_GET['catogory']) ? $view->getCatogoryTotalCount($_GET['catogory']) : $view->getItemTotalCountListed();
+$itemCount = isset($_GET['category']) ? $view->getCatogoryTotalCount($_GET['category']) : $view->getItemTotalCountListed();
 $totalPage = ceil($itemCount / $MAX_ITEMS);
 
-$items = isset($_GET['catogory']) ? $view->getItemWithSpecificCatogory($_GET['catogory'], $start, $MAX_ITEMS) : $view->getItemsWithRange($start, $MAX_ITEMS);
+$items = isset($_GET['category']) ? $view->getItemWithSpecificCatogory($_GET['category'], $start, $MAX_ITEMS) : $view->getItemsWithRange($start, $MAX_ITEMS);
 
 ?>
 
@@ -57,15 +57,15 @@ $items = isset($_GET['catogory']) ? $view->getItemWithSpecificCatogory($_GET['ca
 
             <!-- Catogory Filter -->
             <div class="col-6">
-                <select name="catogory" id="catogorySelector" class="custom-select mb-3" style="width: 100%">
-                    <option value="" <?php if (@$_GET["catogory"] == null) echo "selected"; ?>><?php echo "全部商品 (".$view->getItemTotalCountListed().")"; ?></option>
+                <select name="category" id="categorySelector" class="custom-select mb-3" style="width: 100%">
+                    <option value="" <?php if (@$_GET["category"] == null) echo "selected"; ?>><?php echo "全部商品 (".$view->getItemTotalCountListed().")"; ?></option>
 
                     <?php
                     $catList = $view->getCatogoryList();
-                    foreach($catList as $catogory){
-                        echo "<option value='".$catogory["cat_name"]."'";
-                        if (@$_GET["catogory"] == $catogory["cat_name"]) echo " selected";
-                        echo ">".$catogory["cat_name"]." (".$view->getCatogoryTotalCount($catogory["cat_name"]).")</option>";
+                    foreach($catList as $category){
+                        echo "<option value='".$category["cat_name"]."'";
+                        if (@$_GET["category"] == $category["cat_name"]) echo " selected";
+                        echo ">".$category["cat_name"]." (".$view->getCatogoryTotalCount($category["cat_name"]).")</option>";
                     }
                     ?>
                 </select>
@@ -89,13 +89,13 @@ $items = isset($_GET['catogory']) ? $view->getItemWithSpecificCatogory($_GET['ca
                 <nav>
                     <ul class="pagination justify-content-center">
                         <li class="page-item <?= $page == 1 ? "disabled" : ""; ?>">
-                            <a class="page-link" href="<?= isset($_GET['catogory']) ? $pageName . "?catogory=" . $_GET['catogory'] . "&page=" . ($page - 1) : $pageName . "?page=" . ($page - 1); ?>" id="previous-button" <?= $page == 1 ? "tabindex='1' aria-disabled='true'" : ""; ?>>上一页</a>
+                            <a class="page-link" href="<?= isset($_GET['category']) ? $pageName . "?category=" . $_GET['category'] . "&page=" . ($page - 1) : $pageName . "?page=" . ($page - 1); ?>" id="previous-button" <?= $page == 1 ? "tabindex='1' aria-disabled='true'" : ""; ?>>上一页</a>
                         </li>
                         <?php for($i = 1; $i <= $totalPage; $i++) : ?>
-                            <li class="page-item <?= $page == $i ? "active" : ""; ?>"><a class="page-link" href="<?= isset($_GET['catogory']) ? $pageName . "?catogory=" . $_GET['catogory'] . "&page=" . $i : $pageName . "?page=" . $i; ?>"><?= $i; ?></a></li>
+                            <li class="page-item <?= $page == $i ? "active" : ""; ?>"><a class="page-link" href="<?= isset($_GET['category']) ? $pageName . "?category=" . $_GET['category'] . "&page=" . $i : $pageName . "?page=" . $i; ?>"><?= $i; ?></a></li>
                         <?php endfor; ?>
                         <li class="page-item<?= $page == $totalPage ? " disabled" : ""; ?>">
-                            <a class="page-link" href="<?= isset($_GET['catogory']) ? $pageName . "?catogory=" . $_GET['catogory'] . "&page=" . ($page + 1) : $pageName . "?page=" . ($page + 1); ?>" id="next-button" <?= $page == $totalPage ? "tabindex='1' aria-disabled='true'" : ""; ?>>下一页</a>
+                            <a class="page-link" href="<?= isset($_GET['category']) ? $pageName . "?category=" . $_GET['category'] . "&page=" . ($page + 1) : $pageName . "?page=" . ($page + 1); ?>" id="next-button" <?= $page == $totalPage ? "tabindex='1' aria-disabled='true'" : ""; ?>>下一页</a>
                         </li>
                     </ul>
                 </nav>
@@ -109,9 +109,9 @@ $items = isset($_GET['catogory']) ? $view->getItemWithSpecificCatogory($_GET['ca
     <script>
     $(document).ready(function(){
         // Catogory bar onchange bar
-        $("#catogorySelector").on("change", function(){
-            if($("#catogorySelector option:selected").val() !== ""){
-                window.location.href = "item-list.php?catogory=" + $("#catogorySelector option:selected").val();
+        $("#categorySelector").on("change", function(){
+            if($("#categorySelector option:selected").val() !== ""){
+                window.location.href = "item-list.php?category=" + $("#categorySelector option:selected").val();
             } else{
                 window.location.href = "item-list.php";
             }

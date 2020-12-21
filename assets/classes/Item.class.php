@@ -14,11 +14,11 @@ class Item {
     private $viewCount; //Integer
 
     //Array variable
-    private $catogories; //Array //String
+    private $categories; //Array //String
     private $varieties; //Array //Variety object
 
     //Utility variable
-    private $catogoryCount; //Integer
+    private $categoryCount; //Integer
 
     public function __construct($name, $description, $brand, $origin, $propertyName, $isListed, $imgCount, $viewCount){
         $this->name = $name;
@@ -31,20 +31,20 @@ class Item {
         $this->imgCount = $imgCount;
         $this->viewCount = $viewCount;
 
-        $this->catogories = array();
+        $this->categories = array();
         $this->varieties = array();
 
-        $this->catogoryCount = 0;
+        $this->categoryCount = 0;
     }
 
-    public function addCatogory($catogory){
-        array_push($this->catogories, $catogory);
-        $this->catogoryCount++;
+    public function addCatogory($category){
+        array_push($this->categories, $category);
+        $this->categoryCount++;
     }
 
     public function removeCatogory($index){
-        UsefulFunction::removeArrayElementI($this->catogories, $index);
-        $this->catogoryCount--;
+        UsefulFunction::removeArrayElementI($this->categories, $index);
+        $this->categoryCount--;
     }
 
     public function addVariety($variety){
@@ -110,11 +110,11 @@ class Item {
     }
 
     public function getCatogories() {
-        return $this->catogories;
+        return $this->categories;
     }
 
-    public function setCatogories($catogories) {
-        $this->catogories = $catogories;
+    public function setCatogories($categories) {
+        $this->categories = $categories;
         return $this;
     }
 
@@ -128,11 +128,11 @@ class Item {
     }
 
     public function getCatogoryCount() {
-        return $this->catogoryCount;
+        return $this->categoryCount;
     }
 
-    public function setCatogoryCount($catogoryCount) {
-        $this->catogoryCount = $catogoryCount;
+    public function setCatogoryCount($categoryCount) {
+        $this->categoryCount = $categoryCount;
         return $this;
     }
 

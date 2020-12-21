@@ -19,9 +19,9 @@ class View extends Model{
 
             foreach($class as $cat_id){
 
-                // Get catogories of current classification
-                // Query: SELECT cat_name FROM catogories WHERE cat_id = ?
-                $cat_name = $this->dbSelectAttribute("catogories", "cat_name", "cat_id", $cat_id);
+                // Get categories of current classification
+                // Query: SELECT cat_name FROM categories WHERE cat_id = ?
+                $cat_name = $this->dbSelectAttribute("categories", "cat_name", "cat_id", $cat_id);
 
                 // Add into item object
                 $item->addCatogory($cat_name);
@@ -86,9 +86,9 @@ class View extends Model{
         return $this->toItemObjList($dbTable_items);
     }
 
-    public function getItemWithSpecificCatogory($catogoryName, $start, $range){
-        $dbTable_items_catogories = $this->dbSelectAllRange_JoinTable("items", "classifications", "catogories", "i_id", "cat_id", ["cat_name", "i_is_listed"], [$catogoryName, 1], $start, $range);
-        return $this->toItemObjList($dbTable_items_catogories);
+    public function getItemWithSpecificCatogory($categoryName, $start, $range){
+        $dbTable_items_categories = $this->dbSelectAllRange_JoinTable("items", "classifications", "categories", "i_id", "cat_id", ["cat_name", "i_is_listed"], [$categoryName, 1], $start, $range);
+        return $this->toItemObjList($dbTable_items_categories);
     }
 
     public function getItem($itemName, $itemBrand){
@@ -186,7 +186,7 @@ class View extends Model{
     }
 
     public function getCatogoryList(){
-        $results = $this->dbSelectAll("catogories");
+        $results = $this->dbSelectAll("categories");
         $catArray = array();
         foreach($results as $result){
             array_push($catArray, $result);
@@ -194,8 +194,8 @@ class View extends Model{
         return $catArray;
     }
 
-    public function getCatogoryTotalCount($catogoryName){
-        $cat_id = $this->dbSelectRow_JoinTable("classifications", "items", "catogories", "i_id", "cat_id", "cat_id", ["cat_name", "i_is_listed"], [$catogoryName, 1]);
+    public function getCatogoryTotalCount($categoryName){
+        $cat_id = $this->dbSelectRow_JoinTable("classifications", "items", "categories", "i_id", "cat_id", "cat_id", ["cat_name", "i_is_listed"], [$categoryName, 1]);
         return sizeof($cat_id);
     }
 

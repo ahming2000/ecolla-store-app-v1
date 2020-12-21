@@ -85,9 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="col-md-7 mb-4 p-4">
                 <div class="row">
 
-                    <!-- Item catogory badge -->
-                    <?php include "../assets/block-user-page/item-page/item-catogory-badge.php"; ?>
-                    <!-- Item catogory badge -->
+                    <!-- Item category badge -->
+                    <?php include "../assets/block-user-page/item-page/item-category-badge.php"; ?>
+                    <!-- Item category badge -->
 
                     <!-- Item information -->
                     <?php include "../assets/block-user-page/item-page/item-info.php"; ?>
