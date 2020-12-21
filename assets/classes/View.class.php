@@ -237,6 +237,10 @@ class View extends Model{
         return $count;
     }
 
+    public function getOrderDateTime($orderId){
+        return $this->dbSelectAttribute("orders", "o_date_time", "o_id", $orderId);
+    }
+
 }
 
 ?>
