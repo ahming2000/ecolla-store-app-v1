@@ -32,6 +32,75 @@ if (isset($_POST["submit"])) {
 
 <head>
     <?php include "assets/includes/stylesheet.inc.php"; ?>
+    <style>
+        .receipt-image {
+            height: 40px;
+            width: 100%;
+        }
+
+        .item_txt1 {
+            font-size: 12px;
+        }
+
+
+        .item_txt2 {
+            font-size: 12px;
+        }
+
+        /* for xiao ji, total amount */
+        .item_txt3 {
+            font-size: 15px;
+        }
+
+        .cl1 {
+            width: 10%;
+        }
+
+        .cl2 {
+            width: 20%;
+        }
+
+        .cl3 {
+            width: 5%;
+        }
+
+        .cl4 {
+            width: 15%;
+        }
+
+        .cl11 {
+            width: 25%;
+        }
+
+        .cl12 {
+            width: 20%;
+        }
+
+        .img-payment {
+            width: 30%;
+        }
+
+        @media only screen and (min-width: 600px) {
+            .receipt-image {
+                height: 80px;
+                width: 100%;
+            }
+
+            .item_txt1 {
+                font-size: 20px;
+            }
+
+
+            .item_txt2 {
+                font-size: 20px;
+            }
+
+            /* for xiao ji, total amount */
+            .item_txt3 {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -60,15 +129,18 @@ if (isset($_POST["submit"])) {
                                     $totalWeight = $cartItem->getQuantity() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getWeight();
                                     $subPrice = $cartItem->getSubPrice();
 
-                                    echo "<div class=\"row\" style=\"height: 100px\">
-                                        <div class=\"col-2 p-1 \"><img src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\" style=\"height: 90px; width: auto;\"></div>
-                                        <div class=\"col-3 pt-3 \"><b style=\"font-size: 18px;\">" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
-                                        <div class=\"col-2 pt-3 \"><b style=\"font-size: 18px;\">" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
+                                    echo "<div class=\"row\">
+                                        <div class=\"cl1\"><img class='receipt-image' src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\"></div>
+                                        <div class=\"cl2 text-center \"><b class='item_txt1'>" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
+                                        <div class=\"cl2 text-center \"><b class='item_txt1'>" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
 
+                                        <div class='cl3'></div>
+                                        <div class='cl3'></div>
 
-
-                                        <div class=\"col-3 pt-3 \"><b style=\"font-size: 20px; float: right;\"> " . $cartItem->getQuantity() . " * RM" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() . " = </b></div>
-                                        <div class=\"col-2 pt-3 \"><b style=\"font-size: 20px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
+                                        <div class='cl3 text-center'><b class='item_txt2'>" . $cartItem->getQuantity() . "</b></div>
+                                        <div class='cl3 text-center'><b class='item_txt2'>*</b></div>
+                                        <div class='cl4 text-center'><b class='item_txt2'>RM" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() . " =</b></div>
+                                        <div class=\"cl4 text-right\"><b class='item_txt2'>RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
                                         </div>";
 
                                     //backup
@@ -86,22 +158,22 @@ if (isset($_POST["submit"])) {
                                 }
                                 ?>
                             </div>
-                            <div class="row" style="height: 50px;">
-                                <div class="col-7"></div>
-                                <div class="col-3"><b style="font-size: 24px;float: right;">小计</b></div>
-                                <div class="col-2"><b style="font-size: 24px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getSubtotal(), 2)  ?></span></b></div>
+                            <div class="row">
+                                <div style="width: 55%"></div>
+                                <div class="cl11 text-center"><b class='item_txt3'>小计</b></div>
+                                <div class="cl12 text-center"><b class='item_txt3' style="float: right;">RM<span id="t_price"><?php echo number_format($cart->getSubtotal(), 2)  ?></span></b></div>
                             </div>
-                            <div class="row" style="height: 50px;">
-                                <div class="col-7"></div>
-                                <div class="col-3"><b style="font-size: 24px;float: right;">邮费 </b></div>
-                                <div class="col-2"><b style="font-size: 24px;float: right;">RM<span id="t_price"><?php echo number_format($cart->getShippingFee(), 2)  ?></span></b></div>
+                            <div class="row">
+                                <div style="width: 55%"></div>
+                                <div class="cl11 text-center"><b class='item_txt3'>邮费 </b></div>
+                                <div class="cl12 text-center"><b class='item_txt3' style="float: right;">RM<span id="t_price"><?php echo number_format($cart->getShippingFee(), 2)  ?></span></b></div>
                             </div>
                             <div class="row" style="width:auto;height:5px;background-color: black;"></div>
-                            <div class="row" style="height: 50px;">
-                                <div class="col-7"></div>
-                                <div class="col-3"><b style="font-size: 24px;float: right;">总计 </b></div>
-                                <div class="col-2"><b style="font-size: 24px;float: right;">RM<span id="t_price"><?php $total = $cart->getSubtotal() + $cart->getShippingFee();
-                                                                                                                    echo number_format($total, 2); ?></span></b></div>
+                            <div class="row">
+                                <div style="width: 55%"></div>
+                                <div class="cl11 text-center"><b class='item_txt3'>总计 </b></div>
+                                <div class="cl12 text-center"><b class='item_txt3' style="float: right;">RM<span id="t_price"><?php $total = $cart->getSubtotal() + $cart->getShippingFee();
+                                                                                                                                echo number_format($total, 2); ?></span></b></div>
                             </div>
                         </div>
                     </div>
@@ -113,17 +185,17 @@ if (isset($_POST["submit"])) {
                     <div class="form-row mb-3 p-3">
                         <div class="col-12">
                             <div class="row">
-                                <input type="text" name="o_payment_method" id="selected-payment-method" value="TnG" hidden/>
+                                <input type="text" name="o_payment_method" id="selected-payment-method" value="TnG" hidden />
                                 <div class="col-12"><label><strong>请点击付款方式进行付款</strong></label></div>
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 view zoom payment-method active">
+                                <div class="img-payment view zoom payment-method active">
                                     <input type="text" value="TnG" hidden />
                                     <img class="img-fluid" src="assets/images/payment/tng.png" alt="image">
                                 </div>
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 view zoom payment-method">
+                                <div class="img-payment view zoom payment-method">
                                     <input type="text" value="Boost" hidden />
                                     <img class="img-fluid" src="assets/images/payment/boost.png" alt="image">
                                 </div>
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 view zoom payment-method">
+                                <div class="img-payment view zoom payment-method">
                                     <input type="text" value="Bank Transfer" hidden />
                                     <img class="img-fluid" src="assets/images/payment/bank-transfer.png" alt="image">
                                 </div>
@@ -141,8 +213,9 @@ if (isset($_POST["submit"])) {
                     <!-- Phone number -->
                     <div class="form-row mb-3">
                         <div class="col-12"><label>电话号码</label></div>
-                        <div class="col-sm-4 col-md-3 col-lg-2"><select class="form-control" name="c_phone_mcc" id="c-phone-mcc"></select></div>
-                        <div class="col-sm-8 col-md-5 col-lg-4"><input type="text" class="form-control" name="c_phone" aria-describedby="phoneHelp" placeholder="电话号码" required></div>
+                        <div style="width: 30%"><select class="form-control" name="c_phone_mcc" id="c-phone-mcc"></select></div>
+                        <!--class="col-sm-8 col-md-5 col-lg-4"-->
+                        <div style="width: 50%"><input type="text" class="form-control" name="c_phone" aria-describedby="phoneHelp" placeholder="电话号码" required></div>
                         <div class="col-12"><small id="phoneHelp" class="form-text text-muted">电话号码格式：+60 12-1234 5678</small></div>
                     </div><!-- Phone number -->
 
@@ -179,12 +252,11 @@ if (isset($_POST["submit"])) {
     <footer><?php include "assets/block-user-page/footer.php"; ?></footer>
 
     <script>
-
         $(document).ready(function() {
             bsCustomFileInput.init() //For file uploaded name to show
 
             // For payment method select
-            $(".payment-method").on("click", function(){
+            $(".payment-method").on("click", function() {
                 $(".payment-method").removeClass('active');
                 $(this).addClass('active');
 
@@ -202,14 +274,13 @@ if (isset($_POST["submit"])) {
 
         function addPhoneMCC(option) {
             let str =
-            `
+                `
                 <option value="${option}">
                     ${option}
                 </option>
             `;
             $("#c-phone-mcc").append(str);
         }
-
     </script>
 
     <script src="assets/js/post_code.js"></script>
