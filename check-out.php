@@ -17,15 +17,21 @@ if(empty($cart->getCartItems())) header("location: item-list.php");
 
 if (isset($_POST["submit"])) {
 
+    // Initialize new information
     $customer = new Customer($_POST["c_name"], $_POST["c_phone_mcc"], $_POST["c_phone"], $_POST["c_address"], $_POST["c_state"], $_POST["c_area"], $_POST["c_postal_code"]);
     $order = new Order($customer);
     $order->orderNow($cart, $_POST['o_payment_method']);
-    $cart->resetCart();
 
+    // Upload Receipt
     UsefulFunction::uploadReceipt($_FILES["receipt"], $order->getOrderId());
 
-
+    // Insert order
     $controller->insertNewOrder($order);
+
+    // Reset cart
+    $cart->resetCart();
+
+    // Redirect to order successful page
     header("location: order-successfully.php?orderId=" . $order->getOrderId());
 }
 ?>
