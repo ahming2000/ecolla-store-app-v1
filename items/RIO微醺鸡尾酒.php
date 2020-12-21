@@ -12,7 +12,7 @@ $view = new View();
 $controller = new Controller();
 
 // Get item information
-$item = $view->getItem("RIO鸡尾酒微醺");
+$item = $view->getItem("RIO微醺鸡尾酒");
 
 $i_id = $view->getItemId($item);
 $title = $item->getBrand() . " " . $item->getName() . " | Ecolla ε口乐";
