@@ -21,8 +21,8 @@ class Controller extends Model {
         $this->dbInsert("items", $item_ready);
 
         // Get item id from database
-        // Query: SELECT i_id FROM items WHERE i_name = ? AND i_brand = ?
-        $i_id = $this->dbSelectAttribute("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
+        $view = new View();
+        $i_id = $view->getItemId($item);
 
 
         foreach($item->getCatogories() as $category){

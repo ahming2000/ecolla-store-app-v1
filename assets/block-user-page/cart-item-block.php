@@ -2,13 +2,13 @@
     <div class="row">
         <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 col-xl-5">
             <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
-                <a href="items/<?= $cartItem->getItem()->getBrand() . "-" . $cartItem->getItem()->getName() ?>"><img src="assets/images/items/<?php echo $view->getItemId($cartItem->getItem()); ?>/0.png" class="w-100" height="250"></a>
+                <a href="items/<?= $cartItem->getItem()->getName() ?>"><img src="assets/images/items/<?= $view->getItemId($cartItem->getItem()); ?>/0.png" class="w-100" height="250"></a>
             </div>
         </div>
 
         <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 col-xl-7">
             <div class="cart-item-info">
-                <div class="item-title h4 font-weight-bold"><?php echo $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName(); ?></div>
+                <div class="item-title h4 font-weight-bold"><?php echo $cartItem->getItem()->getName(); ?></div>
                 <div class="item-properties h6 grey-text"><?php echo $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty(); ?></div>
                 <div class="item-total-weight h6 grey-text"><?php $totalWeight = $cartItem->getQuantity() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getWeight();
                                                             echo $totalWeight . "kg" ?></div>

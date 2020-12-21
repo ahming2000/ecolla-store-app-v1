@@ -12,7 +12,7 @@ $view = new View();
 $controller = new Controller();
 
 // Get item information
-$item = $view->getItem("鹌鹑蛋", "湖湘贡");
+$item = $view->getItem("脉动维生素功能饮料");
 
 $i_id = $view->getItemId($item);
 $title = $item->getBrand() . " " . $item->getName() . " | Ecolla ε口乐";

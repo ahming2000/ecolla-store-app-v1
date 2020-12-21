@@ -12,7 +12,7 @@ $view = new View();
 $controller = new Controller();
 
 // Get item information
-$item = $view->getItem("手撕素肉排", "好味屋");
+$item = $view->getItem("湖湘贡鹌鹑蛋");
 
 $i_id = $view->getItemId($item);
 $title = $item->getBrand() . " " . $item->getName() . " | Ecolla ε口乐";

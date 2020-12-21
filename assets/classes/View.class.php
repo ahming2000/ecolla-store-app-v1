@@ -91,11 +91,11 @@ class View extends Model{
         return $this->toItemObjList($dbTable_items_categories);
     }
 
-    public function getItem($itemName, $itemBrand){
+    public function getItem($itemName){
 
         // Get the item
         // Query: SELECT * FROM items WHERE i_name = ? AND i_brand = ?
-        $dbTable_items = $this->dbSelectRow("items", ["i_name", "i_brand"], [$itemName, $itemBrand]);
+        $dbTable_items = $this->dbSelectRow("items", "i_name", $itemName);
         // Return null  if no item is found
         if($dbTable_items == null) return null;
 
@@ -104,8 +104,8 @@ class View extends Model{
     }
 
     public function getItemId($item){
-        // Query: SELECT i_id FROM items WHERE i_name = ? AND i_brand = ?
-        return $this->dbSelectAttribute("items", "i_id", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()]);
+        // Query: SELECT i_id FROM items WHERE i_name = ?
+        return $this->dbSelectAttribute("items", "i_id", "i_name", $item->getName());
     }
 
     public function getItemCount(){

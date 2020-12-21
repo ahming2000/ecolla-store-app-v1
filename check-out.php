@@ -134,7 +134,7 @@ if (isset($_POST["submit"])) {
 
                                     echo "<div class=\"row\">
                                         <div class=\"cl1\"><img class='receipt-image' src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\"></div>
-                                        <div class=\"cl2 text-center \"><b class='item_txt1'>" . $cartItem->getItem()->getBrand() . " " . $cartItem->getItem()->getName() . "</b></div>
+                                        <div class=\"cl2 text-center \"><b class='item_txt1'>" . $cartItem->getItem()->getName() . "</b></div>
                                         <div class=\"cl2 text-center \"><b class='item_txt1'>" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
 
                                         <div class='cl3'></div>
