@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 21, 2020 at 09:23 AM
+-- Generation Time: Dec 21, 2020 at 11:36 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -144,7 +144,7 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (13, '6941025700138', '2021-01-01', 12),
 (14, '6941025701074', '2021-01-01', 14),
 (15, '6941025702019', '2021-01-01', 19),
-(16, '6902538004045', '2021-03-05', 38),
+(16, '6902538004045', '2021-03-05', 30),
 (17, '6935145301016', '2021-05-20', 20),
 (18, '6935145301030', '2021-05-20', 20),
 (19, '6935145301047', '2021-05-20', 20),
@@ -180,11 +180,11 @@ CREATE TABLE IF NOT EXISTS `items` (
 --
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '维生素功能饮料', '', '脉动', '中国', '口味', 1, 4, 32),
-(2, '手撕素肉排', '', '好味屋', '中国', '口味', 1, 5, 362),
-(3, '鹌鹑蛋', '', '湖湘贡', '中国', '口味', 1, 5, 82),
-(4, '鸡尾酒', '', 'RIO', '中国', '口味', 0, 3, 10),
-(5, '微醺鸡尾酒', '', 'RIO', '中国', '口味', 0, 1, 10);
+(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 45),
+(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 367),
+(3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 90),
+(4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 11),
+(5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 10);
 
 -- --------------------------------------------------------
 
@@ -209,13 +209,6 @@ CREATE TABLE IF NOT EXISTS `orders` (
   PRIMARY KEY (`o_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`o_id`, `o_date_time`, `o_payment_method`, `o_note`, `o_delivery_id`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_state`, `c_area`, `c_postal_code`) VALUES
-('ECOLLA_EXAMPLE', '2020-12-09 21:28:59', 'Boost', 'Contactless delivery required.', 'J&T20200912123456', 'Kee Sheng Ming', '+60', '143892199', 'example address', 'example', 'example', '12345');
-
 -- --------------------------------------------------------
 
 --
@@ -227,19 +220,9 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   `o_id` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `oi_quantity` int(11) NOT NULL DEFAULT '0',
-  `oi_note` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`o_id`,`v_barcode`),
   KEY `order_items_FK_v_barcode` (`v_barcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `order_items`
---
-
-INSERT INTO `order_items` (`o_id`, `v_barcode`, `oi_quantity`, `oi_note`) VALUES
-('ECOLLA_EXAMPLE', '6902538007367', 2, ''),
-('ECOLLA_EXAMPLE', '6902538007381', 3, ''),
-('ECOLLA_EXAMPLE', '6931754805655', 20, '');
 
 -- --------------------------------------------------------
 

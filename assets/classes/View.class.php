@@ -130,7 +130,7 @@ class View extends Model{
                 $i_brand = $this->dbSelectAttribute("items", "i_brand", "i_id", $i_id);
 
                 $item = $this->getItem($i_name, $i_brand);
-                $cartItem = new CartItem($item, $oi["oi_quantity"], $oi["v_barcode"], $oi["oi_note"]);
+                $cartItem = new CartItem($item, $oi["oi_quantity"], $oi["v_barcode"]);
                 $cart->addItem($cartItem);
             }
 

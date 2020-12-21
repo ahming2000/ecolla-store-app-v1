@@ -78,8 +78,8 @@ class Model extends Dbh{
 
         "order_items" => [
             "tableName" => "order_items",
-            "columnsToInsert" => "order_items(o_id, v_barcode, oi_quantity, oi_note)",
-            "columnsCountToInsert" => 4
+            "columnsToInsert" => "order_items(o_id, v_barcode, oi_quantity)",
+            "columnsCountToInsert" => 3
         ],
 
         "users" => [

@@ -9,7 +9,7 @@ class CartItem {
     private $subPrice;
     private $varietyIndex;
 
-    public function __construct($item, $quantity, $barcode, $note){
+    public function __construct($item, $quantity, $barcode){
         $this->item = $item;
         $this->quantity = $quantity;
         $this->barcode = $barcode;
