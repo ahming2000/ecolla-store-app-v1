@@ -235,7 +235,7 @@ if (isset($_POST["submit"])) {
                     <div class="form-group">
                         <label>上传收据</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="receipt" id="receipt">
+                            <input type="file" class="custom-file-input" name="receipt" id="receipt" required>
                             <label class="custom-file-label" for="receipt" data-browse="上传">请上传您的收据</label>
                         </div>
                     </div><!-- Upload Receipt -->
