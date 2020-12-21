@@ -30,15 +30,15 @@ function saveData(){
     }
 
     // Declare into item object
-    $item = new Item($_POST["name"], $_POST["description"], $_POST["brand"], $_POST["origin"], 0, sizeof($generalImageList), 0);
+    $item = new Item($_POST["i_name"], $_POST["i_description"], $_POST["i_brand"], $_POST["i_origin"], $_POST["i_property_name"], 0, sizeof($generalImageList), 0); // New item's default value of listing and view count is 0
     // Declare into variety object
-    for($i = 0; $i < sizeof($_POST["variety"]); $i++){
-        if($_POST["variety"][$i]["property"] != ""){
-            $variety = new Variety($_POST["variety"][$i]["barcode"], $_POST['variety'][0]['property'], $_POST["variety-property-name"], $_POST["variety"][$i]["price"], $_POST["variety"][$i]["weight"], 1.0);
+    for($i = 0; $i < sizeof($_POST["v"]); $i++){
+        if($_POST["v"][$i]["v_property"] != ""){
+            $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][0]['v_property'], $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"], $_POST['v'][$i]["v_discount_rate"]);
 
-            for($j = 0; $j < sizeof($_POST["variety"][$i]["inventory"]); $j++){
-                if($_POST["variety"][$i]["inventory"][$j]["quantity"] != ""){
-                    $inventory = new Inventory($_POST["variety"][$i]["inventory"][$j]["expireDate"], $_POST["variety"][$i]["inventory"][$j]["quantity"]);
+            for($j = 0; $j < sizeof($_POST["v"][$i]["inv"]); $j++){
+                if($_POST["v"][$i]["inv"][$j]["inv_quantity"] != ""){
+                    $inventory = new Inventory($_POST["v"][$i]["inv"][$j]["inv_expire_date"], $_POST["v"][$i]["inv"][$j]["inv_quantity"]);
                     $variety->addInventory($inventory); //Add inventory to variety
                 }
             }
@@ -76,7 +76,7 @@ if(isset($_POST["save"])){
 
     $item = saveData();
     UsefulFunction::generateAlert("商品保存成功！");
-    header("location: item-edit.php?itemName=".$_POST["name"]."&itemBrand=".$_POST["brand"]);
+    header("location: item-edit.php?itemName=".$_POST["i_name"]."&itemBrand=".$_POST["i_brand"]);
 
 }
 
@@ -129,7 +129,7 @@ if(isset($_POST['list'])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <input type="text" class="form-control" name="i_name" aria-describedby="i_name" maxlength="250" required/>
+                                    <input type="text" class="form-control" name="i_name" aria-describedby="i-name" maxlength="250" required/>
                                 </div>
                             </div>
                         </div><!-- Name -->
@@ -141,7 +141,7 @@ if(isset($_POST['list'])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <textarea class="form-control" name="i_description" aria-describedby="i_description" rows="5" maxlength="3000"></textarea>
+                                    <textarea class="form-control" name="i_description" aria-describedby="i-description" rows="5" maxlength="3000"></textarea>
                                 </div>
                             </div>
                         </div><!-- Description -->
@@ -153,7 +153,7 @@ if(isset($_POST['list'])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <input type="text" class="form-control" name="i_origin" aria-describedby="i_origin"/>
+                                    <input type="text" class="form-control" name="i_origin" aria-describedby="i-origin"/>
                                 </div>
                             </div>
                         </div><!-- Origin -->
@@ -165,14 +165,14 @@ if(isset($_POST['list'])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <input type="text" class="form-control" name="i_brand" aria-describedby="i_brand" required/>
+                                    <input type="text" class="form-control" name="i_brand" aria-describedby="i-brand" required/>
                                 </div>
                             </div>
                         </div><!-- Brand -->
                         <!-- Catogory -->
                         <div class="col-12">
                             <!-- Current catogory list -->
-                            <datalist id="catogoryList">
+                            <datalist id="catogory-list">
                                 <?php foreach($view->getCatogoryList() as $catogory) : ?>
                                     <option value="<?= $catogory["cat_name"]; ?>"><?= $catogory["cat_name"]; ?></option>
                                 <?php endforeach; ?>
@@ -185,7 +185,7 @@ if(isset($_POST['list'])){
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
                                     <div class="row" id="catogory-section">
-                                        <div class="col-12 mb-1"><input type="text" class="form-control" name="catogory[0]" aria-describedby="catogory" list="catogoryList" maxlength="20"/></div>
+                                        <div class="col-12 mb-1"><input type="text" class="form-control" name="catogory[0]" aria-describedby="catogory" list="catogory-list" maxlength="20"/></div>
                                     </div>
                                 </div>
                             </div>
@@ -196,15 +196,15 @@ if(isset($_POST['list'])){
                         <div class="h2" id="step-two">规格资讯</div>
 
                         <!-- Property Name -->
-                        <div class="col-12"><label for="property">规格设定</label></div>
+                        <div class="col-12"><label>规格设定</label></div>
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
-                                    <label for="variety-property-name">规格名称：</label>
+                                    <label>规格名称：</label>
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <input type="text" class="form-control" name="variety-property-name" aria-describedby="variety-property-name" />
+                                    <input type="text" class="form-control" name="i_property_name" aria-describedby="i-property-name" />
                                 </div>
                             </div>
                         </div><!-- Property Name -->
@@ -212,21 +212,21 @@ if(isset($_POST['list'])){
                         <div class="col-12">
                             <div class="form-row">
                                 <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
-                                    <label for="variety-property">选择：</label>
+                                    <label>选择：</label>
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
                                     <div class="row" id="property-section">
-                                        <div class="col-12 mb-1"><input type="text" class="form-control variety-property-main" name="variety[0][property]" aria-describedby="variety-property" maxlength="100"/></div>
+                                        <div class="col-12 mb-1"><input type="text" class="form-control v-property" name="v[0][v_property]" aria-describedby="v-property" maxlength="100"/></div>
                                     </div>
                                 </div>
                             </div>
                         </div><!-- Property -->
                         <!-- Add extra variety button -->
-                        <div class="col-12 text-center"><button type="button" class="btn btn-secondary mb-3" id="extraProperty">添加更多规格</button></div>
+                        <div class="col-12 text-center"><button type="button" class="btn btn-secondary mb-3" id="extra-property-button">添加更多规格</button></div>
 
                         <!-- Variety -->
-                        <div class="col-12"><label for="variety-table">规格销售</label></div>
+                        <div class="col-12"><label>规格销售</label></div>
                         <div class="col-12 mb-3">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
@@ -239,12 +239,12 @@ if(isset($_POST['list'])){
                                         </tr>
                                     </thead>
 
-                                    <tbody id="variety-section">
+                                    <tbody id="variety-table-section">
                                         <tr>
-                                            <td><input type="text" class="form-control variety-property" name="variety[0][property]" aria-describedby="variety-property" maxlength="100" disabled/></td>
-                                            <td><input type="text" class="form-control variety-barcode" name="variety[0][barcode]" aria-describedby="variety-barcode" maxlength="20"/></td>
-                                            <td><input type="number" step="0.01" min="0" class="form-control variety-price" name="variety[0][price]" aria-describedby="variety-price" maxlength="10"/></td>
-                                            <td><input type="number" step="0.001" min="0" class="form-control variety-weight" name="variety[0][weight]" aria-describedby="variety-weight" maxlength="10"/></td>
+                                            <td><input type="text" class="form-control v-property-view" disabled/></td>
+                                            <td><input type="text" class="form-control" name="v[0][v_barcode]" aria-describedby="v-barcode" maxlength="20"/></td>
+                                            <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_price]" aria-describedby="v-price" maxlength="10"/></td>
+                                            <td><input type="number" step="0.001" min="0" class="form-control" name="v[0][v_weight]" aria-describedby="v-weight" maxlength="10"/></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -252,7 +252,7 @@ if(isset($_POST['list'])){
                         </div><!-- Variety -->
 
                         <!-- Inventory -->
-                        <div class="col-12"><label for="inventory-table">规格库存</label></div>
+                        <div class="col-12"><label>规格库存</label></div>
                         <div class="col-12">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
@@ -266,15 +266,15 @@ if(isset($_POST['list'])){
 
                                     <tbody id="inventory-table-section">
                                         <tr>
-                                            <td><input type="text" class="form-control variety-property" name="variety[0]['property']" aria-describedby="variety-property" maxlength="100" disabled/></td>
+                                            <td><input type="text" class="form-control v-property-view" disabled/></td>
                                             <td colspan="2">
-                                                <div class="form-row inventory-section-class">
+                                                <div class="form-row variety-inventory-table-section">
                                                     <input type="number" value="1" class="inventory-count" hidden/>
-                                                    <div class="col-6"><input type="date" class="form-control inventory-expire-date mb-1" name="variety[0][inventory][0][expireDate]" aria-describedby="inventory-expire-date"/></div>
-                                                    <div class="col-6"><input type="number" min="0" class="form-control inventory-quantity mb-1" name="variety[0][inventory][0][quantity]" aria-describedby="inventory-quantity"/></div>
+                                                    <div class="col-6"><input type="date" class="form-control mb-1" name="v[0][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>
+                                                    <div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[0][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>
                                                 </div>
                                                 <!-- Add extra inventory button -->
-                                                <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-class">添加更多库存</button></div>
+                                                <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-button">添加更多库存</button></div>
                                             </td>
                                         </tr>
                                     </tbody>

@@ -12,6 +12,9 @@ $view = new View();
 $controller = new Controller();
 
 /* Operation */
+// Redirect the page if there is no item in the cart
+if(empty($cart->getCartItems())) header("location: item-list.php");
+
 if (isset($_POST["submit"])) {
 
     $customer = new Customer($_POST["c_name"], $_POST["c_phone_mcc"], $_POST["c_phone"], $_POST["c_address"], $_POST["c_state"], $_POST["c_area"], $_POST["c_postal_code"]);
