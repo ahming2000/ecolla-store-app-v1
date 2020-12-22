@@ -2,15 +2,46 @@
 
 $(document).ready(function() {
 
+    function quantityReset(){
+        $("#quantity").val(1);
+        $("#quantity").removeAttr("disabled");
+        $(".quantity-decrease").attr("disabled", "disabled");
+        $(".quantity-increase").removeAttr("disabled");
+    }
+
+    function quantityControlDisable(){
+        $("#quantity").val(0);
+        $("#quantity").attr("disabled", "disabled");
+        $(".quantity-decrease").attr("disabled", "disabled");
+        $(".quantity-increase").attr("disabled", "disabled");
+    }
+
+    function quantityToMaxInventory(inventoryQuantity){
+        $("#quantity").val(inventoryQuantity);
+        $("#quantity").removeAttr("disabled");
+        $(".quantity-decrease").removeAttr("disabled");
+        $(".quantity-increase").attr("disabled", "disabled");
+    }
+
+    function quantityUnlockControl(){
+        $(".quantity-decrease").removeAttr("disabled");
+        $(".quantity-increase").removeAttr("disabled");
+    }
+
+
+
     // Selected property controller
     $(".variety-selector li").on("click", function() {
+
+        var quantity = parseInt($("#quantity").val());
+        var selectedVarietyInventory = parseInt($(this).children(".variety-inventory").val());
+        var selectedVarietyBarcode = $(this).children(".variety-barcode").val();
 
         // List responsive
         $(".variety-selector li").removeClass("active");
         $(this).addClass("active");
 
         // Change the variety barcode
-        var selectedVarietyBarcode = $(this).children(".variety-barcode").val();
         $("#barcode").val(selectedVarietyBarcode);
 
         // Change the price viewing
@@ -18,7 +49,6 @@ $(document).ready(function() {
         $("#variety-" + selectedVarietyBarcode).removeAttr("hidden");
 
         // Change the variety total inventory quantity
-        var selectedVarietyInventory = $(this).children(".variety-inventory").val();
         $("#inventory").val(selectedVarietyInventory);
 
         // Disable add to cart button if the variety total quantity is 0 (sold out)
@@ -29,15 +59,20 @@ $(document).ready(function() {
         }
 
         // Adjust quantity input to inventory maximum if quantity exceed the max inventory
-        if($("#quantity").val() > selectedVarietyInventory){
-            $("#quantity").val(selectedVarietyInventory);
-            $(".quantity-increase").attr("disabled", "disabled");
-            if(selectedVarietyInventory == 0){
-                $(".quantity-decrease").attr("disabled", "disabled");
-            }
+        if(selectedVarietyInventory == 0){
+            quantityControlDisable();
         } else{
-            $(".quantity-increase").removeAttr("disabled");
-            if($("#quantity").val() == 0) $("#quantity").val(1);
+            if(quantity == 0){ //Previously is 0
+                quantityReset();
+            } else{
+                if(quantity != 1){
+                    if(quantity >= selectedVarietyInventory){ // Previous quantity is larger than the current variety max inventory
+                        quantityToMaxInventory(selectedVarietyInventory);
+                    } else{
+                        quantityUnlockControl();
+                    }
+                }
+            }
         }
 
         // Navigate to selected variety image
@@ -53,6 +88,20 @@ $(document).ready(function() {
             }
         }
         if ($("#img-" + selectedVarietyBarcode).val() != undefined) slider.goTo(selectedImageIndex); // Make sure image is existed before use goto function
+    });
+
+    //Quantity input onchange detect logic with inventory
+    $("#quantity").on("change", function(){
+        var selectedVarietyInventory = parseInt($(".variety-selector li.active").children(".variety-inventory").val());
+        var quantity = parseInt($("#quantity").val());
+
+        if(quantity >= selectedVarietyInventory){ // Previous quantity is larger than the current variety max inventory
+            quantityToMaxInventory(selectedVarietyInventory);
+        } else if(quantity <= 0){
+            quantityReset();
+        } else{
+            quantityUnlockControl();
+        }
     });
 
     // Quantity controller
