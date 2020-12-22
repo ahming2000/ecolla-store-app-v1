@@ -241,8 +241,9 @@ if (isset($_POST["submit"])) {
                     <div class="form-group">
                         <label>上传收据</label>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="receipt" id="receipt" required>
+                            <input type="file" class="custom-file-input" name="receipt" id="receipt" aria-describedby="receiptHelp" required>
                             <label class="custom-file-label" for="receipt" data-browse="上传">请上传您的收据</label>
+                            <small id="receiptHelp" class="form-text text-muted">支持格式 ".jpg", ".jpeg", ".gif", ".png"</small>
                         </div>
                     </div><!-- Upload Receipt -->
 
@@ -293,7 +294,7 @@ if (isset($_POST["submit"])) {
 
         // Image file validater
         // Reference: https://stackoverflow.com/questions/4234589/validation-of-file-extension-before-uploading-file
-        var validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+        var validFileExtensions = [".jpg", ".jpeg", ".gif", ".png"];
         function validateImage(fileInput) {
 
             if (fileInput.type == "file") {
@@ -326,7 +327,7 @@ if (isset($_POST["submit"])) {
                 document.getElementById("receipt").value = ''; // Empty the file upload input if wrong extension
             }
         });
-        
+
     </script>
 
     <script src="assets/js/post_code.js"></script>
