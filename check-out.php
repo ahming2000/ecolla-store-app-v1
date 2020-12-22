@@ -262,7 +262,7 @@ if (isset($_POST["submit"])) {
 
     <script>
         $(document).ready(function() {
-            bsCustomFileInput.init(); //For file uploaded name to show
+            bsCustomFileInput.init(); //For uploaded file name to show
 
             // For payment method select
             $(".payment-method").on("click", function() {
@@ -290,6 +290,43 @@ if (isset($_POST["submit"])) {
             `;
             $("#c-phone-mcc").append(str);
         }
+
+        // Image file validater
+        // Reference: https://stackoverflow.com/questions/4234589/validation-of-file-extension-before-uploading-file
+        var validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+        function validateImage(fileInput) {
+
+            if (fileInput.type == "file") {
+                var fileName = fileInput.value;
+
+                if (fileName.length > 0) {
+
+                    var valid = false;
+                    for (var j = 0; j < validFileExtensions.length; j++) {
+                        var cur = validFileExtensions[j];
+                        if (fileName.substr(fileName.length - cur.length, cur.length).toLowerCase() == cur.toLowerCase()) {
+                            valid = true;
+                            break;
+                        }
+                    }
+
+                    if (!valid) {
+                        alert("请上传格式正确的图像");
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        // Validate image extension before submit
+        $("#receipt").on("change", function(){
+            if (!validateImage(document.getElementById("receipt"))){
+                document.getElementById("receipt").value = ''; // Empty the file upload input if wrong extension
+            }
+        });
+        
     </script>
 
     <script src="assets/js/post_code.js"></script>
