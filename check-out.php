@@ -262,7 +262,7 @@ if (isset($_POST["submit"])) {
 
     <script>
         $(document).ready(function() {
-            bsCustomFileInput.init() //For file uploaded name to show
+            bsCustomFileInput.init(); //For file uploaded name to show
 
             // For payment method select
             $(".payment-method").on("click", function() {
