@@ -131,8 +131,7 @@ if(isset($_POST['changeRegion'])){
                 <!-- Order summary -->
                 <div class="card mb-3">
                     <div class="card-body">
-                        <?php $c = $cart;
-                        include "assets/block-user-page/order-summary-block.php"; ?>
+                        <?php include "assets/block-user-page/order-summary-block.php"; ?>
                         <form action="check-out.php" method="post">
                             <button class="btn btn-primary btn-block" type="submit" id="submit_btn">前往付款</button>
                         </form>
