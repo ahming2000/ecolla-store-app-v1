@@ -21,6 +21,25 @@ $(document).ready(function() {
         var selectedVarietyInventory = $(this).children(".variety-inventory").val();
         $("#inventory").val(selectedVarietyInventory);
 
+        // Disable add to cart button if the variety total quantity is 0 (sold out)
+        if(selectedVarietyInventory == 0){
+            $("#add-to-cart-button").attr("disabled", "disabled");
+        } else{
+            $("#add-to-cart-button").removeAttr("disabled");
+        }
+
+        // Adjust quantity input to inventory maximum if quantity exceed the max inventory
+        if($("#quantity").val() > selectedVarietyInventory){
+            $("#quantity").val(selectedVarietyInventory);
+            $(".quantity-increase").attr("disabled", "disabled");
+            if(selectedVarietyInventory == 0){
+                $(".quantity-decrease").attr("disabled", "disabled");
+            }
+        } else{
+            $(".quantity-increase").removeAttr("disabled");
+            if($("#quantity").val() == 0) $("#quantity").val(1);
+        }
+
         // Navigate to selected variety image
         var totalGeneralImg = $(".slider-container").children(".general-img").length - 2; // Get the total number of images
         var selectedImageIndex = totalGeneralImg; // Initialize

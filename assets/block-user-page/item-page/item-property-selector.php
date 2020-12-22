@@ -8,10 +8,12 @@
 <div class="col-xs-12 col-sm-8">
     <ol class="list-group variety-selector">
         <?php for($i = 0; $i < sizeof($item->getVarieties()); $i++) : ?>
+            <?php $totalQuantity = $item->getVarieties()[$i]->getTotalQuantity(); ?>
             <li class="list-group-item <?= $i == 0 ? "active" : "" ?>">
                 <input type="text" class="variety-barcode" value="<?= $item->getVarieties()[$i]->getBarcode(); ?>" hidden/>
-                <input type="text" class="variety-inventory" value="<?= $item->getVarieties()[$i]->getTotalQuantity(); ?>" hidden/>
+                <input type="text" class="variety-inventory" value="<?= $totalQuantity ?>" hidden/>
                 <?= $item->getVarieties()[$i]->getProperty() ?>
+                <?php if($totalQuantity == 0) : ?><span class="badge badge-danger mx-1">已售完<span><?php endif; ?>
             </li>
         <?php endfor; ?>
     </ol>
