@@ -10,19 +10,18 @@ include "assets/includes/class-auto-loader.inc.php";
 $cart = new Cart();
 $view = new View();
 
-// Get order information
-// if(!isset($_GET["orderId"])) header("location: index.php");
-$order = $view->getOrder($_GET["orderId"]);
-// if($order == null) header("location: index.php");
-
 /* Operation */
+// Redirect to home page if url parameter orderId not found
+// if(!isset($_GET["orderId"])) header("location: index.php");
+
+// Get any attribute from orders table to detect the availability
+$o_date_time = $view->getOrderDateTime($_GET["orderId"]);
+
+// Redirect to home page if the order is not available in database
+// if($o_date_time == null) header("location: index.php");
+
 $alertType = "";
 $message = "";
-
-if(isset($_GET["orderId"])){
-
-
-}
 
 ?>
 
