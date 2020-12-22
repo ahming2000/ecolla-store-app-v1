@@ -5,27 +5,27 @@ $(document).ready(function() {
     function quantityReset(){
         $("#quantity").val(1);
         $("#quantity").removeAttr("disabled");
-        $(".quantity-decrease").attr("disabled", "disabled");
-        $(".quantity-increase").removeAttr("disabled");
+        $(".quantity-decrease-button").attr("disabled", "disabled");
+        $(".quantity-increase-button").removeAttr("disabled");
     }
 
     function quantityControlDisable(){
         $("#quantity").val(0);
         $("#quantity").attr("disabled", "disabled");
-        $(".quantity-decrease").attr("disabled", "disabled");
-        $(".quantity-increase").attr("disabled", "disabled");
+        $(".quantity-decrease-button").attr("disabled", "disabled");
+        $(".quantity-increase-button").attr("disabled", "disabled");
     }
 
     function quantityToMaxInventory(inventoryQuantity){
         $("#quantity").val(inventoryQuantity);
         $("#quantity").removeAttr("disabled");
-        $(".quantity-decrease").removeAttr("disabled");
-        $(".quantity-increase").attr("disabled", "disabled");
+        $(".quantity-decrease-button").removeAttr("disabled");
+        $(".quantity-increase-button").attr("disabled", "disabled");
     }
 
     function quantityUnlockControl(){
-        $(".quantity-decrease").removeAttr("disabled");
-        $(".quantity-increase").removeAttr("disabled");
+        $(".quantity-decrease-button").removeAttr("disabled");
+        $(".quantity-increase-button").removeAttr("disabled");
     }
 
 
@@ -114,7 +114,7 @@ $(document).ready(function() {
         var quantity = $(this).parent().children('input').val();
 
         // Increase button clicked
-        if ($(this).hasClass("quantity-increase")) {
+        if ($(this).hasClass("quantity-increase-button")) {
 
             // Increase quantity
             $(this).parent().children('input').val(++quantity);
@@ -122,24 +122,24 @@ $(document).ready(function() {
             // Disable button when reach maximum
             if ($(this).parent().children('input').val() == INVENTORY) {
                 $(this).attr('disabled', 'disabled');
-                $(this).parent().children('.quantity-decrease').removeAttr('disabled');
+                $(this).parent().children('.quantity-decrease-button').removeAttr('disabled');
             } else {
                 $(this).removeAttr('disabled');
-                $(this).parent().children('.quantity-decrease').removeAttr('disabled');
+                $(this).parent().children('.quantity-decrease-button').removeAttr('disabled');
             }
         }
         // Decrease button clicked
-        else if ($(this).hasClass("quantity-decrease")) {
+        else if ($(this).hasClass("quantity-decrease-button")) {
 
             // Decrease quantity
             $(this).parent().children('input').val(--quantity);
 
             // Disable button when reach minimum
             if ($(this).parent().children('input').val() == 1) {
-                $(this).parent().children('.quantity-increase').removeAttr('disabled');
+                $(this).parent().children('.quantity-increase-button').removeAttr('disabled');
                 $(this).attr('disabled', 'disabled');
             } else {
-                $(this).parent().children('.quantity-increase').removeAttr('disabled');
+                $(this).parent().children('.quantity-increase-button').removeAttr('disabled');
                 $(this).removeAttr('disabled');
             }
         }
