@@ -16,16 +16,17 @@ $cartItems = $cart->getCartItems();
 /* Operation */
 if (isset($_POST["clearCart"])) {
     $cart->resetCart();
+    header("refresh: 0"); //Refresh page immediately
 }
 
-if (isset($_POST['addItemQuantity'])) {
-    $obj = $_POST['addItemQuantity'];
-    $cart->editQuantity($obj, 1);
+if (isset($_POST['quantityIncreaseButton'])) {
+    $barcode = $_POST['quantityIncreaseButton'];
+    $cart->editQuantity($barcode, 1);
 }
 
-if (isset($_POST['minusItemQuantity'])) {
-    $obj = $_POST['minusItemQuantity'];
-    $cart->editQuantity($obj, -1);
+if (isset($_POST['quantityDecreaseButton'])) {
+    $barcode = $_POST['quantityDecreaseButton'];
+    $cart->editQuantity($barcode, -1);
 }
 
 if (isset($_POST['removeItem'])) {
