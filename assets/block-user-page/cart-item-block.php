@@ -1,8 +1,11 @@
-<div class="col-12 mb-3" id="<?php echo $cartItem->getBarcode() ?>">
+<div class="col-12 mb-3" id="<?= $cartItem->getBarcode() ?>">
     <div class="row">
+
+        <!-- Cart Item Image -->
         <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 col-xl-5">
-            <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
-                <a href="items/<?= $cartItem->getItem()->getName() ?>"><img src="assets/images/items/<?= $view->getItemId($cartItem->getItem()); ?>/0.png" class="w-100" height="250"></a>
+            <div class="view zoom z-depth-1 rounded mb-3">
+                <?php $imgPath = file_exists("assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/" . $cartItem->getBarcode() . ".jpg") ? $cartItem->getBarcode() . ".jpg" : "0.jpg"; ?>
+                <a href="items/<?= $cartItem->getItem()->getName() ?>"><img src="assets/images/items/<?= $view->getItemId($cartItem->getItem()); ?>/<?= $imgPath; ?>" class="w-100" height="250"></a>
             </div>
         </div>
 
