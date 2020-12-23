@@ -139,7 +139,7 @@ if (isset($_POST["submit"])) {
                                     $subPrice = $cartItem->getSubPrice();
 
                                     echo "<div class=\"row\">
-                                        <div class=\"cl1\"><img class='receipt-image' src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.png\"></div>
+                                        <div class=\"cl1\"><img class='receipt-image' src=\"assets/images/items/" . $view->getItemId($cartItem->getItem()) . "/0.jpg\"></div>
                                         <div class=\"cl2 text-center \"><b class='item_txt1'>" . $cartItem->getItem()->getName() . "</b></div>
                                         <div class=\"cl2 text-center \"><b class='item_txt1'>" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</b></div>
 
@@ -243,7 +243,7 @@ if (isset($_POST["submit"])) {
                         <div class="custom-file">
                             <input type="file" class="custom-file-input" name="receipt" id="receipt" aria-describedby="receiptHelp" required>
                             <label class="custom-file-label" for="receipt" data-browse="上传">请上传您的收据</label>
-                            <small id="receiptHelp" class="form-text text-muted">支持格式 ".jpg", ".jpeg", ".gif", ".png"</small>
+                            <small id="receiptHelp" class="form-text text-muted">文件格式支持 ".jpg", ".jpeg", ".gif", ".png"<br>文件大小支持少于5MB</small>
                         </div>
                     </div><!-- Upload Receipt -->
 
@@ -295,24 +295,37 @@ if (isset($_POST["submit"])) {
         // Image file validater
         // Reference: https://stackoverflow.com/questions/4234589/validation-of-file-extension-before-uploading-file
         var validFileExtensions = [".jpg", ".jpeg", ".gif", ".png"];
+        var maxUploadSize = 5000000; // Unit in Bytes // 5MB
         function validateImage(fileInput) {
 
             if (fileInput.type == "file") {
                 var fileName = fileInput.value;
+                var fileSize = fileInput.files[0].size;
 
                 if (fileName.length > 0) {
 
-                    var valid = false;
+                    var extensionValid = false;
+                    var sizeValid = false;
+
                     for (var j = 0; j < validFileExtensions.length; j++) {
                         var cur = validFileExtensions[j];
                         if (fileName.substr(fileName.length - cur.length, cur.length).toLowerCase() == cur.toLowerCase()) {
-                            valid = true;
+                            extensionValid = true;
                             break;
                         }
                     }
 
-                    if (!valid) {
+                    if(fileSize < maxUploadSize){
+                        sizeValid = true;
+                    }
+
+                    if (!extensionValid) {
                         alert("请上传格式正确的图像");
+                        return false;
+                    }
+
+                    if (!sizeValid){
+                        alert("请上传少于5MB的图像文件");
                         return false;
                     }
                 }
