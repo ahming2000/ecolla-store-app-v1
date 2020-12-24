@@ -103,21 +103,64 @@ function loadImage(e){
     selected.attr('src', e.target.result);
 }
 
-$(document).on('change', ".image-file-selector", function () {
-    var imgPath = $(this)[0].value;
-    var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+// Image file validater
+// Reference: https://stackoverflow.com/questions/4234589/validation-of-file-extension-before-uploading-file
+var validFileExtensions = [".jpg", ".jpeg", ".gif", ".png"];
+var maxUploadSize = 5000000; // Unit in Bytes // 5MB
+function validateImage(fileInput) {
 
-    if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+    if (fileInput.type == "file") {
+        var fileName = fileInput.value;
+        var fileSize = fileInput.files[0].size;
+
+        if (fileName.length > 0) {
+
+            var extensionValid = false;
+            var sizeValid = false;
+
+            for (var j = 0; j < validFileExtensions.length; j++) {
+                var cur = validFileExtensions[j];
+                if (fileName.substr(fileName.length - cur.length, cur.length).toLowerCase() == cur.toLowerCase()) {
+                    extensionValid = true;
+                    break;
+                }
+            }
+
+            if(fileSize < maxUploadSize){
+                sizeValid = true;
+            }
+
+            if (!extensionValid) {
+                alert("请上传格式正确的图像");
+                return false;
+            }
+
+            if (!sizeValid){
+                alert("请上传少于5MB的图像文件");
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+$(document).on('change', ".image-file-selector", function () {
+
+    if (!validateImage($(this)[0])){
+        $(this).val(''); // Empty the file upload input if wrong extension
+    } else{
+        // Load preview
         if (typeof (FileReader) != "undefined") {
             selected = $(this).parent().find(".image-preview");
             var reader = new FileReader();
             reader.onload = loadImage;
             reader.readAsDataURL($(this)[0].files[0]);
+
         } else {
             alert("您使用的浏览器不支持这个功能！");
         }
-    } else if(imgPath != ""){
-        alert("照片必须是图片文档！");
+
     }
 
 });
