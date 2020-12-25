@@ -1,6 +1,14 @@
 <div class="col-12">
     <div class="h2 font-weight-bold"><?= $item->getBrand().$item->getName(); ?></div>
 </div>
+
+<div class="col-12">
+    <div class="h6 text-muted">
+        <span>已售出 <?= $view->getTotalPurchaseCount($item); ?> 个</span> |
+        <span><?= $item->getViewCount(); ?> 次浏览</span>
+    </div>
+</div>
+
 <div class="col-12 mb-3">
     <?php $i = 0; ?>
     <?php foreach($item->getVarieties() as $variety) : ?>
