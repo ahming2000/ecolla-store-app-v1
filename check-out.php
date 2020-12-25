@@ -109,6 +109,10 @@ if (isset($_POST["submit"])) {
             .item_txt3 {
                 font-size: 24px;
             }
+
+            .img-fluid{
+                height: 150px;
+            }
         }
     </style>
 </head>
