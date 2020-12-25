@@ -1,5 +1,5 @@
 <div class="col-12">
-    <div class="h2 font-weight-bold"><?= $item->getBrand().$item->getName(); ?></div>
+    <div class="h2 font-weight-bold"><?= $item->getName(); ?></div>
 </div>
 
 <div class="col-12">
