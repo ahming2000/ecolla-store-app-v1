@@ -44,6 +44,9 @@ Component used for this project:
   - Make sure upload_max_filesize has value 10M: `upload_max_filesize = 10M`. Meaning: change the maximum file upload size (Dafault is 2M (2MB))
   - Make sure `extension=gd2` is present
   - Make sure `extension=php_imagick.dll` is present
+5. Website setup
+  - Move all source files to `c:\wamp64\www\`, Please make sure you delete all file from `c:\wamp64\www\` first.
+  - Make sure wamp64 of 3 services can run properly and go to localhost/index.php
 
 ### phpinfo() on getPHPInfo.php
 ```html
@@ -53,6 +56,10 @@ Component used for this project:
 ```
 ### Admin login page
 You may login to the admin page with username `ahming` and password `Ksm10072000`
+
+### Problem faced when setup the wamp64
+- Only 2 of 3 services running, the one which not running is MySQL
+  - This problem coused by MySQL Service not running. Go to Windows `Services` and change the startup type of `wampmysqld64` to automatic and restart the computer may solve this problem.
 
 ### Resource
 This project also used:
