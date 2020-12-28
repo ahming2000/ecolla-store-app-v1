@@ -10,6 +10,7 @@ include "assets/includes/class-auto-loader.inc.php";
 // Database Interaction
 $cart = new Cart();
 $view = new View();
+$categories = $view->getCategoryList();
 
 /* Operation */
 // Calculate value for pagination
@@ -17,10 +18,10 @@ $MAX_ITEMS = $view->getMaxItemsPerPage();
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $start = ($page - 1) * $MAX_ITEMS;
 
-$itemCount = isset($_GET['category']) ? $view->getCatogoryTotalCount($_GET['category']) : $view->getItemTotalCountListed();
+$itemCount = isset($_GET['category']) ? $view->getCategoryTotalCount($_GET['category']) : $view->getItemTotalCountListed();
 $totalPage = ceil($itemCount / $MAX_ITEMS);
 
-$items = isset($_GET['category']) ? $view->getItemWithSpecificCatogory($_GET['category'], $start, $MAX_ITEMS) : $view->getItemsWithRange($start, $MAX_ITEMS);
+$items = isset($_GET['category']) ? $view->getItemWithSpecificCategory($_GET['category'], $start, $MAX_ITEMS) : $view->getItemsWithRange($start, $MAX_ITEMS);
 
 ?>
 
@@ -39,37 +40,35 @@ $items = isset($_GET['category']) ? $view->getItemWithSpecificCatogory($_GET['ca
     <main class="container">
 
         <div class="row mb-3">
-            <div class="col-6">
+            <div class="col-sm-12 col-md-6">
                 <form action="" method="get">
 
                     <div class="form-row">
-                        <div class="col-9">
+                        <div class="col-10">
                             <!-- Item searching -->
                             <input type="text" class="form-control" maxlength="20"/>
                         </div>
-                        <div class="col-3">
-                            <input type="submit" class="btn btn-primary" name="searchButton" value="搜索"/>
+                        <div class="col-2">
+                            <input type="submit" class="btn btn-primary p-2 mt-0"name="searchButton" value="搜索"/>
                         </div>
                     </div>
 
                 </form>
             </div>
 
-            <!-- Catogory Filter -->
-            <div class="col-6">
+            <!-- Category Filter -->
+            <div class="col-sm-12 col-md-6">
                 <select name="category" id="categorySelector" class="custom-select mb-3" style="width: 100%">
-                    <option value="" <?php if (@$_GET["category"] == null) echo "selected"; ?>><?php echo "全部商品 (".$view->getItemTotalCountListed().")"; ?></option>
+                    <option <?= isset($_GET["category"]) ? "selected" : ""; ?>>全部商品 (<?= $view->getItemTotalCountListed(); ?>)</option>
 
-                    <?php
-                    $catList = $view->getCatogoryList();
-                    foreach($catList as $category){
-                        echo "<option value='".$category["cat_name"]."'";
-                        if (@$_GET["category"] == $category["cat_name"]) echo " selected";
-                        echo ">".$category["cat_name"]." (".$view->getCatogoryTotalCount($category["cat_name"]).")</option>";
-                    }
-                    ?>
+                    <?php foreach($categories as $category) : ?>
+                        <option value="<?= $category["cat_name"]; ?>" <?= @$_GET["category"] == $category["cat_name"] ? "selected" : ""; ?>>
+                            <?= $category["cat_name"] . " (" . $view->getCategoryTotalCount($category["cat_name"]) . ")"; ?>
+                        </option>
+                    <?php endforeach; ?>
+
                 </select>
-            </div><!-- Catogory Filter -->
+            </div><!-- Category Filter -->
 
         </div>
 
@@ -108,7 +107,7 @@ $items = isset($_GET['category']) ? $view->getItemWithSpecificCatogory($_GET['ca
 
     <script>
     $(document).ready(function(){
-        // Catogory bar onchange bar
+        // Category bar onchange bar
         $("#categorySelector").on("change", function(){
             if($("#categorySelector option:selected").val() !== ""){
                 window.location.href = "item-list.php?category=" + $("#categorySelector option:selected").val();
