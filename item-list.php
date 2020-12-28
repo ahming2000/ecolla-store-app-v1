@@ -59,7 +59,7 @@ $items = isset($_GET['category']) ? $view->getItemWithSpecificCategory($_GET['ca
             <!-- Category Filter -->
             <div class="col-sm-12 col-md-6">
                 <select name="category" id="categorySelector" class="custom-select mb-3" style="width: 100%">
-                    <option <?= isset($_GET["category"]) ? "selected" : ""; ?>>全部商品 (<?= $view->getItemTotalCountListed(); ?>)</option>
+                    <option value="" <?= isset($_GET["category"]) ? "selected" : ""; ?>>全部商品 (<?= $view->getItemTotalCountListed(); ?>)</option>
 
                     <?php foreach($categories as $category) : ?>
                         <option value="<?= $category["cat_name"]; ?>" <?= @$_GET["category"] == $category["cat_name"] ? "selected" : ""; ?>>
