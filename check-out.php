@@ -111,7 +111,8 @@ if (isset($_POST["submit"])) {
             }
 
             .img-fluid{
-                height: 150px;
+                height: 180px;
+                width: 180px;
             }
         }
     </style>
@@ -201,15 +202,15 @@ if (isset($_POST["submit"])) {
                             <div class="row">
                                 <input type="text" name="o_payment_method" id="selected-payment-method" value="TnG" hidden />
                                 <div class="col-12"><label><strong>请点击付款方式进行付款</strong></label></div>
-                                <div class="img-payment view zoom payment-method active">
+                                <div class="d-flex justify-content-center align-items-center img-payment view zoom payment-method active">
                                     <input type="text" value="TnG" hidden />
                                     <img class="img-fluid" src="assets/images/payment/tng.png" alt="image">
                                 </div>
-                                <div class="img-payment view zoom payment-method">
+                                <div class="d-flex justify-content-center align-items-center img-payment view zoom payment-method">
                                     <input type="text" value="Boost" hidden />
                                     <img class="img-fluid" src="assets/images/payment/boost.png" alt="image">
                                 </div>
-                                <div class="img-payment view zoom payment-method">
+                                <div class="d-flex justify-content-center align-items-center img-payment view zoom payment-method">
                                     <input type="text" value="Bank Transfer" hidden />
                                     <img class="img-fluid" src="assets/images/payment/bank-transfer.png" alt="image">
                                 </div>
