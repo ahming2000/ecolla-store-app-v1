@@ -24,7 +24,7 @@ class View extends Model{
                 $cat_name = $this->dbSelectAttribute("categories", "cat_name", "cat_id", $cat_id);
 
                 // Add into item object
-                $item->addCatogory($cat_name);
+                $item->addCategory($cat_name);
 
             }
 
@@ -86,7 +86,7 @@ class View extends Model{
         return $this->toItemObjList($dbTable_items);
     }
 
-    public function getItemWithSpecificCatogory($categoryName, $start, $range){
+    public function getItemWithSpecificCategory($categoryName, $start, $range){
         $dbTable_items_categories = $this->dbSelectAllRange_JoinTable("items", "classifications", "categories", "i_id", "cat_id", ["cat_name", "i_is_listed"], [$categoryName, 1], $start, $range);
         return $this->toItemObjList($dbTable_items_categories);
     }
@@ -185,7 +185,7 @@ class View extends Model{
         }
     }
 
-    public function getCatogoryList(){
+    public function getCategoryList(){
         $results = $this->dbSelectAll("categories");
         $catArray = array();
         foreach($results as $result){
@@ -194,7 +194,7 @@ class View extends Model{
         return $catArray;
     }
 
-    public function getCatogoryTotalCount($categoryName){
+    public function getCategoryTotalCount($categoryName){
         $cat_id = $this->dbSelectRow_JoinTable("classifications", "items", "categories", "i_id", "cat_id", "cat_id", ["cat_name", "i_is_listed"], [$categoryName, 1]);
         return sizeof($cat_id);
     }

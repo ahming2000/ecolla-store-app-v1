@@ -20,7 +20,7 @@ $controller = new Controller();
 $item = $view->getItem($_GET["itemName"]);
 if($item == null) header("location: item-management.php");
 $i_id = $view->getItemId($item);
-$catogoryCount = sizeof($item->getCatogories());
+$categoryCount = sizeof($item->getCategories());
 $propertyCount = sizeof($item->getVarieties());
 
 /* Operation */
@@ -181,8 +181,8 @@ if(isset($_POST['list'])){
                         <div class="col-12">
                             <!-- Current catogory list -->
                             <datalist id="catogory-list">
-                                <?php foreach($view->getCatogoryList() as $catogory) : ?>
-                                    <option value="<?= $catogory["cat_name"]; ?>"><?= $catogory["cat_name"]; ?></option>
+                                <?php foreach($view->getCategoryList() as $category) : ?>
+                                    <option value="<?= $category["cat_name"]; ?>"><?= $category["cat_name"]; ?></option>
                                 <?php endforeach; ?>
                             </datalist><!-- Current catogory list -->
 
@@ -193,15 +193,15 @@ if(isset($_POST['list'])){
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
                                     <div id="catogory-section">
-                                        <?php if ($catogoryCount == 0) : ?>
+                                        <?php if ($categoryCount == 0) : ?>
                                             <div class="row">
                                                 <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="catogory[0]" aria-describedby="catogory" list="catogory-list" maxlength="20"/></div>
                                                 <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                             </div>
                                         <?php else : ?>
-                                            <?php for($i = 0; $i < $catogoryCount; $i++) : ?>
+                                            <?php for($i = 0; $i < $categoryCount; $i++) : ?>
                                                 <div class="row">
-                                                    <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="catogory[<?= $i; ?>]" aria-describedby="catogory" list="catogory-list" maxlength="20" value="<?= $item->getCatogories()[$i]; ?>"/></div>
+                                                    <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="catogory[<?= $i; ?>]" aria-describedby="catogory" list="catogory-list" maxlength="20" value="<?= $item->getCategories()[$i]; ?>"/></div>
                                                     <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                 </div>
                                             <?php endfor; ?>

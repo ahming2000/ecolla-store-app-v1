@@ -37,12 +37,12 @@ class Item {
         $this->categoryCount = 0;
     }
 
-    public function addCatogory($category){
+    public function addCategory($category){
         array_push($this->categories, $category);
         $this->categoryCount++;
     }
 
-    public function removeCatogory($index){
+    public function removeCategory($index){
         UsefulFunction::removeArrayElementI($this->categories, $index);
         $this->categoryCount--;
     }
@@ -109,11 +109,11 @@ class Item {
         return $this;
     }
 
-    public function getCatogories() {
+    public function getCategories() {
         return $this->categories;
     }
 
-    public function setCatogories($categories) {
+    public function setCategories($categories) {
         $this->categories = $categories;
         return $this;
     }
@@ -127,11 +127,11 @@ class Item {
         return $this;
     }
 
-    public function getCatogoryCount() {
+    public function getCategoryCount() {
         return $this->categoryCount;
     }
 
-    public function setCatogoryCount($categoryCount) {
+    public function setCategoryCount($categoryCount) {
         $this->categoryCount = $categoryCount;
         return $this;
     }
