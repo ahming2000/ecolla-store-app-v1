@@ -1,15 +1,17 @@
 /* Extra Markup */
 function getExtraCatogoryHTML(catogoryCount){
     return `` +
-    `<div class="col-12 mb-1">` +
-        `<input type="text" class="form-control" name="catogory[${catogoryCount}]" aria-describedby="catogory" list="catogoryList" maxlength="20"/>` +
+    `<div class="row">` +
+        `<div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="catogory[${catogoryCount}]" aria-describedby="catogory" list="catogory-list" maxlength="20"/></div>` +
+        `<div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>` +
     `</div>`;
 }
 
 function getExtraPropertyHTML(propertyCount){
     return `` +
-    `<div class="col-12 mb-1">` +
-        `<input type="text" class="form-control v-property" name="v[${propertyCount}][v_property]" aria-describedby="v-property" maxlength="100"/>` +
+    `<div class="row">` +
+        `<div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[${propertyCount}][v_property]" aria-describedby="v-property" maxlength="100"/></div>` +
+        `<div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>` +
     `</div>`;
 }
 
@@ -28,10 +30,11 @@ function getExtraInventoryTableRowHTML(propertyCount){
     `<tr>` +
         `<td><input type="text" class="form-control v-property-view" disabled/></td>` +
         `<td colspan="2">` +
-            `<div class="form-row variety-inventory-table-section">` +
-                `<input type="number" value="1" class="inventory-count" hidden/>` +
-                `<div class="col-6"><input type="date" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
-                `<div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
+            `<div class="variety-inventory-table-section">` +
+                `<div class="row">` +
+                    `<div class="col-6"><input type="date" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
+                    `<div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
+                `</div>` +
             `</div>` +
             `<!-- Add extra inventory button -->` +
             `<div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-button">添加更多库存</button></div>` +
@@ -41,8 +44,10 @@ function getExtraInventoryTableRowHTML(propertyCount){
 
 function getExtraInventoryHTML(currentVarietyIndex, inventoryCount){
     return `` +
-    `<div class="col-6"><input type="date" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
-    `<div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_quantity]" aria-describedby="inv-quantity"/></div>`;
+    `<div class="row">` +
+        `<div class="col-6"><input type="date" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
+        `<div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
+    `</div>`;
 }
 
 function getExtraVarietyImageBoxHTML(propertyCount){
@@ -58,21 +63,19 @@ function getExtraVarietyImageBoxHTML(propertyCount){
 
 /* Get form information */
 function getCatogoryCount(){
-    return $("#catogory-section div").length;
+    return $("#catogory-section div.row").length;
 }
 
 function getPropertyCount(){
-    return $(".v-property").length;
+    return $("#property-section div.row").length;
 }
 
 function getIventoryRowCount(source){
-    return $(source).parent().parent().children(".inventory-section-class").children(".inventory-count").val();
+    return $(source).parent().parent().children(".inventory-section-class tr").length;
 }
 
 function getInventoryCount(source, modification){ //With value modification function
-    inventoryCount = $(source).parent().parent().children(".variety-inventory-table-section").children(".inventory-count").val();
-    $(this).parent().parent().children(".inventory-section-class").children(".inventory-count").val(inventoryCount + modification);
-    return inventoryCount;
+    return $(source).parent().parent().children(".variety-inventory-table-section div.row").length;;
 }
 
 // Extra inventory
@@ -92,8 +95,24 @@ $(document).on("change", ".v-property", function(e){ // To detect and modify rea
     var propertyIndex = $(".v-property").index(this);
 
     $(".v-property-view").eq(propertyIndex).val(value); // Variety table
-    $(".v-property-view").eq(propertyIndex + propertyCount).val(value); // Inventory table
+    $(".v-property-view").eq(propertyIndex + propertyCount - 1).val(value); // Inventory table  // Minus 1 of property count to index
     $(".variety-property-caption").eq(propertyIndex).html(value); // Variety Image Box Caption
+});
+
+// Catogory or property or inventory remove button
+$(document).on("click", ".remove-button", function(){
+    if($(this).hasClass("property-remove-button")){
+        var propertyCount = getPropertyCount();
+        var propertyInput = $(this).parent().parent().find(".v-property");
+        var propertyIndex = $(".v-property").index(propertyInput);
+
+        $(".v-property-view").eq(propertyIndex).parent().parent().html('');
+        $(".v-property-view").eq(propertyIndex + propertyCount - 1).parent().parent().html(''); // Minus 1 of property count to index
+        $(".variety-property-caption").eq(propertyIndex).parent().parent().attr("hidden", "hidden"); // Hidden the div to delete to avoid blank space
+        $(".variety-property-caption").eq(propertyIndex).parent().parent().html('');
+    }
+
+    $(this).parent().parent().html("");
 });
 
 // For separate image upload
@@ -156,6 +175,26 @@ $(document).on('change', ".image-file-selector", function () {
             var reader = new FileReader();
             reader.onload = loadImage;
             reader.readAsDataURL($(this)[0].files[0]);
+
+
+            // Crop and shape the preview
+            var style = getComputedStyle(selected[0]);
+            var width = parseInt(style.width) || 0;
+            var height = parseInt(style.height) || 0;
+
+            if(width > height){
+                padding = (width - height) / 2.0;
+                selected[0].style.marginTop = padding;
+                selected[0].style.marginBottom = padding;
+            } else{
+                padding = (height - width) / 2.0;
+                selected[0].style.marginLeft = padding;
+                selected[0].style.marginRight = padding;
+            }
+
+            selected[0].style.width = width;
+            selected[0].style.height = height;
+            selected[0].style.objectFit = 'cover';
 
         } else {
             alert("您使用的浏览器不支持这个功能！");
