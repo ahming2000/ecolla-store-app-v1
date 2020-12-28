@@ -4,7 +4,17 @@ require_once __DIR__."\\..\\database\\Model.class.php";
 
 class Controller extends Model {
 
-    public function insertNewItem($item){
+    public function insertNewItem($itemName){
+
+        // Check duplication
+        if($this->dbSelectRow("items", "i_name", $itemName) != null) return false;
+
+        $item_ready = [$itemName, "", "", "", "", 0];
+        $this->dbInsert("items", $item_ready);
+        return true;
+    }
+
+    public function insertNewItem_old($item){
 
         // Case:
         // 1. Variety cannot duplicate
