@@ -68,7 +68,7 @@ class ImageFileHandler{
     public function uploadReceipt(){
         $path = $this->RECEIPT_IMG_PATH;
         $this->upload($path);
-        $this->toJPG($fileWithPath);
+        $this->toJPG($path);
     }
 
     public function uploadItemImage($cropMode = "crop"){
