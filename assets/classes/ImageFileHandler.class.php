@@ -50,9 +50,8 @@ class ImageFileHandler{
 
     // Operation flag (Default: true)
     private $optimize;
-    private $crop;
 
-    public function __construct($filePtr, $fileName, $i_id = "", $optimize = true, $crop = true){
+    public function __construct($filePtr, $fileName, $i_id = "", $optimize = true){
         $this->filePtr = $filePtr;
         $this->fileName = $fileName;
 
@@ -62,7 +61,6 @@ class ImageFileHandler{
         $this->i_id = $i_id;
 
         $this->optimize = $optimize;
-        $this->crop = $crop;
     }
 
     public function uploadReceipt(){
@@ -96,7 +94,8 @@ class ImageFileHandler{
         }
     }
 
-    private function toJPG($path, $imageQuality = 75){
+    private function toJPG($path, $imageQuality = 100){
+        if($this->optimize == true) $imageQuality = 75;
         // Reference: https://theonlytutorials.com/convert-image-to-jpg-png-gif-in-php/
         $fullPath = $path . "/" . $this->fileName . "." . $this->filePtrExtention;
         $binary = imagecreatefromstring(file_get_contents($fullPath));
