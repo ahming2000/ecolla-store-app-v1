@@ -1,25 +1,38 @@
-<?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
 <?php
-    $controller = new Controller();
-
-    if(isset($_POST["login"])){
-        if(!empty($_POST["username"]) && !empty($_POST["password"])){
-            if($controller->checkUserPassword($_POST["username"], $_POST["password"])){
-                setcookie("username", $_POST["username"], time() + (60 * 60 * 24), "/admin/"); // Cookie expire in 1 days (24 hours)
-                header("location: index.php");
-                die(); //To improve security
-            } else{
-                echo "Wrong user or password!"."<br>";
-            }
+/* Authorization */
+if(isset($_POST["login"])){
+    if(!empty($_POST["username"]) && !empty($_POST["password"])){
+        if($controller->checkUserPassword($_POST["username"], $_POST["password"])){
+            setcookie("username", $_POST["username"], time() + (60 * 60 * 24), "/admin/"); // Cookie expire in 1 days (24 hours)
+            header("location: index.php");
+            die(); //To improve security
+        } else{
+            echo "Wrong user or password!"."<br>";
         }
     }
+}
+
+/* Initialization */
+// Standard variable declaration
+$upperDirectoryCount = 1;
+$title = "登录";
+$mode = "admin";
+
+// Auto loader for classes
+include "../assets/includes/class-auto-loader.inc.php";
+
+// Database Interaction
+$controller = new Controller();
+
+
+/* Operation */
 
 ?>
 
 <!DOCTYPE html>
 <html>
 
-<head><?php $upperDirectoryCount = 1; $title = "登录"; $mode = "admin"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
+<head><?php include "../assets/includes/stylesheet.inc.php"; ?></head>
 
 <style>
 .form_container {margin-top: 100px;}
@@ -27,6 +40,7 @@
 
 <body>
 
+    <?php include "../assets/includes/script.inc.php"; ?>
 
     <div class="container h-100">
         <div class="d-flex justify-content-center h-100">
