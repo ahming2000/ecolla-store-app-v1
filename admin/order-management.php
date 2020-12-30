@@ -1,13 +1,36 @@
-<?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
-<?php if(!isset($_COOKIE["username"])) header("location: login.php"); ?>
-<?php $view = new View(); $orderList = $view->getAllOrders(); ?>
+<?php
+/* Authorization */
+if(!isset($_COOKIE["username"])) header("location: login.php");
+
+/* Initialization */
+// Standard variable declaration
+$upperDirectoryCount = 1;
+$title = "订单管理";
+$mode = "admin";
+
+// Auto loader for classes
+include "../assets/includes/class-auto-loader.inc.php";
+
+// Database Interaction
+$view = new View();
+
+//Get order information
+$orderList = $view->getAllOrders();
+
+/* Operation */
+
+?>
+
 <!DOCTYPE html>
 <html>
 
-<head><?php $upperDirectoryCount = 1; $title = "订单管理"; $mode = "admin"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
+<head><?php include "../assets/includes/stylesheet.inc.php"; ?></head>
 
 <body>
-    <?php $upperDirectoryCount = 1; include "../assets/block-admin-page/header.php"; ?>
+
+    <?php include "../assets/includes/script.inc.php"; ?>
+
+    <header><?php include "../assets/block-admin-page/header.php"; ?></header>
 
     <div class="container">
 

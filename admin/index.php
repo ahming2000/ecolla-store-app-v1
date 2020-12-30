@@ -1,8 +1,5 @@
-<?php $upperDirectoryCount = 1;
-include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. 
-?>
 <?php
-
+/* Authorization */
 if (isset($_COOKIE["username"])) {
     // $message =  "<h3>登陆成功！</h3>" . "<br>" . "<a href=\"logout.php\">点击登出</a>";
     $message =  "<a href=\"logout.php\">点击登出</a>";
@@ -10,14 +7,28 @@ if (isset($_COOKIE["username"])) {
     header("location: login.php");
 }
 
-$view = new View();
-$orderList = $view->getAllOrders();
+/* Initialization */
+// Standard variable declaration
+$upperDirectoryCount = 1;
+$mode = "admin";
+$title = "管理员主页";
+
 $t_date = date('Y-m-d');
 $cartItems = array(); //This cart Item list is for pie chart only, (maybe graph too)
 $report_order = array(); // array for orders transacted on specific day
 $total_sold = 0;
 $total_price = 0;
 
+// Auto loader for classes
+include "../assets/includes/class-auto-loader.inc.php";
+
+// Database Interaction
+$view = new View();
+
+//Get item information
+$orderList = $view->getAllOrders();
+
+/* Operation */
 function updateReportOrder()
 {
     foreach ($GLOBALS['orderList'] as $order) {
@@ -112,15 +123,14 @@ if (isset($_POST["report_date"])) {
         $total_sold += $cartItem->getQuantity();
     }
 }
+
 ?>
+
 <!DOCTYPE html>
 <html>
 
 <head>
-    <?php $upperDirectoryCount = 1;
-    $title = "管理员主页";
-    $mode = "admin";
-    include "../assets/includes/stylesheet-script-declaration.inc.php" ?>
+    <?php include "../assets/includes/stylesheet.inc.php"; ?>
 
     <style>
         tr:nth-child(even) {
@@ -157,8 +167,10 @@ if (isset($_POST["report_date"])) {
 </head>
 
 <body>
-    <?php $upperDirectoryCount = 1;
-    include "../assets/block-admin-page/header.php"; ?>
+
+    <?php include "../assets/includes/script.inc.php"; ?>
+
+    <header><?php include "../assets/block-admin-page/header.php"; ?></header>
 
     <!--Daily report -->
     <div class="container">
@@ -183,7 +195,7 @@ if (isset($_POST["report_date"])) {
                                     for($i = 0; $i < count($cartItems); $i++){
                                         if($i % $limit == 0 && $i != 0){
                                             $str .= "</tr><tr>";
-                                        } 
+                                        }
                                         $str .= "<td style='font-size: 20px;background-color: ".$color[$i]."'>" . $cartItems[$i]->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</td>";
                                     }
                                     echo substr($str, '0', '-5');

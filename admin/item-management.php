@@ -1,34 +1,57 @@
-<?php $upperDirectoryCount = 1; include "../assets/includes/class-auto-loader.inc.php"; //Auto include all the classes. ?>
-<?php if(!isset($_COOKIE["username"])) header("location: login.php"); $view = new View(); $controller = new Controller(); $itemList = $view->getAllItems(); ?>
-    <?php
-        if(isset($_POST["deleteButton"])){
-            $item = $view->getItem($_POST["name"], $_POST["brand"]);
-            if(!$controller->deleteItem($item)){
-                UsefulFunction::generateAlert("删除失败");
-            } else{
-                UsefulFunction::generateAlert("删除成功");
-                header("refresh: 0"); //Refresh page immediately
-            }
-        }
+<?php
+/* Authorization */
+if(!isset($_COOKIE["username"])) header("location: login.php");
 
-        if(isset($_POST['list'])){
-            $controller = new Controller();
-            $controller->changeListStatus($_POST['name'], $_POST['brand']);
-            header("refresh: 0");
-        }
+/* Initialization */
+// Standard variable declaration
+$upperDirectoryCount = 1;
+$title = "商品管理";
+$mode = "admin";
 
-        if(isset($_POST['edit'])){
-            header("location: item-edit.php?itemName=" . $_POST['name'] . "&itemBrand=" . $_POST['brand']);
-        }
+// Auto loader for classes
+include "../assets/includes/class-auto-loader.inc.php";
 
-     ?>
+// Database Interaction
+$view = new View();
+$controller = new Controller();
+
+//Get item information
+$itemList = $view->getAllItems();
+
+/* Operation */
+
+if(isset($_POST["deleteButton"])){
+    $item = $view->getItem($_POST["name"], $_POST["brand"]);
+    if(!$controller->deleteItem($item)){
+        UsefulFunction::generateAlert("删除失败");
+    } else{
+        UsefulFunction::generateAlert("删除成功");
+        header("refresh: 0"); //Refresh page immediately
+    }
+}
+
+if(isset($_POST['list'])){
+    $controller = new Controller();
+    $controller->changeListStatus($_POST['name'], $_POST['brand']);
+    header("refresh: 0");
+}
+
+if(isset($_POST['edit'])){
+    header("location: item-edit.php?itemName=" . $_POST['name'] . "&itemBrand=" . $_POST['brand']);
+}
+
+?>
+
 <!DOCTYPE html>
 <html>
 
-<head><?php $upperDirectoryCount = 1; $title = "商品管理"; $mode = "admin"; include "../assets/includes/stylesheet-script-declaration.inc.php" ?></head>
+<head><?php include "../assets/includes/stylesheet.inc.php"; ?></head>
 
 <body>
-    <?php $upperDirectoryCount = 1; include "../assets/block-admin-page/header.php"; ?>
+
+    <?php include "../assets/includes/script.inc.php"; ?>
+
+    <header><?php include "../assets/block-admin-page/header.php"; ?></header>
 
     <div style="margin-top: 100px;"></div>
 
@@ -64,7 +87,7 @@
                 foreach($itemList as $item){
                     include "../assets/block-admin-page/manage-item-block.php";
                 }
-                 ?>
+                ?>
             </tbody>
         </table>
 
@@ -129,33 +152,33 @@
         }
 
 
-            var myTable = document.getElementById("item-table");
+        var myTable = document.getElementById("item-table");
 
-            function untickAll(){
-                //Untick all selection
-                for(var i = 0; i < document.getElementsByClassName('item-check-box').length; i++){
-                    if(document.getElementsByClassName('item-check-box')[i].checked){
-                        document.getElementsByClassName('item-check-box')[i].checked = false;
-                    }
+        function untickAll(){
+            //Untick all selection
+            for(var i = 0; i < document.getElementsByClassName('item-check-box').length; i++){
+                if(document.getElementsByClassName('item-check-box')[i].checked){
+                    document.getElementsByClassName('item-check-box')[i].checked = false;
                 }
             }
+        }
 
-            function addButtonClicked(){
-                untickAll();
-                document.location.href = "item-create.php";
-            }
+        function addButtonClicked(){
+            untickAll();
+            document.location.href = "item-create.php";
+        }
 
-            function editButtonClicked(){
-                untickAll();
+        function editButtonClicked(){
+            untickAll();
 
-                document.location.href = "item-edit.php?" +
-                "itemName=" + document.getElementById("selectedName").value + "&" +
-                "itemBrand=" + document.getElementById("selectedBrand").value;
-            }
+            document.location.href = "item-edit.php?" +
+            "itemName=" + document.getElementById("selectedName").value + "&" +
+            "itemBrand=" + document.getElementById("selectedBrand").value;
+        }
 
-            function deleteButtonClicked(){
-                untickAll();
-            }
+        function deleteButtonClicked(){
+            untickAll();
+        }
 
         </script>
 
