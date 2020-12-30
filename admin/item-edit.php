@@ -24,16 +24,18 @@ $categoryCount = sizeof($item->getCategories());
 $propertyCount = sizeof($item->getVarieties());
 
 /* Operation */
-function saveData(){
+
+// Update data
+function updateData(){
 
     // Convert file pointer to better array arrangement. Reference: https://www.php.net/manual/en/features.file-upload.multiple.php#53240
-    $generalImageListWithNull = UsefulFunction::reArrayFiles($_FILES["item-image"]);
+    $generalImageListWithDummy = UsefulFunction::reArrayFiles($_FILES["item-image"]);
     // Check list all image into an array
     $generalImageList = array();
-    for($i = 0; $i < sizeof($generalImageListWithNull); $i++){
-        if($generalImageListWithNull[$i]["name"] != null){
+    for($i = 0; $i < sizeof($generalImageListWithDummy); $i++){
+        if($generalImageListWithDummy[$i]["name"] != "image-upload-alt.png"){
             //Used to rearrage the index for image upload later
-            array_push($generalImageList, $generalImageListWithNull[$i]);
+            array_push($generalImageList, $generalImageListWithDummy[$i]);
         }
     }
 
@@ -61,47 +63,54 @@ function saveData(){
         }
     }
 
-    // Insert into database first to get item_id
-    $controller->insertNewItem($item);
-    $i_id = $view->getItemId($item);
+    // Update data in database
+    if(!$controller->updateItem($i_id, $item)) return false;
 
     // General image upload
     for($i = 0; $i < sizeof($generalImageList); $i++){
-        UsefulFunction::uploadItemImage($generalImageList[$i], $i_id, $i, "crop");
+        $imageFileHandler = new ImageFileHandler($generalImageList[$i], $i, $i_id);
+        $imageFileHandler->uploadItemImage();
     }
 
     // Variety image upload
     $varietyImageList =  UsefulFunction::reArrayFiles($_FILES["variety-image"]);
     for($i = 0; $i < sizeof($varietyImageList); $i++){
-        if($varietyImageList[$i]["name"] != null){
-            UsefulFunction::uploadItemImage($varietyImageList[$i], $i_id, $_POST["variety"][$i]["barcode"], "crop");
+        if($varietyImageList[$i]["name"] != "image-upload-alt.png"){
+            $imageFileHandler = new ImageFileHandler($varietyImageList[$i], $_POST["v"][$i]["v_barcode"]);
+            $imageFileHandler->uploadItemImage();
         }
     }
-    return $item;
+
+    return true;
 }
 
+// Save only
 if(isset($_POST["save"])){
-
-    $item = saveData();
-    UsefulFunction::generateAlert("商品保存成功！");
-    header("location: item-edit.php?itemName=".$_POST["i_name"]."&itemBrand=".$_POST["i_brand"]);
-
+    if(!updateData()){
+        $message = "数据库更新失败，请联络客服人员！";
+        $alertType = "alert-danger";
+    } else{
+        $message = "保存成功！";
+        $alertType = "alert-success";
+    }
 }
 
-// Listing button clicked
-if(isset($_POST['list'])){
+// Save and list
+if(isset($_POST["list"])){
+    $message = "";
 
-    $item = saveData();
-    if(UsefulFunction::checkListingCondition($item)){
-        $obj = json_decode($_POST['mini_database']);
-        UsefulFunction::createPHPFile($_POST["name"], $_POST["brand"], $obj);
-        // To-do: set is_listed attribute to 1 in database
-        UsefulFunction::generateAlert("商品保存成功，商品已上架！");
-        header("location: item-edit.php?itemName=".$_POST["name"]."&itemBrand=".$_POST["brand"]);
+    if(!updateData()){
+        $message = "数据库更新失败，请联络客服人员！";
     } else{
-        UsefulFunction::generateAlert("商品资料没有达到上架的条件！");
-        header("location: item-edit.php?itemName=".$_POST["name"]."&itemBrand=".$_POST["brand"]);
+        $message = "保存成功！";
     }
+
+    $listingErrorMessage = $controller->list($_POST["i_name"]);
+
+    if($listingErrorMessage) UsefulFunction::createItemPage($_POST["markup"]);
+
+    $message = $message . $listingErrorMessage;
+    $alertType = "alert-warning";
 }
 
 ?>
@@ -122,6 +131,12 @@ if(isset($_POST['list'])){
 
         <!-- Page content with row class -->
         <div class="row">
+
+            <div class="col-12">
+                <div class="alert <?= isset($alertType) ? $alertType : ""; ?>" role="alert">
+                    <?= isset($message) ? $message : ""; ?>
+                </div>
+            </div>
 
             <div class="col-sm-12 col-md-10">
                 <form action="" method="post" enctype="multipart/form-data">
@@ -296,7 +311,7 @@ if(isset($_POST['list'])){
 
                         <!-- Inventory -->
                         <div class="col-12"><label>规格库存</label></div>
-                        <div class="col-12">
+                        <div class="col-12 mb-3">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
@@ -314,8 +329,9 @@ if(isset($_POST['list'])){
                                                 <td colspan="2">
                                                     <div class="variety-inventory-table-section">
                                                         <div class="row">
-                                                            <div class="col-6"><input type="date" class="form-control mb-1" name="v[0][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>
-                                                            <div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[0][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>
+                                                            <div class="col-5"><input type="date" class="form-control mb-1" name="v[0][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>
+                                                            <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[0][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>
+                                                            <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                         </div>
                                                     </div>
                                                     <!-- Add extra inventory button -->
@@ -331,14 +347,16 @@ if(isset($_POST['list'])){
                                                             <?php $currentIventoryCount = sizeof($item->getVarieties()[$i]->getInventories()); ?>
                                                             <?php if ($currentIventoryCount == 0) : ?>
                                                                 <div class="row">
-                                                                    <div class="col-6"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>
-                                                                    <div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>
+                                                                    <div class="col-5"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>
+                                                                    <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>
+                                                                    <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                                 </div>
                                                             <?php else : ?>
                                                                 <?php for($j = 0; $j < $currentIventoryCount; $j++) : ?>
                                                                     <div class="row">
-                                                                        <div class="col-6"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_expire_date]" aria-describedby="inv-expire-date" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getExpireDate(); ?>"/></div>
-                                                                        <div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_quantity]" aria-describedby="inv-quantity" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getQuantity(); ?>"/></div>
+                                                                        <div class="col-5"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_expire_date]" aria-describedby="inv-expire-date" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getExpireDate(); ?>"/></div>
+                                                                        <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_quantity]" aria-describedby="inv-quantity" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getQuantity(); ?>"/></div>
+                                                                        <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                                     </div>
                                                                 <?php endfor; ?>
                                                             <?php endif; ?>
@@ -356,11 +374,11 @@ if(isset($_POST['list'])){
 
                         <div class="h2" id="step-three">媒体管理</div>
 
-                        <div class="col-12">
-
-                            <div class="h3">基本照片</div>
+                        <div class="col-12 mb-3">
 
                             <div class="form-row general-image-section">
+
+                                <div class="col-12"><label>基本照片</label></div>
 
                                 <!-- Cover picture (0.jpg) -->
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
@@ -448,11 +466,12 @@ if(isset($_POST['list'])){
                         </div>
 
                         <!-- Variety image section -->
-                        <div class="col-12">
+                        <div class="col-12 mb-3">
 
-                            <div class="h3">规格照片</div>
+
 
                             <div class="form-row" id="variety-image-section">
+                                <div class="col-12"><label>规格照片<label></div>
                                 <?php if ($propertyCount == 0) : ?>
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                                         <label>
@@ -478,14 +497,14 @@ if(isset($_POST['list'])){
                         </div><!-- Variety image section -->
 
                         <div class="col-12 text-center mb-3">
-                            <input class="btn btn-primary mr-2" type="submit" value="创建并保存" name="save" style="width: 200px">
-                            <input class="btn btn-primary" type="submit" value="创建并上架" name="list" style="width: 200px">
+                            <input class="btn btn-primary mr-2" type="submit" value="保存" name="save" style="width: 200px">
+                            <input class="btn btn-primary" type="submit" value="保存并上架" name="list" style="width: 200px">
                         </div>
 
                     </div>
 
+                    <input type="text" name="markup" value="empty" id="markup" hidden/>
 
-                    <input type="text" name="mini_database" value="empty" hidden id="mini_db" />
                 </form>
             </div>
 
@@ -504,29 +523,9 @@ if(isset($_POST['list'])){
 
     </main>
 
+    <script src="../assets/js/item-page-generator.js"></script>
+
     <script src="../assets/js/admin-item-management-page.js"></script>
-    <script src="../assets/js/itemPage_generate.js"></script>
-    <script>
-    $(function() {
-        $("form").on("submit", e => {
-            let name = $('input[name=name]').val() || "", brand = $('input[name=brand]').val() || "",
-            type = $("input[name^='catogory']").eq(0).val() || "", barcode = $(`input[name="variety[0][barcode]"]`).val() || "",
-            price = $(`input[name="variety[0][price]"]`).val();
-            let obj = {
-                name: $('input[name=name]').val() || "",
-                brand: $('input[name=brand]').val() || "",
-                type: $("input[name^='catogory']").eq(0).val() || "",
-                barcode:  $(`input[name="variety[0][barcode]"]`).val() || "",
-                price: $(`input[name="variety[0][price]"]`).val() || "",
-                html_markup: itemPage_html_string(name, brand, price, barcode, type)
-            }
-
-            let obj_str = JSON.stringify(obj);
-
-            $("input[name=mini_database]").val(obj_str);
-        });
-    });
-    </script>
 
 </body>
 </html>
