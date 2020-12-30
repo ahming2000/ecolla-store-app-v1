@@ -32,8 +32,9 @@ function getExtraInventoryTableRowHTML(propertyCount){
         `<td colspan="2">` +
             `<div class="variety-inventory-table-section">` +
                 `<div class="row">` +
-                    `<div class="col-6"><input type="date" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
-                    `<div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
+                    `<div class="col-5"><input type="date" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
+                    `<div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
+                    `<div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>` +
                 `</div>` +
             `</div>` +
             `<!-- Add extra inventory button -->` +
@@ -45,8 +46,9 @@ function getExtraInventoryTableRowHTML(propertyCount){
 function getExtraInventoryHTML(currentVarietyIndex, inventoryCount){
     return `` +
     `<div class="row">` +
-        `<div class="col-6"><input type="date" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
-        `<div class="col-6"><input type="number" min="0" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
+        `<div class="col-5"><input type="date" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
+        `<div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
+        `<div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>` +
     `</div>`;
 }
 
@@ -74,8 +76,8 @@ function getIventoryRowCount(source){
     return $(source).parent().parent().children(".inventory-section-class tr").length;
 }
 
-function getInventoryCount(source, modification){ //With value modification function
-    return $(source).parent().parent().children(".variety-inventory-table-section div.row").length;;
+function getInventoryCount(source){
+    return $(source).parent().parent().find(".variety-inventory-table-section div.row").length;
 }
 
 // Extra inventory
@@ -83,7 +85,7 @@ $(document).on("click", ".extra-inventory-button", function(e){ // To detect and
     e.preventDefault();
 
     var currentVarietyIndex = $(".extra-inventory-button").index($(this)); // Get current located index in the table
-    $(".variety-inventory-table-section").eq(currentVarietyIndex).append(getExtraInventoryHTML(getInventoryCount(this, 1), currentVarietyIndex));
+    $(".variety-inventory-table-section").eq(currentVarietyIndex).append(getExtraInventoryHTML(getInventoryCount(this), currentVarietyIndex));
 });
 
 // Auto sync property shown below two table
@@ -204,7 +206,39 @@ $(document).on('change', ".image-file-selector", function () {
 
 });
 
+// Markup generator
+$(function() {
+    $("form").on("submit", e => {
+        let name = $('input[name=i_name]').val() || "";
+        let obj = {
+            name: $('input[name=i_name]').val() || "",
+            html_markup: itemPageGenerate(name)
+        }
+
+        let obj_str = JSON.stringify(obj);
+        $("#markup").val(obj_str);
+    });
+});
+
+// Retrieve image source to the file input for server submit testing
+function getImageOriginalSource(){
+    var imgs = document.getElementsByTagName("img");
+
+    for(var i = 0; i < imgs.length; i++){
+        var imgSrc = imgs[i].src;
+        var fileInput = imgs[i].parentElement.getElementsByTagName("input")[0];
+        if (fileInput == null) continue;
+        const dT = new ClipboardEvent('').clipboardData || // Firefox < 62 workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
+            new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
+        dT.items.add(new File(['imgSource'], imgSrc));
+        fileInput.files = dT.files;
+    }
+}
+
 $(document).ready(function(){
+
+    // Retrieve image source to the file input for server submit testing
+    getImageOriginalSource();
 
     // Extra catogory
     $("#extra-catogory-button").on("click", function(){
