@@ -1,4 +1,16 @@
 <?php
+/* Initialization */
+// Standard variable declaration
+$upperDirectoryCount = 1;
+$title = "登录";
+$mode = "admin";
+
+// Auto loader for classes
+include "../assets/includes/class-auto-loader.inc.php";
+
+// Database Interaction
+$controller = new Controller();
+
 /* Authorization */
 if(isset($_POST["login"])){
     if(!empty($_POST["username"]) && !empty($_POST["password"])){
@@ -11,18 +23,6 @@ if(isset($_POST["login"])){
         }
     }
 }
-
-/* Initialization */
-// Standard variable declaration
-$upperDirectoryCount = 1;
-$title = "登录";
-$mode = "admin";
-
-// Auto loader for classes
-include "../assets/includes/class-auto-loader.inc.php";
-
-// Database Interaction
-$controller = new Controller();
 
 
 /* Operation */
