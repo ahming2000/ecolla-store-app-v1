@@ -26,7 +26,7 @@ $propertyCount = sizeof($item->getVarieties());
 /* Operation */
 
 // Update data
-function updateData(){
+function updateData($oldItem){
 
     // Convert file pointer to better array arrangement. Reference: https://www.php.net/manual/en/features.file-upload.multiple.php#53240
     $generalImageListWithDummy = UsefulFunction::reArrayFiles($_FILES["item-image"]);
@@ -40,11 +40,11 @@ function updateData(){
     }
 
     // Declare into item object
-    $item = new Item($_POST["i_name"], $_POST["i_description"], $_POST["i_brand"], $_POST["i_origin"], $_POST["i_property_name"], 0, sizeof($generalImageList), 0); // New item's default value of listing and view count is 0
+    $newItem = new Item($_POST["i_name"], $_POST["i_desc"], $_POST["i_brand"], $_POST["i_origin"], $_POST["i_property_name"], 0, sizeof($generalImageList), 0); // New item's default value of listing and view count is 0
     // Declare into variety object
     for($i = 0; $i < sizeof($_POST["v"]); $i++){
         if($_POST["v"][$i]["v_property"] != ""){
-            $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][0]['v_property'], $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"], $_POST['v'][$i]["v_discount_rate"]);
+            $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"], 1.0); //$_POST['v'][$i]["v_discount_rate"]
 
             for($j = 0; $j < sizeof($_POST["v"][$i]["inv"]); $j++){
                 if($_POST["v"][$i]["inv"][$j]["inv_quantity"] != ""){
@@ -53,18 +53,25 @@ function updateData(){
                 }
             }
 
-            $item->addVariety($variety); //Add variety to item
+            $newItem->addVariety($variety); //Add variety to item
         }
     }
     // Declare into catogories array
-    for($i = 0; $i < sizeof($_POST["catogory"]); $i++){
-        if($_POST["catogory"][$i] != ""){
-            $item->addCatogory($_POST["catogory"][$i]); //Add catogory to item
+    if (isset($_POST["category"])){
+        for($i = 0; $i < sizeof($_POST["category"]); $i++){
+            if($_POST["category"][$i] != ""){
+                $newItem->addCategory($_POST["category"][$i]); //Add category to item
+            }
         }
     }
 
     // Update data in database
-    if(!$controller->updateItem($i_id, $item)) return false;
+    $view = new View();
+    $controller = new Controller();
+    $i_id = $view->getItemId($oldItem);
+    if(!$controller->updateItem($oldItem, $newItem, $i_id)) return false;
+
+    die("Break at item-edit.php");
 
     // General image upload
     for($i = 0; $i < sizeof($generalImageList); $i++){
@@ -86,7 +93,7 @@ function updateData(){
 
 // Save only
 if(isset($_POST["save"])){
-    if(!updateData()){
+    if(!updateData($item)){
         $message = "数据库更新失败，请联络客服人员！";
         $alertType = "alert-danger";
     } else{
@@ -99,7 +106,7 @@ if(isset($_POST["save"])){
 if(isset($_POST["list"])){
     $message = "";
 
-    if(!updateData()){
+    if(!updateData($item)){
         $message = "数据库更新失败，请联络客服人员！";
     } else{
         $message = "保存成功！";
@@ -164,7 +171,7 @@ if(isset($_POST["list"])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <textarea class="form-control" name="i_description" aria-describedby="i-description" rows="5" maxlength="3000"><?= $item->getDescription(); ?></textarea>
+                                    <textarea class="form-control" name="i_desc" aria-describedby="i-description" rows="5" maxlength="3000"><?= $item->getDescription(); ?></textarea>
                                 </div>
                             </div>
                         </div><!-- Description -->
@@ -192,14 +199,14 @@ if(isset($_POST["list"])){
                                 </div>
                             </div>
                         </div><!-- Brand -->
-                        <!-- Catogory -->
+                        <!-- Category -->
                         <div class="col-12">
-                            <!-- Current catogory list -->
-                            <datalist id="catogory-list">
+                            <!-- Current category list -->
+                            <datalist id="category-list">
                                 <?php foreach($view->getCategoryList() as $category) : ?>
                                     <option value="<?= $category["cat_name"]; ?>"><?= $category["cat_name"]; ?></option>
                                 <?php endforeach; ?>
-                            </datalist><!-- Current catogory list -->
+                            </datalist><!-- Current category list -->
 
                             <div class="form-row">
                                 <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
@@ -207,16 +214,16 @@ if(isset($_POST["list"])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <div id="catogory-section">
+                                    <div id="category-section">
                                         <?php if ($categoryCount == 0) : ?>
                                             <div class="row">
-                                                <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="catogory[0]" aria-describedby="catogory" list="catogory-list" maxlength="20"/></div>
+                                                <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[0]" aria-describedby="category" list="category-list" maxlength="20"/></div>
                                                 <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                             </div>
                                         <?php else : ?>
                                             <?php for($i = 0; $i < $categoryCount; $i++) : ?>
                                                 <div class="row">
-                                                    <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="catogory[<?= $i; ?>]" aria-describedby="catogory" list="catogory-list" maxlength="20" value="<?= $item->getCategories()[$i]; ?>"/></div>
+                                                    <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[<?= $i; ?>]" aria-describedby="category" list="category-list" maxlength="20" value="<?= $item->getCategories()[$i]; ?>"/></div>
                                                     <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                 </div>
                                             <?php endfor; ?>
@@ -224,9 +231,9 @@ if(isset($_POST["list"])){
                                     </div>
                                 </div>
                             </div>
-                        </div><!-- Catogory -->
-                        <!-- Add extra catogory button -->
-                        <div class="col-12 text-center"><button type="button" class="btn btn-secondary" id="extra-catogory-button">添加更多类别/标签</button></div>
+                        </div><!-- Category -->
+                        <!-- Add extra category button -->
+                        <div class="col-12 text-center"><button type="button" class="btn btn-secondary" id="extra-category-button">添加更多类别/标签</button></div>
 
                         <div class="h2" id="step-two">规格资讯</div>
 
