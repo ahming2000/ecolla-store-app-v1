@@ -447,18 +447,18 @@ class Model extends Dbh{
 
     */
     protected function dbDelete($tableName, $attrToSearch, $attrContentToSearch){
-        $sql = "DELETE FROM $tableName WHERE ".$attrToSearch." = ?";
-        $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute([$attrContentToSearch])) die("Database deleting from $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-        return true;
-    }
 
-    protected function dbDelete_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
-        if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-        $sql = "DELETE FROM $tableName WHERE ".$this->clauseConnector($attrToSearchList, "AND");
+        // Check is multiple search or not
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            // Make number of attribute and number of content are the same
+            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+            $sql = "DELETE FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
+        } else {
+            $sql = "DELETE FROM $tableName WHERE $attrToSearch = ?";
+        }
+
         $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute($attrContentToSearchList)) die("Database deleting from $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-        return true;
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database deleting from $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
     }
 
 
@@ -512,6 +512,13 @@ class Model extends Dbh{
         if(!$stmt->execute($attrContentToSearchList)) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
         $results = $stmt->fetch();
         return $results['count'];
+    }
+
+    protected function dbDelete_MultiSearch($tableName, $attrToSearchList, $attrContentToSearchList){
+        if(sizeof($attrToSearchList) !== sizeof($attrContentToSearchList)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
+        $sql = "DELETE FROM $tableName WHERE ".$this->clauseConnector($attrToSearchList, "AND");
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute($attrContentToSearchList)) die("Database deleting from $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
     }
 
 }
