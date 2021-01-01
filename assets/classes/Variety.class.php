@@ -58,10 +58,6 @@ class Variety {
         return $this->weight;
     }
 
-    public function getInventory(){
-        return $this->inventory;
-    }
-
     public function getDiscountRate(){
         return $this->discountRate;
     }
@@ -76,10 +72,6 @@ class Variety {
 
     public function setWeight($weight){
         $this->weight = $weight;
-    }
-
-    public function setInventory($inventory){
-        $this->inventory = $inventory;
     }
 
     public function setDiscountRate($discountRate){
