@@ -40,6 +40,14 @@ class UsefulFunction{
         return (substr($string, 0, $len) === $startString);
     }
 
+    public static function arrayIndexRearrage($arr){
+        $new = array();
+        foreach($arr as $a){
+            array_push($new, $a);
+        }
+        return $new;
+    }
+
     public static function isExisted($arr, $element){
         foreach($arr as $a){
             if($a === $element){
