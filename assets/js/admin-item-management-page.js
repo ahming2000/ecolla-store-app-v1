@@ -85,7 +85,7 @@ $(document).on("click", ".extra-inventory-button", function(e){ // To detect and
     e.preventDefault();
 
     var currentVarietyIndex = $(".extra-inventory-button").index($(this)); // Get current located index in the table
-    $(".variety-inventory-table-section").eq(currentVarietyIndex).append(getExtraInventoryHTML(getInventoryCount(this), currentVarietyIndex));
+    $(".variety-inventory-table-section").eq(currentVarietyIndex).append(getExtraInventoryHTML(currentVarietyIndex, getInventoryCount(this)));
 });
 
 // Auto sync property shown below two table
