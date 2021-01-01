@@ -42,12 +42,14 @@ function updateData($oldItem){
     // Declare into item object
     $newItem = new Item($_POST["i_name"], $_POST["i_desc"], $_POST["i_brand"], $_POST["i_origin"], $_POST["i_property_name"], 0, sizeof($generalImageList), 0); // New item's default value of listing and view count is 0
     // Declare into variety object
+    $_POST["v"] = UsefulFunction::arrayIndexRearrage($_POST["v"]); //Rearrange array index for make sure all element is looped
     for($i = 0; $i < sizeof($_POST["v"]); $i++){
-        if($_POST["v"][$i]["v_property"] != ""){
+        if($_POST["v"][$i]["v_property"] != null or $_POST["v"][$i]["v_property"] != ""){
             $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"], 1.0); //$_POST['v'][$i]["v_discount_rate"]
 
+            $_POST["v"][$i]["inv"] = UsefulFunction::arrayIndexRearrage($_POST["v"][$i]["inv"]); //Rearrange array index for make sure all element is looped
             for($j = 0; $j < sizeof($_POST["v"][$i]["inv"]); $j++){
-                if($_POST["v"][$i]["inv"][$j]["inv_quantity"] != ""){
+                if($_POST["v"][$i]["inv"][$j]["inv_quantity"] != "" or $_POST["v"][$i]["inv"][$j]["inv_quantity"] != null){
                     $inventory = new Inventory($_POST["v"][$i]["inv"][$j]["inv_expire_date"], $_POST["v"][$i]["inv"][$j]["inv_quantity"]);
                     $variety->addInventory($inventory); //Add inventory to variety
                 }
@@ -55,6 +57,7 @@ function updateData($oldItem){
 
             $newItem->addVariety($variety); //Add variety to item
         }
+
     }
     // Declare into catogories array
     if (isset($_POST["category"])){
