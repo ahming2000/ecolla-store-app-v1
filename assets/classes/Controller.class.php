@@ -126,7 +126,7 @@ class Controller extends Model {
                 $invCountDiff = sizeof($newV->getInventories()) - sizeof($oldV->getInventories());
                 $inv_ids = $this->dbSelectColumnAttribute("inventories", "inv_id", "v_barcode", $b);
 
-                // Direct delete all and recreate again (May do more operation)
+                // Direct delete all and recreate again (May do more operations and use up more inv_id)
                 /*
                 // Delete all first
                 for($i = 0; $i < sizeof($inv_ids); $i++){
@@ -140,7 +140,9 @@ class Controller extends Model {
                 }
                 */
 
-                if($invCountDiff < 0){
+                if($invCountDiff < 0){ // Old inventory is more than new inventory
+
+                    // Delete extra inventory
                     for($i = 0; $i < abs($invCountDiff); $i++){
                         $this->dbDelete("inventories", "inv_id", $inv_ids[0]); //Delete first inv_id row found
                         array_shift($inv_ids); // Remove the first inv_id which deleted from inventories table
@@ -157,9 +159,9 @@ class Controller extends Model {
 
                     }
 
-                } else if($invCountDiff > 0){
+                } else if($invCountDiff > 0){ // Old inventory is less than new inventory
 
-                    // Insert first
+                    // Insert the new one first
                     for($i = 0; $i < $invCountDiff; $i++){
                         $inventory_ready = [$b, $newV->getInventories()[$i]->getExpireDate(), $newV->getInventories()[$i]->getQuantity()];
                         $this->dbInsert("inventories", $inventory_ready);
@@ -175,7 +177,7 @@ class Controller extends Model {
                         $this->dbUpdate("inventories", "inv_quantity", $newV->getInventories()[$i]->getQuantity(), "inv_id", $inv_ids[$i - $invCountDiff]);
 
                     }
-                } else if($invCountDiff == 0){
+                } else if($invCountDiff == 0){ // Old inventory is same as new inventory
                     // Update current available data
                     for($i = 0; $i < sizeof($newV->getInventories()); $i++){
 
@@ -223,7 +225,7 @@ class Controller extends Model {
         $i_id = $view->getItemId($item);
         if($i_id == false) return false;
 
-        if($this->dbDelete_MultiSearch("items", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()])){
+        if($this->dbDelete("items", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()])){
             //Delete general image
             for($i = 0; $i < $item->getImgCount(); $i++){
                 if(file_exists("../assets/images/items/$i_id/$i.jpg")){
@@ -292,6 +294,7 @@ class Controller extends Model {
         $this->dbUpdate("items", "i_view_count", $item->getViewCount() + 1, "i_name", $item->getName());
     }
 
+    
 
 
 
