@@ -1,8 +1,8 @@
 /* Extra Markup */
-function getExtraCatogoryHTML(catogoryCount){
+function getExtraCategoryHTML(categoryCount){
     return `` +
     `<div class="row">` +
-        `<div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="catogory[${catogoryCount}]" aria-describedby="catogory" list="catogory-list" maxlength="20"/></div>` +
+        `<div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[${categoryCount}]" aria-describedby="category" list="category-list" maxlength="20"/></div>` +
         `<div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>` +
     `</div>`;
 }
@@ -55,17 +55,27 @@ function getExtraInventoryHTML(currentVarietyIndex, inventoryCount){
 function getExtraVarietyImageBoxHTML(propertyCount){
     return `` +
     `<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">` +
-        `<label>` +
-            `<input type="file" name="variety-image[${propertyCount}]" class="image-file-selector" style="display:none;"/>` +
-            `<img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>` +
-            `<div style="text-align: center;" class="variety-property-caption"></div>` +
-        `</label>` +
+        `<input type="file" name="variety-image[${propertyCount}]" class="image-file-selector" style="display:none;"/>` +
+        `<figure class="figure">` +
+            `<div class="img-upload-container">` +
+                `<img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>` +
+                `<div class="img-upload-overlay">` +
+                    `<div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">` +
+                        `<i class="icofont-edit"></i>` +
+                    `</div>` +
+                    `<div class="img-upload-overlay-icon remove-img-button" title="Remove Image" onclick="removeImage(this)">` +
+                        `<i class="icofont-ui-delete"></i>` +
+                    `</div>` +
+                `</div>` +
+            `</div>` +
+            `<figcaption class="figure-caption text-center">照片 <?= $i ?></figcaption>` +
+        `</figure>` +
     `</div>`;
 }
 
 /* Get form information */
-function getCatogoryCount(){
-    return $("#catogory-section div.row").length;
+function getCategoryCount(){
+    return $("#category-section div.row").length;
 }
 
 function getPropertyCount(){
@@ -101,7 +111,7 @@ $(document).on("change", ".v-property", function(e){ // To detect and modify rea
     $(".variety-property-caption").eq(propertyIndex).html(value); // Variety Image Box Caption
 });
 
-// Catogory or property or inventory remove button
+// Category or property or inventory remove button
 $(document).on("click", ".remove-button", function(){
     if($(this).hasClass("property-remove-button")){
         var propertyCount = getPropertyCount();
@@ -226,7 +236,7 @@ function getImageOriginalSource(){
 
     for(var i = 0; i < imgs.length; i++){
         var imgSrc = imgs[i].src;
-        var fileInput = imgs[i].parentElement.getElementsByTagName("input")[0];
+        var fileInput = imgs[i].parentElement.parentElement.parentElement.getElementsByTagName("input")[0];
         if (fileInput == null) continue;
         const dT = new ClipboardEvent('').clipboardData || // Firefox < 62 workaround exploiting https://bugzilla.mozilla.org/show_bug.cgi?id=1422655
             new DataTransfer(); // specs compliant (as of March 2018 only Chrome)
@@ -235,14 +245,23 @@ function getImageOriginalSource(){
     }
 }
 
+function uploadImage(source){
+    source.parentElement.parentElement.parentElement.parentElement.firstElementChild.click();
+}
+
+function removeImage(source){
+    source.parentElement.parentElement.firstElementChild.src = "../assets/images/alt/image-upload-alt.png";
+    source.parentElement.parentElement.parentElement.parentElement.firstElementChild.value = "";
+}
+
 $(document).ready(function(){
 
     // Retrieve image source to the file input for server submit testing
     getImageOriginalSource();
 
-    // Extra catogory
-    $("#extra-catogory-button").on("click", function(){
-        $("#catogory-section").append(getExtraCatogoryHTML(getCatogoryCount()));
+    // Extra category
+    $("#extra-category-button").on("click", function(){
+        $("#category-section").append(getExtraCategoryHTML(getCategoryCount()));
     });
 
     // Extra property
