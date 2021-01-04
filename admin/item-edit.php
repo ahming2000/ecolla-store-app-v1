@@ -32,8 +32,15 @@ function updateData($oldItem){
     $generalImageList = UsefulFunction::reArrayFiles($_FILES["item-image"]);
     $varietyImageList =  UsefulFunction::reArrayFiles($_FILES["variety-image"]);
 
+    $generalImageCount = 0;
+    foreach($generalImageList as $g){
+        if($g["name"] != "" and $g["name"] != "image-upload-alt.png"){
+            $generalImageCount++;
+        }
+    }
+
     // Declare into item object
-    $newItem = new Item($_POST["i_name"], $_POST["i_desc"], $_POST["i_brand"], $_POST["i_origin"], $_POST["i_property_name"], 0, sizeof($generalImageList), 0); // New item's default value of listing and view count is 0
+    $newItem = new Item($_POST["i_name"], $_POST["i_desc"], $_POST["i_brand"], $_POST["i_origin"], $_POST["i_property_name"], 0, $generalImageCount, 0); // New item's default value of listing and view count is 0
 
     // Declare into variety object
     if(isset($_POST["v"])){
@@ -103,11 +110,10 @@ function updateData($oldItem){
 if(isset($_POST["save"])){
     if(!updateData($item)){
         $message = "数据库更新失败，请联络客服人员！";
-        $alertType = "alert-danger";
     } else{
         $message = "保存成功！";
-        $alertType = "alert-success";
     }
+    UsefulFunction::generateAlert($message);
 }
 
 // Save and list
@@ -115,17 +121,24 @@ if(isset($_POST["list"])){
     $message = "";
 
     if(!updateData($item)){
-        $message = "数据库更新失败，请联络客服人员！";
+        $message = "数据库更新失败，请联络客服人员！\\n";
     } else{
-        $message = "保存成功！";
+        $message = "保存成功！\\n";
     }
 
     $listingErrorMessage = $controller->list($_POST["i_name"]);
 
-    if($listingErrorMessage) UsefulFunction::createItemPage($_POST["markup"]);
+    if($listingErrorMessage == null){
+        if(UsefulFunction::createItemPage(json_decode($_POST["markup"]))){
+            $message = $message . "上架成功！\\n";
+        } else{
+            die("创建商品页面失败<br>错误代码：Error on php fwrite function.");
+        }
+    }
 
     $message = $message . $listingErrorMessage;
-    $alertType = "alert-warning";
+
+    UsefulFunction::generateAlert($message);
 }
 
 ?>
@@ -146,12 +159,6 @@ if(isset($_POST["list"])){
 
         <!-- Page content with row class -->
         <div class="row">
-
-            <div class="col-12">
-                <div class="alert <?= isset($alertType) ? $alertType : ""; ?>" role="alert">
-                    <?= isset($message) ? $message : ""; ?>
-                </div>
-            </div>
 
             <div class="col-sm-12 col-md-10">
                 <form action="" method="post" enctype="multipart/form-data">
