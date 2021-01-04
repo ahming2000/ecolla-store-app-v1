@@ -38,12 +38,7 @@ class ImageFileHandler{
     private $ITEM_IMG_PATH = "../assets/images/items/";
 
     // Variable
-    private $filePtr;
-    private $fileName; // Final file name
-
-    // Infomation from file pointer (filePtr)
-    private $filePtrName;
-    private $filePtrExtention;
+    private $filePtrs;
 
     // Variable with default value
     private $i_id; // For item image use only // Default: ""
@@ -51,36 +46,104 @@ class ImageFileHandler{
     // Operation flag (Default: true)
     private $optimize;
 
-    public function __construct($filePtr, $fileName, $i_id = "", $optimize = true){
-        $this->filePtr = $filePtr;
-        $this->fileName = $fileName;
-
-        $this->filePtrName = basename($filePtr["name"]);
-        $this->filePtrExtention = pathinfo($this->filePtrName, PATHINFO_EXTENSION);
+    public function __construct($filePtrs, $i_id = "", $optimize = true){
+        $this->filePtrs = $filePtrs;
 
         $this->i_id = $i_id;
 
         $this->optimize = $optimize;
     }
 
-    public function uploadReceipt(){
+    public function uploadReceipt($fileName){
+        if ($this->i_id != "") die("文件上传错误<br>错误代码：Not allow to upload receipt when item ID is not blank");
+
         $path = $this->RECEIPT_IMG_PATH;
-        $this->upload($path);
-        $this->toJPG($path);
+        $extension = pathinfo(basename($this->filePtrs["name"]), PATHINFO_EXTENSION);
+
+        $this->upload($path, $this->filePtrs, $fileName, $extension);
+        $this->toJPG($path, $fileName, $extension);
     }
 
-    public function uploadItemImage($cropMode = "crop"){
+    public function uploadItemGeneralImage($cropMode = "crop"){
         if ($this->i_id == "") die("文件上传错误<br>错误代码：Item ID is blank");
+
         $path = $this->ITEM_IMG_PATH . "$this->i_id/";
-        $this->upload($path);
-        $this->toJPG($path);
-        $this->cropImageToSquare($path, $cropMode);
+
+        $currentImageCount = 0;
+        $MAX_COUNT = 8;
+
+        foreach($this->filePtrs as $filePtr){
+
+            $extension = pathinfo(basename($filePtr["name"]), PATHINFO_EXTENSION);
+
+            // Check if the file pointer is not blank or default value
+            if($filePtr["name"] != "" and $filePtr["name"] != "image-upload-alt.png"){
+
+                // Check the image is existed image or new uploaded image
+                // (existed image cannot pass the image validation with getimagesize function)
+                if(@getimagesize($filePtr["tmp_name"]) != null){
+                    $this->upload($path, $filePtr, $currentImageCount, $extension);
+                    $this->toJPG($path, $currentImageCount, $extension);
+                    $this->cropImageToSquare($path, $currentImageCount, $cropMode);
+                } else{
+                    // Rename the file name to smaller (move image naming count forward)
+                    $fileName = basename($filePtr["name"]);
+                    if($fileName != $currentImageCount . ".jpg") rename($path . $fileName, $path . $currentImageCount . ".jpg");
+                }
+
+                $currentImageCount++;
+
+            }
+        }
+
+        // Delete the remaining image
+        for($i = $currentImageCount; $i <= $MAX_COUNT; $i++){
+            $this->deleteImage($i);
+        }
+
+    }
+
+    public function uploadItemVarietyImage($oldBarcodeList, $newBarcodeList, $cropMode = "crop"){
+        if ($this->i_id == "") die("文件上传错误<br>错误代码：Item ID is blank");
+
+        $path = $this->ITEM_IMG_PATH . "$this->i_id/";
+
+        $barcodeToRemove = array_diff($oldBarcodeList, $newBarcodeList);
+
+        $i = 0;
+
+        foreach($this->filePtrs as $filePtr){
+
+            $extension = pathinfo(basename($filePtr["name"]), PATHINFO_EXTENSION);
+
+            // Check if the file pointer is not blank or default value
+            if($filePtr["name"] != "" and $filePtr["name"] != "image-upload-alt.png"){
+
+                // Check the image is existed image or new uploaded image
+                // (existed image cannot pass the image validation with getimagesize function)
+                if(@getimagesize($filePtr["tmp_name"]) != null){
+                    $this->upload($path, $filePtr, $newBarcodeList[$i], $extension);
+                    $this->toJPG($path, $newBarcodeList[$i], $extension);
+                    $this->cropImageToSquare($path, $newBarcodeList[$i], $cropMode);
+                }
+
+            } else{
+                $this->deleteImage($newBarcodeList[$i]);
+            }
+
+            $i++;
+        }
+
+        // Delete the remaining image
+        for($i = 0; $i < sizeof($barcodeToRemove); $i++){
+            $this->deleteImage($barcodeToRemove[$i]);
+        }
     }
 
     // Standard
-    private function upload($path){
+    private function upload($path, $filePtr, $fileName, $extension){
         // Validate image is real image or not
-        if(!$this->validate()){
+        if(!$this->validate($filePtr)){
             die("文件上传出现错误，请联系客服人员。<br>错误代码：Error when validate image.");
         }
 
@@ -88,32 +151,33 @@ class ImageFileHandler{
         @mkdir($path, 0700);
 
         // Upload to server
-        $fullPath = $path . $this->fileName . "." . $this->filePtrExtention;
-        if (!move_uploaded_file($this->filePtr["tmp_name"], $fullPath)) {
+        $fullPath = $path . $fileName . "." . $extension;
+        if (!move_uploaded_file($filePtr["tmp_name"], $fullPath)) {
             die("文件上传出现错误，请联系客服人员。<br>错误代码：Error when upload image to server.");
         }
     }
 
-    private function toJPG($path, $imageQuality = 100){
+    private function toJPG($path, $fileName, $extension, $imageQuality = 100){
         if($this->optimize == true) $imageQuality = 75;
         // Reference: https://theonlytutorials.com/convert-image-to-jpg-png-gif-in-php/
-        $fullPath = $path . "/" . $this->fileName . "." . $this->filePtrExtention;
+        $fullPath = $path . "/" . $fileName . "." . $extension;
         $binary = imagecreatefromstring(file_get_contents($fullPath));
-        imageJpeg($binary, $path . $this->fileName . '.jpg', $imageQuality);
+        imageJpeg($binary, $path . $fileName . '.jpg', $imageQuality);
+        unlink($fullPath);
     }
 
-    private function optimizeImageJPG($path){ // Only accept jpg format // Old version backup
-        $img = imagecreatefromjpeg($path . $this->fileName . ".jpg");
-        imagejpeg ($img, $path . $this->fileName . ".jpg", 75);
+    private function optimizeImageJPG($path, $fileName){ // Only accept jpg format // Old version backup
+        $img = imagecreatefromjpeg($path . $fileName . ".jpg");
+        imagejpeg ($img, $path . $fileName . ".jpg", 75);
     }
 
-    private function cropImageToSquare($path, $mode){
+    private function cropImageToSquare($path, $fileName, $mode){
 
         // Frame mode Reference: https://stackoverflow.com/questions/34699245/php-imagemagick-how-to-square-an-image-in-the-middle-of-a-white-square-without
         // Crop mode Reference: https://www.bitrepository.com/crop-rectangle-image-to-square.html
 
         // Declare full path variable for later use
-        $fullPath = $path . $this->fileName . ".jpg";
+        $fullPath = $path . $fileName . ".jpg";
 
         // Get image width and height
         $info = GetImageSize($fullPath);
@@ -195,9 +259,21 @@ class ImageFileHandler{
         }
     }
 
+    private function deleteImage($fileName){
+        if($this->i_id != ""){
+            if(file_exists("../assets/images/items/$this->i_id/$fileName.jpg")){
+                unlink("../assets/images/items/$this->i_id/$fileName.jpg");
+            }
+        } else{
+            if(file_exists("assets/images/orders/$fileName.jpg")){
+                unlink("assets/images/orders/$fileName.jpg");
+            }
+        }
+    }
+
     // Useful tool
-    private function validate(){
-        return getimagesize($this->filePtr["tmp_name"]);
+    private function validate($filePtr){
+        return getimagesize($filePtr["tmp_name"]);
     }
 
 }
