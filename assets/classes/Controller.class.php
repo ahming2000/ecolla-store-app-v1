@@ -307,7 +307,7 @@ class Controller extends Model {
         $view = new View();
 
         $dbTable_items = $this->dbSelectRow("items", "i_name", $itemName);
-        if ($dbTable_items == null) die("上架失败\\n错误代码：Item is not in the database.");
+        if ($dbTable_items == null) die("上架失败<br>错误代码：Item is not in the database.");
 
         $i_id = $this->dbSelectAttribute("items", "i_id", "i_name", $itemName);
         $items = $view->toItemObjList($dbTable_items);
