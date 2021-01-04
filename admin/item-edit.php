@@ -29,40 +29,44 @@ $propertyCount = sizeof($item->getVarieties());
 function updateData($oldItem){
 
     // Convert file pointer to better array arrangement. Reference: https://www.php.net/manual/en/features.file-upload.multiple.php#53240
-    $generalImageListWithDummy = UsefulFunction::reArrayFiles($_FILES["item-image"]);
-    // Check list all image into an array
-    $generalImageList = array();
-    for($i = 0; $i < sizeof($generalImageListWithDummy); $i++){
-        if($generalImageListWithDummy[$i]["name"] != "image-upload-alt.png"){
-            //Used to rearrage the index for image upload later
-            array_push($generalImageList, $generalImageListWithDummy[$i]);
-        }
-    }
+    $generalImageList = UsefulFunction::reArrayFiles($_FILES["item-image"]);
+    $varietyImageList =  UsefulFunction::reArrayFiles($_FILES["variety-image"]);
 
     // Declare into item object
     $newItem = new Item($_POST["i_name"], $_POST["i_desc"], $_POST["i_brand"], $_POST["i_origin"], $_POST["i_property_name"], 0, sizeof($generalImageList), 0); // New item's default value of listing and view count is 0
-    // Declare into variety object
-    $_POST["v"] = UsefulFunction::arrayIndexRearrage($_POST["v"]); //Rearrange array index for make sure all element is looped
-    for($i = 0; $i < sizeof($_POST["v"]); $i++){
-        if($_POST["v"][$i]["v_property"] != null or $_POST["v"][$i]["v_property"] != ""){
-            $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"], 1.0); //$_POST['v'][$i]["v_discount_rate"]
 
-            $_POST["v"][$i]["inv"] = UsefulFunction::arrayIndexRearrage($_POST["v"][$i]["inv"]); //Rearrange array index for make sure all element is looped
-            for($j = 0; $j < sizeof($_POST["v"][$i]["inv"]); $j++){
-                if($_POST["v"][$i]["inv"][$j]["inv_quantity"] != "" or $_POST["v"][$i]["inv"][$j]["inv_quantity"] != null){
-                    $inventory = new Inventory($_POST["v"][$i]["inv"][$j]["inv_expire_date"], $_POST["v"][$i]["inv"][$j]["inv_quantity"]);
-                    $variety->addInventory($inventory); //Add inventory to variety
+    // Declare into variety object
+    if(isset($_POST["v"])){
+
+        $_POST["v"] = UsefulFunction::arrayIndexRearrage($_POST["v"]); //Rearrange array index for make sure all element is looped
+        for($i = 0; $i < sizeof($_POST["v"]); $i++){
+
+            if(isset($_POST["v"][$i]["v_property"]) and $_POST["v"][$i]["v_property"] != ""){
+
+                $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"], 1.0); //$_POST['v'][$i]["v_discount_rate"]
+
+                if(isset($_POST["v"][$i]["inv"])){
+
+                    $_POST["v"][$i]["inv"] = UsefulFunction::arrayIndexRearrage($_POST["v"][$i]["inv"]); //Rearrange array index for make sure all element is looped
+                    for($j = 0; $j < sizeof($_POST["v"][$i]["inv"]); $j++){
+                        if($_POST["v"][$i]["inv"][$j]["inv_quantity"] != "" and isset($_POST["v"][$i]["inv"][$j]["inv_quantity"])){
+                            $inventory = new Inventory($_POST["v"][$i]["inv"][$j]["inv_expire_date"], $_POST["v"][$i]["inv"][$j]["inv_quantity"]);
+                            $variety->addInventory($inventory); //Add inventory to variety
+                        }
+                    }
+
                 }
+
+                $newItem->addVariety($variety); //Add variety to item
             }
 
-            $newItem->addVariety($variety); //Add variety to item
         }
-
     }
+
     // Declare into catogories array
     if (isset($_POST["category"])){
         for($i = 0; $i < sizeof($_POST["category"]); $i++){
-            if($_POST["category"][$i] != ""){
+            if($_POST["category"][$i] != "" and isset($_POST["category"][$i])){
                 $newItem->addCategory($_POST["category"][$i]); //Add category to item
             }
         }
@@ -74,22 +78,23 @@ function updateData($oldItem){
     $i_id = $view->getItemId($oldItem);
     if(!$controller->updateItem($oldItem, $newItem, $i_id)) return false;
 
-    die("Break at item-edit.php");
-
     // General image upload
-    for($i = 0; $i < sizeof($generalImageList); $i++){
-        $imageFileHandler = new ImageFileHandler($generalImageList[$i], $i, $i_id);
-        $imageFileHandler->uploadItemImage();
-    }
+    $imageFileHandler = new ImageFileHandler($generalImageList, $i_id);
+    $imageFileHandler->uploadItemGeneralImage();
 
     // Variety image upload
-    $varietyImageList =  UsefulFunction::reArrayFiles($_FILES["variety-image"]);
-    for($i = 0; $i < sizeof($varietyImageList); $i++){
-        if($varietyImageList[$i]["name"] != "image-upload-alt.png"){
-            $imageFileHandler = new ImageFileHandler($varietyImageList[$i], $_POST["v"][$i]["v_barcode"]);
-            $imageFileHandler->uploadItemImage();
-        }
+    $oldBarcodeList = array();
+    foreach($oldItem->getVarieties() as $v){
+        array_push($oldBarcodeList, $v->getBarcode());
     }
+
+    $newBarcodeList = array();
+    foreach($_POST["v"] as $v){
+        array_push($newBarcodeList, $v["v_barcode"]);
+    }
+
+    $imageFileHandler = new ImageFileHandler($varietyImageList, $i_id);
+    $imageFileHandler->uploadItemVarietyImage($oldBarcodeList, $newBarcodeList);
 
     return true;
 }
@@ -384,6 +389,58 @@ if(isset($_POST["list"])){
 
                         <div class="h2" id="step-three">媒体管理</div>
 
+                        <style>
+                            .img-upload-container{
+                                position: relative;
+                                width: 100%;
+                                max-width: 400px;
+                            }
+
+                            .img-upload-overlay {
+                                position: absolute;
+                                top: 0;
+                                bottom: 0;
+                                left: 0;
+                                right: 0;
+                                height: 100%;
+                                width: 100%;
+                                opacity: 0;
+                                transition: .3s ease;
+                                background-color: grey;
+                            }
+
+
+                            .img-upload-container:hover .img-upload-overlay{
+                                opacity: 1.0;
+                            }
+
+                            .icofont-ui-delete:hover .icofont-edit:hover{
+                                color: #eee;
+                            }
+
+                            .img-upload-overlay-icon {
+                                color: white;
+                                transform: translate(-50%, -50%);
+                                -ms-transform: translate(-50%, -50%);
+                                text-align: center;
+                            }
+
+                            .remove-img-button{
+                                font-size: 20px;
+                                position: absolute;
+                                top: 50%;
+                                right: 15%;
+                            }
+
+                            .edit-img-button{
+                                font-size: 20px;
+                                position: absolute;
+                                top: 50%;
+                                left: 30%;
+                            }
+
+                            </style>
+
                         <div class="col-12 mb-3">
 
                             <div class="form-row general-image-section">
@@ -392,84 +449,42 @@ if(isset($_POST["list"])){
 
                                 <!-- Cover picture (0.jpg) -->
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[0]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/0.jpg") ? "../assets/images/items/$i_id/0.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">封面</div>
-                                    </label>
+                                    <input type="file" name="item-image[0]" class="image-file-selector" style="display:none;"/>
+                                    <figure class="figure">
+                                        <div class="img-upload-container">
+                                            <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/0.jpg") ? "../assets/images/items/$i_id/0.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
+                                            <div class="img-upload-overlay">
+                                                <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
+                                                    <i class="icofont-edit"></i>
+                                                </div>
+                                                <div class="img-upload-overlay-icon remove-img-button" title="Remove Image" onclick="removeImage(this)">
+                                                    <i class="icofont-ui-delete"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <figcaption class="figure-caption text-center">封面</figcaption>
+                                    </figure>
                                 </div><!-- Cover picture (0.jpg) -->
 
-                                <!-- Cover picture (1.jpg) -->
+                                <!-- General picture -->
+                                <?php for($i = 1; $i <= 8; $i++) : ?>
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[1]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/1.jpg") ? "../assets/images/items/$i_id/1.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">照片 1</div>
-                                    </label>
-                                </div><!-- Cover picture (1.jpg) -->
-
-                                <!-- Cover picture (2.jpg) -->
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[2]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/2.jpg") ? "../assets/images/items/$i_id/2.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">照片 2</div>
-                                    </label>
-                                </div><!-- Cover picture (2.jpg) -->
-
-                                <!-- Cover picture (3.jpg) -->
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[3]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/3.jpg") ? "../assets/images/items/$i_id/3.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">照片 3</div>
-                                    </label>
-                                </div><!-- Cover picture (3.jpg) -->
-
-                                <!-- Cover picture (4.jpg) -->
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[4]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/4.jpg") ? "../assets/images/items/$i_id/4.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">照片 4</div>
-                                    </label>
-                                </div><!-- Cover picture (4.jpg) -->
-
-                                <!-- Cover picture (5.jpg) -->
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[5]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/5.jpg") ? "../assets/images/items/$i_id/5.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">照片 5</div>
-                                    </label>
-                                </div><!-- Cover picture (5.jpg) -->
-
-                                <!-- Cover picture (6.jpg) -->
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[6]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/6.jpg") ? "../assets/images/items/$i_id/6.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">照片 6</div>
-                                    </label>
-                                </div><!-- Cover picture (6.jpg) -->
-
-                                <!-- Cover picture (7.jpg) -->
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[7]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/7.jpg") ? "../assets/images/items/$i_id/7.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">照片 7</div>
-                                    </label>
-                                </div><!-- Cover picture (7.jpg) -->
-
-                                <!-- Cover picture (8.jpg) -->
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <label>
-                                        <input type="file" name="item-image[8]" class="image-file-selector" style="display:none;"/>
-                                        <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/8.jpg") ? "../assets/images/items/$i_id/8.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                        <div style="text-align: center;">照片 8</div>
-                                    </label>
-                                </div><!-- Cover picture (8.jpg) -->
+                                    <input type="file" name="item-image[<?= $i; ?>]" class="image-file-selector" style="display:none;"/>
+                                    <figure class="figure">
+                                        <div class="img-upload-container">
+                                            <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/$i.jpg") ? "../assets/images/items/$i_id/$i.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
+                                            <div class="img-upload-overlay">
+                                                <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
+                                                    <i class="icofont-edit"></i>
+                                                </div>
+                                                <div class="img-upload-overlay-icon remove-img-button" title="Remove Image" onclick="removeImage(this)">
+                                                    <i class="icofont-ui-delete"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <figcaption class="figure-caption text-center">照片 <?= $i ?></figcaption>
+                                    </figure>
+                                </div><?php endfor; ?><!-- General picture -->
 
                             </div>
 
@@ -478,27 +493,45 @@ if(isset($_POST["list"])){
                         <!-- Variety image section -->
                         <div class="col-12 mb-3">
 
-
-
                             <div class="form-row" id="variety-image-section">
                                 <div class="col-12"><label>规格照片<label></div>
                                 <?php if ($propertyCount == 0) : ?>
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                        <label>
-                                            <input type="file" name="variety-image[0]" class="image-file-selector" style="display:none;"/>
-                                            <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
-                                            <div style="text-align: center;" class="variety-property-caption"></div>
-                                        </label>
+                                        <input type="file" name="variety-image[0]" class="image-file-selector" style="display:none;"/>
+                                        <figure class="figure">
+                                            <div class="img-upload-container">
+                                                <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                                <div class="img-upload-overlay">
+                                                    <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
+                                                        <i class="icofont-edit"></i>
+                                                    </div>
+                                                    <div class="img-upload-overlay-icon remove-img-button" title="Remove Image" onclick="removeImage(this)">
+                                                        <i class="icofont-ui-delete"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <figcaption class="figure-caption text-center">照片 <?= $i ?></figcaption>
+                                        </figure>
                                     </div>
                                 <?php else : ?>
                                     <?php for($i = 0; $i < $propertyCount; $i++) : ?>
                                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                            <label>
-                                                <input type="file" name="variety-image[<?= $i; ?>]" class="image-file-selector" style="display:none;"/>
-                                                <?php $b = $item->getVarieties()[$i]->getBarcode(); ?>
-                                                <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/$b.jpg") ? "../assets/images/items/$i_id/$b.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                                <div style="text-align: center;" class="variety-property-caption"><?= $item->getVarieties()[$i]->getProperty(); ?></div>
-                                            </label>
+                                            <input type="file" name="variety-image[<?= $i; ?>]" class="image-file-selector" style="display:none;"/>
+                                            <figure class="figure">
+                                                <div class="img-upload-container">
+                                                    <?php $b = $item->getVarieties()[$i]->getBarcode(); ?>
+                                                    <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/$b.jpg") ? "../assets/images/items/$i_id/$b.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
+                                                    <div class="img-upload-overlay">
+                                                        <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
+                                                            <i class="icofont-edit"></i>
+                                                        </div>
+                                                        <div class="img-upload-overlay-icon remove-img-button" title="Remove Image" onclick="removeImage(this)">
+                                                            <i class="icofont-ui-delete"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <figcaption class="figure-caption text-center variety-property-caption"><?= $item->getVarieties()[$i]->getProperty(); ?></figcaption>
+                                            </figure>
                                         </div>
                                     <?php endfor; ?>
                                 <?php endif; ?>
