@@ -59,7 +59,6 @@ class UsefulFunction{
     }
 
     public static function createItemPage($data){
-        //$newPHPFile = fopen("../items/".str_replace(" ", "-", $item->getName()).".php", "w") or die("Error on creating new php file!");
         $newPHPFile = fopen("../items/$data->name.php", "w") or die("创建商品页面错误！<br>错误代码：Error when creating php file");
 
         if(!fwrite($newPHPFile, $data->html_markup)) return false;
