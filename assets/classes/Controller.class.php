@@ -294,7 +294,79 @@ class Controller extends Model {
         $this->dbUpdate("items", "i_view_count", $item->getViewCount() + 1, "i_name", $item->getName());
     }
 
-    
+    /*  Listing condition (attributes must present)
+        1. Item: name, property name and at least one variety
+        2. Variety: all attribute in Variety class and at least one inventory
+        3. Inventory: quantity
+        4. Category can be blank
+     */
+    public function list($itemName){
+
+        $isFail = false;
+
+        $view = new View();
+
+        $dbTable_items = $this->dbSelectRow("items", "i_name", $itemName);
+        if ($dbTable_items == null) die("上架失败\\n错误代码：Item is not in the database.");
+
+        $i_id = $this->dbSelectAttribute("items", "i_id", "i_name", $itemName);
+        $items = $view->toItemObjList($dbTable_items);
+        $item = $items[0];
+
+        $message_fail = "上架失败，请符合以下条件：\\n";
+
+        // Check property name
+        if($item->getPropertyName() == null){
+            $message_fail = $message_fail . "规格名称不可为空\\n";
+            $isFail = true;
+        }
+
+        // Check variety
+        if(empty($item->getVarieties())){
+            $message_fail = $message_fail . "请先添加至少一个规格\\n";
+            $isFail = true;
+        }
+        else {
+            for($i = 0; $i < sizeof($item->getVarieties()); $i++){
+
+                if($item->getVarieties()[$i]->getProperty() == null){
+                    $message_fail = $message_fail . "货号 " . $item->getVarieties()[$i]->getBarcode() . " 的规格选择不可为空！\\n";
+                    $isFail = true;
+                }
+
+                if($item->getVarieties()[$i]->getPrice() == null){
+                    $message_fail = $message_fail . "规格 " . $item->getVarieties()[$i]->getProperty() . " 的价钱不可为空！\\n";
+                    $isFail = true;
+                }
+
+                if($item->getVarieties()[$i]->getWeight() == null){
+                    $message_fail = $message_fail . "规格 " . $item->getVarieties()[$i]->getProperty() . " 的重量不可为空！\\n";
+                    $isFail = true;
+                }
+
+                if(empty($item->getVarieties()[$i]->getInventories())){
+                    $message_fail = $message_fail . "规格 " . $item->getVarieties()[$i]->getProperty() . " 的库存不可为空！\\n";
+                    $isFail = true;
+                }
+
+            }
+        }
+
+        // Check cover image is existed
+        if(!file_exists("../assets/images/items/$i_id/0.jpg") && $item->getImgCount() == 0){
+            $message_fail = $message_fail . "请先上传封面照片！\\n";
+            $isFail  = true;
+        }
+
+        if($isFail){
+            $this->dbUpdate("items", "i_is_listed", 0, "i_id", $i_id);
+            return $message_fail;
+        } else{
+            $this->dbUpdate("items", "i_is_listed", 1, "i_id", $i_id);
+            return null;
+        }
+
+    }
 
 
 
