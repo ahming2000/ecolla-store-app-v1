@@ -23,8 +23,8 @@ if (isset($_POST["submit"])) {
     $order->orderNow($cart, $_POST['o_payment_method']);
 
     // Upload Receipt
-    $imageFileHandler = new ImageFileHandler($_FILES["receipt"], $order->getOrderId());
-    $imageFileHandler->uploadReceipt();
+    $imageFileHandler = new ImageFileHandler($_FILES["receipt"]);
+    $imageFileHandler->uploadReceipt($order->getOrderId());
 
     // Insert order
     $controller->insertNewOrder($order);
