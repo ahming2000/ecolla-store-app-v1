@@ -35,7 +35,7 @@ class ImageFileHandler{
 
     // Constant
     private $RECEIPT_IMG_PATH = "assets/images/orders/";
-    private $ITEM_IMG_PATH = "assets/images/items/";
+    private $ITEM_IMG_PATH = "../assets/images/items/";
 
     // Variable
     private $filePtr;
@@ -88,7 +88,7 @@ class ImageFileHandler{
         @mkdir($path, 0700);
 
         // Upload to server
-        $fullPath = $path . "/" . $this->fileName . "." . $this->filePtrExtention;
+        $fullPath = $path . $this->fileName . "." . $this->filePtrExtention;
         if (!move_uploaded_file($this->filePtr["tmp_name"], $fullPath)) {
             die("文件上传出现错误，请联系客服人员。<br>错误代码：Error when upload image to server.");
         }
