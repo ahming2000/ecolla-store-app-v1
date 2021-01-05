@@ -13,11 +13,17 @@ include "../assets/includes/class-auto-loader.inc.php";
 
 // Database Interaction
 $view = new View();
+$controller = new Controller();
 
 //Get order information
 $orderList = $view->getAllOrders();
 
 /* Operation */
+if(isset($_POST["updateDeliveryId"])){
+    $controller->updateDeliveryId($_POST["orderId"], $_POST["deliveryId"]);
+    UsefulFunction::generateAlert("已更新订单 " . $_POST["orderId"] . " 的运输ID为 " . $_POST["deliveryId"]);
+    header("refresh: 0"); //Refresh page immediately
+}
 
 ?>
 
@@ -42,11 +48,12 @@ $orderList = $view->getAllOrders();
             <thead>
                 <tr>
                     <th scope="col">订单ID</th>
+                    <th scope="col">运送ID</th>
                     <th scope="col">订单日期时间</th>
-                    <th scope="col">顾客资料资料</th>
-                    <th scope="col">订单物品列表</th>
-                    <th scope="col">订单物品总数量</th>
-                    <th scope="col">总计</th>
+                    <th scope="col">顾客资料</th>
+                    <th scope="col">订单物品</th>
+                    <th scope="col">销售额</th>
+                    <th scope="col">操作</th>
                 </tr>
             </thead>
             <tbody>
