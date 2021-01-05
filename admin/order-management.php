@@ -44,12 +44,11 @@ if(isset($_POST["updateDeliveryId"])){
 
         <div class="h1">订单查看</div>
 
-        <table class="table table-bordered" id="item-table">
+        <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">订单ID</th>
+                    <th scope="col">订单详情</th>
                     <th scope="col">运送ID</th>
-                    <th scope="col">订单日期时间</th>
                     <th scope="col">顾客资料</th>
                     <th scope="col">订单物品</th>
                     <th scope="col">销售额</th>

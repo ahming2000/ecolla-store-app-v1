@@ -1,6 +1,7 @@
 <tr>
 
     <td>
+        <?= $order->getDateTime(); ?><br>
         <?= $order->getOrderId(); ?><br>
         <button type='button' class='btn btn-sm btn-primary' value='<?= "../assets/images/orders/".$order->getOrderId().".jpg"; ?>' onclick='viewReceipt(this)'>查看账单</button>
     </td>
@@ -8,12 +9,10 @@
     <td>
         <form action="" method="post">
             <input type="text" name="orderId" value="<?= $order->getOrderId(); ?>" hidden/>
-            <input type="text" class="form-control-sm" name="deliveryId" value="<?= $order->getDeliveryId(); ?>" alt="输入运输ID..."/><br>
-            <button type="submit" class="btn btn-sm btn-primary" name="updateDeliveryId">更新</button>
+            <input type="text" class="form-control form-control-sm mb-0" name="deliveryId" value="<?= $order->getDeliveryId(); ?>" placeholder="输入运输ID..."/><br>
+            <button type="submit" class="btn btn-sm btn-primary mt-0" name="updateDeliveryId">更新</button>
         </form>
     </td>
-
-    <td><?= $order->getDateTime(); ?></td>
 
     <td>
         名字：<?= $order->getCustomer()->getName(); ?><br>
@@ -34,5 +33,12 @@
 
     <td><?php echo "RM".number_format($order->getCart()->getSubtotal() + $order->getCart()->getShippingFee(), 2)." (包含 RM".number_format($order->getCart()->getShippingFee(), 2)." 的运输费）"; ?></td>
 
-    <td></td>
+    <td>
+        <form action="" method="post">
+            <input type="text" name="orderId" value="<?= $order->getOrderId(); ?>" hidden/>
+            <button type="button" class="btn btn-outline-secondary p-2 m-1" name="refund">退款</button><br>
+            <button type="button" class="btn btn-outline-secondary p-2 m-1" name="reverseCheckOut">反结账</button><br>
+            <button type="button" class="btn btn-outline-secondary p-2 m-1" name="adjustOrder">调整订单</button><br>
+        </form>
+    </td>
 </tr>
