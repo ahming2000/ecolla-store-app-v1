@@ -241,7 +241,7 @@ class Controller extends Model {
             }
 
             //Remove directory
-            rmdir("../assets/images/items/".$i_id."/");
+            @rmdir("../assets/images/items/".$i_id."/");
 
             //Delete webpage
             if(file_exists("../items/" . $item->getName() . ".php")) unlink("../items/" . $item->getName() . ".php");
