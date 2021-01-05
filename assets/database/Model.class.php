@@ -459,6 +459,7 @@ class Model extends Dbh{
 
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database deleting from $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        return true;
     }
 
 
