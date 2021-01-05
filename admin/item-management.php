@@ -21,23 +21,37 @@ $itemList = $view->getAllItems();
 /* Operation */
 
 if(isset($_POST["deleteButton"])){
-    $item = $view->getItem($_POST["name"], $_POST["brand"]);
-    if(!$controller->deleteItem($item)){
-        UsefulFunction::generateAlert("删除失败");
-    } else{
+    $item = $view->getItem($_POST["name"]);
+    if($controller->deleteItem($item)){
         UsefulFunction::generateAlert("删除成功");
         header("refresh: 0"); //Refresh page immediately
+    } else{
+        UsefulFunction::generateAlert("删除失败");
     }
 }
 
 if(isset($_POST['list'])){
     $controller = new Controller();
-    $controller->changeListStatus($_POST['name'], $_POST['brand']);
+    if($controller->changeListStatus($_POST['name'])){
+        UsefulFunction::generateAlert("上架/下架成功！");
+    } else{
+        UsefulFunction::generateAlert("上架失败！");
+    }
     header("refresh: 0");
 }
 
 if(isset($_POST['edit'])){
-    header("location: item-edit.php?itemName=" . $_POST['name'] . "&itemBrand=" . $_POST['brand']);
+    header("location: item-edit.php?itemName=" . $_POST['name']);
+}
+
+if(isset($_POST['delete'])){
+    $item = $view->getItem($_POST["name"]);
+    if($controller->deleteItem($item)){
+        UsefulFunction::generateAlert("删除成功");
+        header("refresh: 0"); //Refresh page immediately
+    } else{
+        UsefulFunction::generateAlert("删除失败");
+    }
 }
 
 ?>
@@ -172,8 +186,7 @@ if(isset($_POST['edit'])){
             untickAll();
 
             document.location.href = "item-edit.php?" +
-            "itemName=" + document.getElementById("selectedName").value + "&" +
-            "itemBrand=" + document.getElementById("selectedBrand").value;
+            "itemName=" + document.getElementById("selectedName").value;
         }
 
         function deleteButtonClicked(){
