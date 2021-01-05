@@ -381,6 +381,10 @@ class Controller extends Model {
         }
     }
 
+    public function updateDeliveryId($orderId, $deliveryId){
+        $this->dbUpdate("orders", "o_delivery_id", $deliveryId, "o_id", $orderId);
+    }
+
 
 
 
