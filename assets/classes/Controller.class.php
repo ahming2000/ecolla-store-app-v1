@@ -225,7 +225,7 @@ class Controller extends Model {
         $i_id = $view->getItemId($item);
         if($i_id == false) return false;
 
-        if($this->dbDelete("items", ["i_name", "i_brand"], [$item->getName(), $item->getBrand()])){
+        if($this->dbDelete("items", "i_id", $i_id)){
             //Delete general image
             for($i = 0; $i < $item->getImgCount(); $i++){
                 if(file_exists("../assets/images/items/$i_id/$i.jpg")){
@@ -368,7 +368,18 @@ class Controller extends Model {
 
     }
 
-
+    public function changeListStatus($itemName){
+        if($this->dbSelectAttribute("items", "i_is_listed", "i_name", $itemName) == 1){
+            $this->dbUpdate("items", "i_is_listed", 0, "i_name", $itemName);
+            return true;
+        } else{
+            if($this->list($itemName) != null){
+                return true;
+            } else{
+                return false;
+            }
+        }
+    }
 
 
 
