@@ -114,6 +114,7 @@ if(isset($_POST["save"])){
         $message = "保存成功！";
     }
     UsefulFunction::generateAlert($message);
+    header("refresh: 0"); //Refresh page immediately
 }
 
 // Save and list
@@ -139,6 +140,7 @@ if(isset($_POST["list"])){
     $message = $message . $listingErrorMessage;
 
     UsefulFunction::generateAlert($message);
+    header("refresh: 0"); //Refresh page immediately
 }
 
 ?>
