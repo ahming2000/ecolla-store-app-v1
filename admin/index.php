@@ -19,6 +19,11 @@ $report_order = array(); // array for orders transacted on specific day
 $total_sold = 0;
 $total_price = 0;
 
+//For Line Chart
+//To get this week item counts
+$week_cart_quantity = array();
+$week_dates = array();
+
 // Auto loader for classes
 include "../assets/includes/class-auto-loader.inc.php";
 
@@ -29,18 +34,48 @@ $view = new View();
 $orderList = $view->getAllOrders();
 
 /* Operation */
-function updateReportOrder()
+function updateReportOrder(&$report_arr, &$dates)
 {
     foreach ($GLOBALS['orderList'] as $order) {
-        if (strtotime(explode(" ", $order->getDateTime())[0]) == strtotime($GLOBALS['t_date'])) {
-            array_push($GLOBALS['report_order'], $order);
+        if (strtotime(explode(" ", $order->getDateTime())[0]) == strtotime($dates)) {
+            array_push($report_arr, $order);
         }
     }
 }
 
-function updateCartItemList()
+function updateWeekCartNDates(&$week_cart_quantity, &$week_dates)
 {
-    foreach ($GLOBALS['report_order'] as $o) {
+    $week_dates = array();
+    for ($i = -3; $i < 4; $i++) {
+        array_push($week_dates, date('Y-m-d', strtotime($GLOBALS['t_date'] . ' ' . $i . ' day')));
+    }
+
+    for ($i = 0; $i < 7; $i++) {
+        //initialize temporary report and cartItem List
+        $tmp_report = array();
+        $tmp_cartItems = array();
+        $tmp_total_sold = 0;
+
+        updateReportOrder($tmp_report, $week_dates[$i]);
+
+        if (empty($tmp_report)) {
+            array_push($week_cart_quantity, $tmp_total_sold);
+            continue;
+        }
+
+        updateCartItemList($tmp_report, $tmp_cartItems);
+
+        foreach ($tmp_cartItems as $cartItem) {
+            $tmp_total_sold += $cartItem->getQuantity();
+        }
+
+        array_push($week_cart_quantity, $tmp_total_sold);
+    }
+}
+
+function updateCartItemList($report_arr, &$cartItem_list)
+{
+    foreach ($report_arr as $o) {
         $tmp_no_clone_cart = $o->getCart()->getCartItems();
         $tmp_cart = array();
 
@@ -48,28 +83,28 @@ function updateCartItemList()
             array_push($tmp_cart, clone $cartItem);
         }
 
-        if (empty($GLOBALS['cartItems'])) {
-            $GLOBALS['cartItems'] = $tmp_cart;
+        if (empty($cartItem_list)) {
+            $cartItem_list = $tmp_cart;
         } else {
             foreach ($tmp_cart as $c) {
-                if (duplicateCartItems($c)) {
-                    for ($i = 0; $i < count($GLOBALS['cartItems']); $i++) {
-                        if ($GLOBALS['cartItems'][$i]->getBarcode() === $c->getBarcode()) {
-                            $ori_num = $GLOBALS['cartItems'][$i]->getQuantity();
-                            $GLOBALS['cartItems'][$i]->setQuantity($ori_num + $c->getQuantity());
+                if (duplicateCartItems($cartItem_list, $c)) {
+                    for ($i = 0; $i < count($cartItem_list); $i++) {
+                        if ($cartItem_list[$i]->getBarcode() === $c->getBarcode()) {
+                            $ori_num = $cartItem_list[$i]->getQuantity();
+                            $cartItem_list[$i]->setQuantity($ori_num + $c->getQuantity());
                         }
                     }
                 } else {
-                    array_push($GLOBALS['cartItems'], $c);
+                    array_push($cartItem_list, $c);
                 }
             }
         }
     }
 }
 
-function duplicateCartItems($c)
+function duplicateCartItems($cartItem_list, $c)
 {
-    foreach ($GLOBALS['cartItems'] as $cartItem) {
+    foreach ($cartItem_list as $cartItem) {
         if ($cartItem->getBarcode() === $c->getBarcode()) {
             return True;
         }
@@ -77,49 +112,29 @@ function duplicateCartItems($c)
     return False;
 }
 
-//colors
-$red = array("#FFA07A", "#FA8072", "#CD5C5C", "#DC143C", "#FF0000");
-$yellow = array("#FFFACD", "#FFD700", "#FFFF00");
-$blue = array("#00BFFF",  "#1E90FF", "#0000FF",  "#0000CD", "#000080");
-$green = array("#ADFF2F", "#7CFC00", "#00FF00",  "#00FA9A", "#228B22");
-$orange = array("#FFA500", "#FF8C00",  "#FF7F50", "#FF6347", "#FF4500");
-$purple = array("#FF00FF", "#EE82EE", "#DA70D6", "#9400D3", "#8B008B");
-
-// $color = array(
-//     array("#FFA07A", "#FA8072", "#CD5C5C", "#DC143C", "#FF0000"),
-//     array("#00BFFF",  "#1E90FF", "#0000FF",  "#0000CD", "#000080"),
-//     array("#ADFF2F", "#7CFC00", "#00FF00",  "#00FA9A", "#228B22"),
-//     array("#FFA500", "#FF8C00",  "#FF7F50", "#FF6347", "#FF4500"),
-//     array("#FF00FF", "#EE82EE", "#DA70D6", "#9400D3", "#8B008B")
-// );
-
-$color = array();
-
-for ($i = 0; $i < 3; $i++) {
-    array_push($color, $red[$i], $yellow[$i], $blue[$i], $green[$i], $orange[$i], $purple[$i]);
-}
-
-for ($i = 3; $i < 5; $i++) {
-    array_push($color, $red[$i], $blue[$i], $green[$i], $orange[$i], $purple[$i]);
-}
-
 //update cart items from order
-updateReportOrder();
-updateCartItemList();
+updateReportOrder($report_order, $t_date);
+updateCartItemList($report_order, $cartItems);
 
 foreach ($cartItems as $cartItem) {
     $total_price += $cartItem->getSubPrice();
     $total_sold += $cartItem->getQuantity();
 }
 
+//Generate This Week Total Quantity
+updateWeekCartNDates($week_cart_quantity, $week_dates);
+
 if (isset($_POST["report_date"])) {
     $cartItems = array();
     $report_order = array();
+    $week_cart_quantity = array();
+    $week_dates = array();
     $total_sold = 0;
     $total_price = 0;
     $t_date = $_POST["report_date"];
-    updateReportOrder();
-    updateCartItemList();
+    updateReportOrder($report_order, $t_date);
+    updateCartItemList($report_order, $cartItems);
+    updateWeekCartNDates($week_cart_quantity, $week_dates);
     foreach ($cartItems as $cartItem) {
         $total_price += $cartItem->getSubPrice();
         $total_sold += $cartItem->getQuantity();
@@ -138,35 +153,10 @@ if (isset($_POST["report_date"])) {
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-
-        /*Primary colors: Red, Orange, Yellow, Green, Blue, Purple, Indigo*/
-        /*Red: #FFA07A, #FA8072, #CD5C5C, #DC143C, #FF0000 */
-        /*Orange: #FFA500, #FF8C00,  #FF7F50, #FF6347, #FF4500 */
-        /*Yellow: #FFFACD, #FFD700, #FFFF00 */
-        /*Green:  #ADFF2F, #7CFC00, #00FF00,  #00FA9A, #228B22  */
-        /*Blue: #00BFFF,  #1E90FF, #0000FF,  #0000CD, #000080 */
-        /*Indigo: */
-        /*Purple:  #FF00FF, #EE82EE, #DA70D6, #9400D3, #8B008B */
-        .piechart {
-            width: 400px;
-            height: 400px;
-            border-radius: 50%;
-            background-image: conic-gradient(<?php
-                                                $cur_deg = 0;
-                                                $str = "";
-                                                for ($i = 0; $i < count($cartItems); $i++) {
-                                                    $str .= $color[$i] . " " . $cur_deg . "deg ";
-                                                    $cur_deg += $cartItems[$i]->getQuantity() / $total_sold * 360;
-                                                    $str .= $cur_deg . "deg,";
-                                                }
-
-                                                echo substr($str, '0', '-1');
-
-                                                ?>);
-        }
     </style>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
     <script>
         $(function() {
             let t_date = new Date(<?php echo strtotime($t_date) ?> * 1000);
@@ -174,6 +164,67 @@ if (isset($_POST["report_date"])) {
             $("#date_").change(e => {
                 $("#form_report_date").submit();
             });
+
+            let line_chart = new CanvasJS.Chart("line_chart", {
+                exportEnabled: true,
+                animationEnabled: true,
+                theme: "light2",
+                axisX: {
+                    interlacedColor: "#F0F8FF"
+                },
+                data: [{
+                    type: "line",
+                    indexLabelFontSize: 16,
+                    dataPoints: [
+                        <?php
+                        $str = "";
+                        for ($i = 0; $i < 7; $i++) {
+                            $str .= "{ y: " . $week_cart_quantity[$i] . ", ";
+                            $str .= "label: '" . $week_dates[$i] . "' },";
+                        }
+                        echo substr($str, '0', '-1');
+                        ?>
+                    ]
+                }]
+            });
+
+            let pie_chart = new CanvasJS.Chart("pie_chart", {
+                exportEnabled: true,
+                animationEnabled: true,
+                legend: {
+                    cursor: "pointer"
+                },
+                data: [{
+                    type: "pie",
+                    showInLegend: true,
+                    toolTipContent: "{name}: <strong>{y}%</strong>",
+                    indexLabel: "{name} - {y}%",
+                    dataPoints: [
+                        <?php
+                        $str = "";
+                        for ($i = 0; $i < count($cartItems); $i++) {
+                            $name_str = $cartItems[$i]->getItem()->getName() . ' ' .  $cartItems[$i]->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty();
+                            $percentage = $cartItems[$i]->getQuantity() / $total_sold * 100.00;
+                            $str .= "{ y: " . $percentage . ", ";
+                            $str .= "name: '" . $name_str . "' },";
+                        }
+                        echo substr($str, '0', '-1');
+                        ?>
+                    ]
+                }]
+            });
+
+            pie_chart.render();
+            line_chart.render();
+
+            <?php
+                if(empty($report_order)){
+                    echo "console.log('Unfortunately, there is no report to generate as there are no sales made in this period.');";
+                    echo "$('#pie_chart_table').remove();";
+                } else {
+                    echo "$('#no_sales').remove();";
+                }
+            ?>
         });
     </script>
 </head>
@@ -188,8 +239,7 @@ if (isset($_POST["report_date"])) {
 
     <!--Daily report -->
     <div class="container">
-        <div class="text-center h1">Today Sales report</div>
-        <!--Add a function where you can sort by monthly daily or annual sales report -->
+        <div class="bg-secondary h1 text-center" style="color: white;">Daily Sales report</div>
         <hr style="height:2.5px;border:none;color:#333;background-color:#333;" />
 
         <form method="POST" action="../admin/index.php" id="form_report_date">
@@ -200,52 +250,13 @@ if (isset($_POST["report_date"])) {
                 <div class="col-4">Total number of items sold: <?php echo $total_sold; ?></div>
             </div>
         </form>
+    </div>
 
-        <div class="row">
-            <div class="col-8 p-3">
-                <div class="border border-success" style="height: 475px;">
-                    <div class="bg-success h2 text-center" style="color: white;">Pie Chart</div>
-                    <div class="d-flex justify-content-center align-items-center pt-1">
-                        <div class="piechart"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4 p-3">
-                <div class="border border-success" style="height: 475px;">
-                    <!--Legend for pie chart-->
-                    <div class="px-3 text-center">
+    <div class="container" id="pie_chart_table">
+        <div class="bg-success h1 text-center" style="color: white;">Pie Chart</div>
+        <div id="pie_chart" style="height: 400px; width: 100%;"></div>
 
-                        <div class="row bg-success">
-                            <div class="col">
-                                <div class="h3" style="color: white;">Legend</div>
-                            </div>
-                        </div>
-
-                        <div class="row table-success">
-                            <div class="col-2">CCode</div>
-                            <div class="col-4">Name</div>
-                            <div class="col-3">Variety</div>
-                            <div class="col-2">Count</div>
-                        </div>
-                        <?php
-                            for ($i = 0; $i < count($cartItems); $i++) {
-                                $str = "<div class='row'>"; 
-                                $color_str = "<div class='col-2'>
-                                    <div style='width: 30px; height: 30px; background-color: " . $color[$i] . "'></div>
-                                </div>";
-                                $name_str = "<div class='col-4'>" . $cartItems[$i]->getItem()->getName() . "</div>";
-                                $variety_str = "<div class='col-3'>" . $cartItems[$i]->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</div>";
-                                $count_str = "<div class='col-2'>" . $cartItems[$i]->getQuantity() . "</div>";
-                                $str .= $color_str . $name_str . $variety_str . $count_str . "</div>";
-                                echo $str;
-                            }
-                        ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <table class="table text-center border border-dark">
+        <table class="table text-center border border-dark mt-2">
             <thead>
                 <tr class="bg-danger" style="color: white;">
                     <th></th>
@@ -284,7 +295,15 @@ if (isset($_POST["report_date"])) {
                 ?>
             </tbody>
         </table>
+    </div>
 
+    <div class="container" id="no_sales">
+        <div class="h2 text-center">Unfortunately, there are no sales transaction for today...</div>
+    </div>
+
+    <div class="container">
+        <div class="bg-primary h1 text-center" style="color: white;">Weekly Sales report</div>
+        <div id="line_chart" style="height: 400px; width: 100%;"></div>
     </div>
 
     <div class="container">
@@ -297,16 +316,5 @@ if (isset($_POST["report_date"])) {
         ?>
     </div>
 </body>
-
-<!--<div> <?php
-            // $str = "<tr>";
-            // for ($i = 0; $i < count($cartItems); $i++) {
-            //     if ($i % $limit == 0 && $i != 0) {
-            //         $str .= "</tr><tr>";
-            //     }
-            //     $str .= "<td style='font-size: 20px;background-color: " . $color[$i] . "'>" . $cartItems[$i]->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty() . "</td>";
-            // }
-            // echo substr($str, '0', '-5');
-            ?></div> -->
 
 </html>
