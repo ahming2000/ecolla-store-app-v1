@@ -43,3 +43,12 @@ function generate_report_info_phone(date, price, sold){
         </div>
     `;
 }
+
+//Generate Weekly Sales Report Title
+function generate_week_title_phone(){
+    return `<div class="bg-primary h2 text-center" id="weekly_"  style="color: white;">Weekly Sales Report</div>`;
+}
+
+function generate_week_title_default(){
+    return `<div class="bg-primary h1 text-center" id="weekly_"  style="color: white;">Weekly Sales Report</div>`;
+}

@@ -159,9 +159,36 @@ if (isset($_POST["report_date"])) {
             font-size: 12px;
         }
 
+        /*Deafult for pie-chart and line-chart */
+        #pie_chart,
+        #line_chart {
+            height: 200px;
+        }
+
+        /* For Phone-side View */
+        @media only screen and (min-width: 600px) {
+            .report_info_txt {
+                font-size: 16px;
+            }
+
+            #pie_chart,
+            #line_chart {
+                height: 300px;
+            }
+        }
+
+        /* For Ipad Default View */
         @media only screen and (min-width: 768px) {
             .report_info_txt {
                 font-size: 16px;
+            }
+        }
+
+        /* For Desktop Default View */
+        @media only screen and (min-width: 1024px) {
+            #pie_chart,
+            #line_chart {
+                height: 400px;
             }
         }
     </style>
@@ -174,21 +201,41 @@ if (isset($_POST["report_date"])) {
 
     <script>
         //convert php value to javascript
-        const date_ = (new Date()).toLocaleDateString();
+        const date_ = (new Date()).toLocaleDateString('en-CA');
         const price_ = <?php echo $total_price; ?>;
         const sold_ = <?php echo $total_sold; ?>;
 
         //This part a bit hard code, should be dynamic
-        let table_col_ind = {
-                'name': 2,
-                'variety': 3,
-                'barcode': 4,
-                'count': 5,
-                'price_per_item': 6,
-                'total_price': 7,
-                'time_purchased': 8
+        let table_col = {
+            'name': {
+                ind: 2,
+                flag: true
             },
-            table_flag = [true, true, true, true, true, true, true];
+            'variety': {
+                ind: 3,
+                flag: true
+            },
+            'barcode': {
+                ind: 4,
+                flag: true
+            },
+            'count': {
+                ind: 5,
+                flag: true
+            },
+            'price_per_item': {
+                ind: 6,
+                flag: true
+            },
+            'total_price': {
+                ind: 7,
+                flag: true
+            },
+            'time_purchased': {
+                ind: 8,
+                flag: true
+            }
+        };
 
         function update_date() {
             let t_date = new Date(<?php echo strtotime($t_date) ?> * 1000);
@@ -198,24 +245,69 @@ if (isset($_POST["report_date"])) {
             });
         }
 
-        function hide_col(ind, colspan) {
+        //Table functions - show or hide table columns
+        function show_col(ind) {
+            let colspan = parseInt($('.orderId_td').attr('colspan'));
+            $(`td:nth-child(${ind}),th:nth-child(${ind})`).show();
+            $('.orderId_td').attr('colspan', colspan + 1);
+        }
+
+        function show_col_all() {
+            for (let tble in table_col) {
+                if (!table_col[tble].flag) {
+                    show_col(table_col[tble].ind);
+                    $(`#detail_board input[name='${tble}']`).prop("checked", true);
+                    table_col[tble].flag = true;
+                }
+            }
+        }
+
+        function hide_col(ind) {
+            let colspan = parseInt($('.orderId_td').attr('colspan'));
             $(`td:nth-child(${ind}),th:nth-child(${ind})`).hide();
             $('.orderId_td').attr('colspan', colspan - 1);
         }
 
-        function show_col(ind, colspan) {
-            $(`td:nth-child(${ind}),th:nth-child(${ind})`).show();
-            $('.orderId_td').attr('colspan', colspan + 1);
+        function hide_col_phone() {
+            // To hide barcode column
+            hide_col(4);
+            $("#detail_board input[name='barcode']").prop("checked", false);
+            table_col['barcode'].flag = false;
+
+            // To hide price Per Item column
+            hide_col(6);
+            $("#detail_board input[name='price_per_item']").prop("checked", false);
+            table_col['price_per_item'].flag = false;
+
+            // To hide time purchased column
+            hide_col(8);
+            $("#detail_board input[name='time_purchased']").prop("checked", false);
+            table_col['time_purchased'].flag = false;
+        }
+
+        function hide_col_ipad() {
+            // To hide time purchased column
+            hide_col(8);
+            $("#detail_board input[name='time_purchased']").prop("checked", false);
+            table_col['time_purchased'].flag = false;
         }
 
         $(function() {
 
             if ($(window).width() <= 600) {
+                //For phone
                 $("#in_form").append(generate_report_info_phone(date_, price_, sold_));
+                hide_col_phone();
+                $("#weekly_title_cnt").append(generate_week_title_phone());
             } else if ($(window).width() > 600 && $(window).width() < 900) {
+                //For Ipad default width and phone side-view
                 $("#in_form").append(generate_report_info_ipad(date_, price_, sold_));
+                hide_col_ipad();
+                $("#weekly_title_cnt").append(generate_week_title_default());
             } else {
+                //For Desktop
                 $("#in_form").append(generate_report_info_desktop(date_, price_, sold_));
+                $("#weekly_title_cnt").append(generate_week_title_default());
             }
 
             update_date();
@@ -282,13 +374,26 @@ if (isset($_POST["report_date"])) {
 
             //check viewport (Idk how to do this in css)
             $(window).resize("on", e => {
+
                 $("#in_form_").remove();
+                $("#weekly_").remove();
+
+                show_col_all();
+
                 if ($(window).width() <= 600) {
+                    //For phone
                     $("#in_form").append(generate_report_info_phone(date_, price_, sold_));
+                    hide_col_phone();
+                    $("#weekly_title_cnt").append(generate_week_title_phone());
                 } else if ($(window).width() > 600 && $(window).width() < 900) {
+                    //For Ipad default width and phone side-view
                     $("#in_form").append(generate_report_info_ipad(date_, price_, sold_));
+                    hide_col_ipad();
+                    $("#weekly_title_cnt").append(generate_week_title_default());
                 } else {
+                    //For computers default width
                     $("#in_form").append(generate_report_info_desktop(date_, price_, sold_));
+                    $("#weekly_title_cnt").append(generate_week_title_default());
                 }
                 update_date();
             });
@@ -302,10 +407,10 @@ if (isset($_POST["report_date"])) {
 
             //Show or hide table columns
             $("#detail_board input:checkbox").change(function() {
-                let ind = table_col_ind[$(this).attr('name')],
-                    colspan = $('.orderId_td').attr('colspan');
-                (table_flag[ind - 2] == true) ? hide_col(ind, colspan) : show_col(ind, colspan);
-                table_flag[ind - 2] = !table_flag[ind - 2];
+                let tble = table_col[$(this).attr('name')],
+                    ind = tble.ind;
+                (tble.flag == true) ? hide_col(ind): show_col(ind);
+                tble.flag = !tble.flag;
             });
         });
     </script>
@@ -333,8 +438,7 @@ if (isset($_POST["report_date"])) {
     <div class="container mt-2" id="pie_chart_table">
         <div class="bg-success h1 text-center" style="color: white;">Pie Chart</div>
 
-        <!--Only phone has problem-->
-        <div id="pie_chart" style="height: 400px; width: 100%;"></div>
+        <div id="pie_chart" style="width: 100%;"></div>
 
         <div class="d-flex justify-content-end mt-2">
             <div style="position: relative;">
@@ -351,7 +455,6 @@ if (isset($_POST["report_date"])) {
             </div>
         </div>
 
-        <!--Only 740 and phone got problem-->
         <table class="table text-center border border-dark mt-2" style="width: 100%;">
             <thead>
                 <tr class="bg-danger" style="color: white;">
@@ -398,9 +501,8 @@ if (isset($_POST["report_date"])) {
     </div>
 
     <div class="container">
-        <div class="bg-primary h1 text-center" style="color: white;">Weekly Sales Report</div>
-        <!--Only phone has problem-->
-        <div id="line_chart" style="height: 400px; width: 100%;"></div>
+        <div id="weekly_title_cnt"></div>
+        <div id="line_chart" style="width: 100%;"></div>
     </div>
 
     <div class="container">
