@@ -1,0 +1,41 @@
+{
+    "items" : {
+        "tableName" : "items",
+        "columns" : ["i_name", "i_desc", "i_brand", "i_origin", "i_property_name", "i_image_count"]
+    },
+
+    "varieties" : {
+        "tableName" : "varieties",
+        "columns" : ["v_barcode", "v_property", "v_price", "v_weight", "v_discount_rate", "i_id"]
+    },
+
+    "categories" : {
+        "tableName" : "categories",
+        "columns" : ["cat_name"]
+    },
+
+    "inventories" : {
+        "tableName" : "inventories",
+        "columns" : ["v_barcode", "inv_expire_date", "inv_quantity"]
+    },
+
+    "classifications" : {
+        "tableName" : "classifications",
+        "columns" : ["i_id", "cat_id"]
+    },
+
+    "orders" : {
+        "tableName" : "orders",
+        "columns" : ["o_id", "o_date_time", "o_payment_method", "o_note", "c_name", "c_phone_mcc", "c_phone", "c_address", "c_state", "c_area", "c_postal_code"]
+    },
+
+    "order_items" : {
+        "tableName" : "order_items",
+        "columns" : ["o_id", "v_barcode", "oi_quantity"]
+    },
+
+    "users" : {
+        "tableName" : "users",
+        "columns" : ["user_name", "user_password"]
+    }
+}

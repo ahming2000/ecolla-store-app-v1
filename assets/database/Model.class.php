@@ -1,43 +1,605 @@
 <?php
 
-/*  MVC Model Version: v0.1.1-alpha (To be released)
+/*  MVC Model Version: v0.3.0-alpha
 *   Created by AhMing
-*   Github: https://github.com/ahming2000
-*
-*   Changing Log:
-*   v0.1.0-alpha
-*   Now you can insert table with one function, less confusion on inserting table.
-*
-*   v0.1.1-alpha
-*   Select column function may cause error when null value (not found) is selected, respond on null value with return false to ignore the error.
-*
-*   v0.1.2-alpha
-*   Multiple Search function now combine with the single search function, it will auto detect array
-*
-*   v0.2.0-alpha
-*   Column and row select function now divide into with WHERE CLAUSE and with attrToSelect or both
-*   Joined table preview function added.
-*
-*   v0.2.1-alpha
-*   Minor improvement in dbInsert
-*
+*   Commit Details: https://github.com/ahming2000/EcollaWebsite/commits/main/assets/database/Model.class.php
+*   Go to README.MD for changing log.
 */
 
-require_once __DIR__."\\Dbh.class.php";
+require_once "Dbh.class.php";
 
 class Model extends Dbh{
 
-    //To-do:
-    // 1. Logging to file for every function
-    // 2. Create dynamic way on declaring table attribute outside of this class
+    /*** Utility ***/
+    /*  Print the error for debugging use */
+    private function handleException($errorLocation, $detail){
+        echo "Internal error<br>";
+        echo "$errorLocation<br>";
+        echo "Error message: $detail";
+        die();
+    }
+
+    /* Log to file for any changes */
+    private function log(){
+        //To-do: Logging to file for every function
+    }
+
+    private $DB_CONFIG;
+    function __construct(){
+        /* Import table inserting config from json files */
+        $JSON_STRING = file_get_contents("db-tables-config.json", true);
+        if(!$JSON_STRING){
+            $this->handleException("Error when importing database table config json file.", "Please make sure the database table config files is existed!");
+        }
+
+        $this->DB_CONFIG = json_decode($JSON_STRING, true);
+        if($this->DB_CONFIG == null){
+            $this->handleException("Cannot decode database table config json.", "Please make sure config files format is correct!");
+        }
+    }
 
 
 
 
 
-    /*  Database Table
-    Notice: PLEASE DEFINE YOUR TABLE ATTRIBUTE OVER HERE!
+    /*** Useful tools ***/
+    /*  Concat the symbol into a string
+        Example:
+        When $count is assigned
+        $element = '?', $saperateWith = ', ', $count = 3
+        $output = ?, ?, ?
+        When $count is not assigned
+        $element = ["a", "b"], $saperateWith = ', '
+        $output = "a, b"
     */
+    private function concatString($element, $saperateWith, $count = 0){
+        if($count == 0){
+            $str = $element[0];
+            for($i = 1; $i < sizeof($element); $i++){
+                $str = $str . $saperateWith . $element[$i];
+            }
+        } else{
+            $str = $element;
+            for($i = 1; $i < $count; $i++){
+                $str = $str . $saperateWith . $element;
+            }
+        }
+        return $str;
+    }
+
+    /*  Connect multiple attribute with clause by using this function
+        Example:
+        $attrArray = ["i_name", "i_brand"], $clause = "AND"
+        $output = "i_name = ? AND i_brand = ?"
+    */
+    private function clauseConnector($attrArray, $clause){
+        $str = $attrArray[0] . " = ?";
+        for($i = 1; $i < sizeof($attrArray); $i++){
+            $str = $str . " " . $clause . " " . $attrArray[$i] . " = ?";
+        }
+        return $str;
+    }
+
+
+
+
+
+    /*** Database Interaction ***/
+    /*  Standard function for database query
+        Output:
+        Return raw data
+        Return true when run a query without result
+    */
+    protected function dbQuery($sql){
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query
+        if(!$stmt->execute()){
+            $this->handleException("Error when execute standard query function, your query conmmand: <br>$sql", $stmt->errorInfo()[2]);
+        }
+
+        // Return the results into php variable
+        $results = $stmt->fetchAll();
+        return $results == null ? true : $results;
+    }
+
+    /*  Insert into database
+        Syntax:
+        dbInsert: INSERT INTO {table name} VALUE({data to insert})
+    */
+    protected function dbInsert_new($configName, $data){
+        // Check availability of the database table config
+        if (!array_key_exists($configName, $this->DB_CONFIG)) {
+            $this->handleException("$configName is not existed in database table config.", "Please make sure config is available in the database table config file!");
+        }
+
+        // Check $data is an array
+        if (!is_array($data)){
+            $this->handleException("Data to insert is not an array.", "Please make sure data to insert is an array!");
+        }
+
+        $tableName = $this->DB_CONFIG[$configName]["tableName"];
+        $columns = $this->DB_CONFIG[$configName]["columns"];
+        $columnsCount = sizeof($columns);
+
+        // Check $data array has correct number of columns or not
+        if (sizeof($data) != $columnsCount){
+            $this->handleException("Data to insert should have $columnsCount column data but only have " . sizeof($data) . ".", "Please make sure data to insert has correct number of columns!");
+        }
+
+        $tableInfo = "$tableName(" . $this->concatString($columns, ", ") . ")";
+        $valueInfo = $this->concatString("?", ", ", $columnsCount);
+
+        $sql = "INSERT INTO $tableInfo VALUE($valueInfo)";
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query
+        if(!$stmt->execute($data)){
+            $this->handleException("Error when inserting row into table.", $stmt->errorInfo()[2]);
+        }
+    }
+
+    /*  Select all
+        Syntax:
+        1. SELECT * FROM {table name}
+        2. SELECT * FROM {table name} LIMIT {start}, {range}
+        Output:
+        1. All column and row data (2D Array)
+        2. All column and row data within range set (2D Array)
+    */
+    protected function dbSelectAll($tableName, $start = 0, $range = 0){
+
+        $hasLimit = false;
+
+        // If $start and $range is set, query with LIMIT CLAUSE
+        if($range != 0) $hasLimit = true;
+
+        if($hasLimit){
+            $sql = "SELECT * FROM $tableName LIMIT $start, $range";
+        }
+        else{
+            $sql = "SELECT * FROM $tableName";
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query
+        if(!$stmt->execute()){
+            $this->handleException("Error when selecting all from $tableName.", $stmt->errorInfo()[2]);
+        }
+
+        // Return the results into php variable
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    /*  Select row(s) with all columns and condition(s) can be set
+        Syntax:
+        1. SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        2. SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search} LIMIT {start}, {range}
+        Output:
+        1. All column and relevent row data (2D Array)
+        2. All column and relevent row data within range set (2D Array)
+    */
+    protected function dbSelectRow($tableName, $attrToSearch, $attrContentToSearch, $start = 0, $range = 0){
+
+        $hasLimit = false;
+        $hasMultipleSearch = false;
+
+        // If $start and $range is set, query with LIMIT CLAUSE
+        if($range != 0) $hasLimit = true;
+
+        // If $attrToSearch and $attrContentToSearch are array, enable multiple search
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            $hasMultipleSearch = true;
+
+            // Error when one of it is not array
+            if(!is_array($attrToSearch) or !is_array($attrContentToSearch)){
+                $this->handleException("Error when selecting row from $tableName.", "Both variables should be array for multiple search!");
+            }
+
+            // Error when two array have difference size
+            if(sizeof($attrToSearch) != sizeof($attrContentToSearch)){
+                $this->handleException("Error when selecting row from $tableName.", "You must have same amount of attribute and attribute content for WHERE clause!");
+            }
+        }
+
+        if($hasLimit){
+            if($hasMultipleSearch){
+                $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                $sql = "SELECT * FROM $tableName WHERE $whereClause LIMIT $start, $range";
+            } else{
+                $sql = "SELECT * FROM $tableName WHERE $attrToSearch = ? LIMIT $start, $range";
+            }
+        }
+        else{
+            if($hasMultipleSearch){
+                $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                $sql = "SELECT * FROM $tableName WHERE $whereClause";
+            } else{
+                $sql = "SELECT * FROM $tableName WHERE $attrToSearch = ?";
+            }
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query, put it as array when it is array
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])){
+            $this->handleException("Error when selecting row from $tableName.", $stmt->errorInfo()[2]);
+        }
+
+        // Return the results into php variable
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+    /*  Select all attributes with selected column name
+        Syntax:
+        1. SELECT {attribute to select} FROM {table name}
+        2. SELECT {attribute to select} FROM {table name} LIMIT {start}, {range}
+        Output:
+        1. All column data (1D Array)
+        2. All column data within range set (1D Array)
+    */
+    protected function dbSelectColumn($tableName, $attrToSelect, $start = 0, $range = 0){
+
+        $hasLimit = false;
+
+        // If $start and $range is set, query with LIMIT CLAUSE
+        if($range != 0) $hasLimit = true;
+
+        if($hasLimit){
+            $sql = "SELECT $attrToSelect FROM $tableName LIMIT $start, $range";
+        }
+        else{
+            $sql = "SELECT $attrToSelect FROM $tableName";
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query
+        if(!$stmt->execute()){
+            $this->handleException("Error when selecting column from $tableName.", $stmt->errorInfo()[2]);
+        }
+
+        // Return the results into php variable
+        $results = $stmt->fetchAll();
+        return array_column($results, $attrToSelect);
+    }
+
+    /*  Select relevent attributes with selected column name and condition(s) is set
+        Syntax:
+        1. SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        2. SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search} LIMIT {start}, {range}
+        Output:
+        1. Relevent column and relevent row data (2D Array)
+        2. Relevent column and relevent row data within range set (2D Array)
+    */
+    protected function dbSelectRowAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch, $start = 0, $range = 0){
+
+        $hasLimit = false;
+        $hasMultipleSearch = false;
+
+        // If $start and $range is set, query with LIMIT CLAUSE
+        if($range != 0) $hasLimit = true;
+
+        // If $attrToSearch and $attrContentToSearch are array, enable multiple search
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            $hasMultipleSearch = true;
+
+            // Error when one of it is not array
+            if(!is_array($attrToSearch) or !is_array($attrContentToSearch)){
+                $this->handleException("Error when selecting row attribute from $tableName.", "Both variables should be array for multiple search!");
+            }
+
+            // Error when two array have difference size
+            if(sizeof($attrToSearch) != sizeof($attrContentToSearch)){
+                $this->handleException("Error when selecting row attribute from $tableName.", "You must have same amount of attribute and attribute content for WHERE clause!");
+            }
+        }
+
+        if($hasLimit){
+            if($hasMultipleSearch){
+                $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause LIMIT $start, $range";
+            } else{
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ? LIMIT $start, $range";
+            }
+        }
+        else{
+            if($hasMultipleSearch){
+                $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause";
+            } else{
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
+            }
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query, put it as array when it is array
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])){
+            $this->handleException("Error when selecting row attribute from $tableName.", $stmt->errorInfo()[2]);
+        }
+
+        // Return the results into php variable
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
+
+    /*  Select all attributes with selected column name and condition(s) is set
+        Syntax:
+        1. SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        2. SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search} LIMIT {start}, {range}
+        Output:
+        1. Relevent column data (1D Array)
+        2. Relevent column data within range set (1D Array)
+    */
+    protected function dbSelectColumnAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch, $start = 0, $range = 0){
+
+        $hasLimit = false;
+        $hasMultipleSearch = false;
+
+        // If $start and $range is set, query with LIMIT CLAUSE
+        if($range != 0) $hasLimit = true;
+
+        // If $attrToSearch and $attrContentToSearch are array, enable multiple search
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            $hasMultipleSearch = true;
+
+            // Error when one of it is not array
+            if(!is_array($attrToSearch) or !is_array($attrContentToSearch)){
+                $this->handleException("Error when selecting column attribute from $tableName.", "Both variables should be array for multiple search!");
+            }
+
+            // Error when two array have difference size
+            if(sizeof($attrToSearch) != sizeof($attrContentToSearch)){
+                $this->handleException("Error when selecting column attribute from $tableName.", "You must have same amount of attribute and attribute content for WHERE clause!");
+            }
+        }
+
+        if($hasLimit){
+            if($hasMultipleSearch){
+                $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause LIMIT $start, $range";
+            } else{
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ? LIMIT $start, $range";
+            }
+        }
+        else{
+            if($hasMultipleSearch){
+                $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause";
+            } else{
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
+            }
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query, put it as array when it is array
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])){
+            $this->handleException("Error when selecting column attribute from $tableName.", $stmt->errorInfo()[2]);
+        }
+
+        // Return the results into php variable
+        $results = $stmt->fetchAll();
+        return array_column($results, $attrToSelect);
+    }
+
+    /*  Select all attributes with selected column name and condition(s) is set
+        Syntax:
+        1. SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
+        2. SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search} LIMIT {start}, {range}
+        Output:
+        1. Relevent data with selected column and one or some attributes (Value)
+        2. Relevent data with selected column and one or some attributes within range set (Value)
+    */
+    protected function dbSelectAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch, $start = 0, $range = 0){
+
+        $hasMultipleSearch = false;
+
+        // If $attrToSearch and $attrContentToSearch are array, enable multiple search
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            $hasMultipleSearch = true;
+
+            // Error when one of it is not array
+            if(!is_array($attrToSearch) or !is_array($attrContentToSearch)){
+                $this->handleException("Error when selecting attribute from $tableName.", "Both variables should be array for multiple search!");
+            }
+
+            // Error when two array have difference size
+            if(sizeof($attrToSearch) != sizeof($attrContentToSearch)){
+                $this->handleException("Error when selecting attribute from $tableName.", "You must have same amount of attribute and attribute content for WHERE clause!");
+            }
+        }
+
+        if($hasMultipleSearch){
+            $whereClause = $this->clauseConnector($attrToSearch, "AND");
+            $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause";
+        } else{
+            $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query, put it as array when it is array
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])){
+            $this->handleException("Error when selecting attribute from $tableName.", $stmt->errorInfo()[2]);
+        }
+
+        // Return the results into php variable
+        $results = $stmt->fetchAll();
+        // If nothing is found, directly return null to avoid array indexing error
+        if($results != null) return $results[0][$attrToSelect];
+        else return null;
+    }
+
+    protected function dbSelectCount($tableName, $attrToSearch = array(), $attrContentToSearch = array()){
+
+        $hasMultipleSearch = false;
+
+        // If $attrToSearch and $attrContentToSearch are array, enable multiple search
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            $hasMultipleSearch = true;
+
+            // Error when one of it is not array
+            if(!is_array($attrToSearch) or !is_array($attrContentToSearch)){
+                $this->handleException("Error when selecting count from $tableName.", "Both variables should be array for multiple search!");
+            }
+
+            // Error when two array have difference size
+            if(sizeof($attrToSearch) != sizeof($attrContentToSearch)){
+                $this->handleException("Error when selecting count from $tableName.", "You must have same amount of attribute and attribute content for WHERE clause!");
+            }
+        }
+
+        if($hasMultipleSearch){
+            $whereClause = $this->clauseConnector($attrToSearch, "AND");
+            $sql = "SELECT COUNT(*) AS count FROM $tableName WHERE $whereClause";
+        } else{
+            $sql = "SELECT COUNT(*) AS count FROM $tableName";
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query, put it as array when it is array
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])){
+            $this->handleException("Error when selecting count from $tableName.", $stmt->errorInfo()[2]);
+        }
+
+        // Return the results into php variable
+        $results = $stmt->fetchAll();
+        return $results['count'];
+    }
+
+    /*  Update database
+        Syntax:
+        dbUpdate: UPDATE {table name} SET {attribute to update} = {attribute content to update} WHERE {attribute to search} = {attribute content to search}
+    */
+    protected function dbUpdate($tableName, $attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
+
+        $hasMultipleSearch = false;
+
+        // If $attrToSearch and $attrContentToSearch are array, enable multiple search
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            $hasMultipleSearch = true;
+
+            // Error when one of it is not array
+            if(!is_array($attrToSearch) or !is_array($attrContentToSearch)){
+                $this->handleException("Error when updating $attrToUpdate from $tableName.", "Both variables should be array for multiple search!");
+            }
+
+            // Error when two array have difference size
+            if(sizeof($attrToSearch) != sizeof($attrContentToSearch)){
+                $this->handleException("Error when updating $attrToUpdate from $tableName.", "You must have same amount of attribute and attribute content for WHERE clause!");
+            }
+        }
+
+        if($hasMultipleSearch){
+            $whereClause = $this->clauseConnector($attrToSearch, "AND");
+            $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $whereClause";
+        } else{
+            $sql = "UPDATE $tableName SET $attrToUpdate = ?";
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query, put it as array when it is array
+        if(!$stmt->execute(array_merge([$attrContentToUpdate], is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])){
+            $this->handleException("Error when updating $attrToUpdate from $tableName.", $stmt->errorInfo()[2]);
+        }
+    }
+
+    /*  Delete database data
+        Syntax:
+        dbDelete: DELETE FROM {table name} WHERE {attribute to search} = {attribute content to search}
+    */
+    protected function dbDelete($tableName, $attrToSearch, $attrContentToSearch){
+
+        $hasMultipleSearch = false;
+
+        // If $attrToSearch and $attrContentToSearch are array, enable multiple search
+        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+            $hasMultipleSearch = true;
+
+            // Error when one of it is not array
+            if(!is_array($attrToSearch) or !is_array($attrContentToSearch)){
+                $this->handleException("Error when deleting row from $tableName.", "Both variables should be array for multiple search!");
+            }
+
+            // Error when two array have difference size
+            if(sizeof($attrToSearch) != sizeof($attrContentToSearch)){
+                $this->handleException("Error when deleting row from $tableName.", "You must have same amount of attribute and attribute content for WHERE clause!");
+            }
+        }
+
+        if($hasMultipleSearch){
+            $whereClause = $this->clauseConnector($attrToSearch, "AND");
+            $sql = "DELETE FROM $tableName WHERE $whereClause";
+        } else{
+            $sql = "DELETE FROM $tableName WHERE $attrToSearch = ?";
+        }
+
+        // Prepare the query
+        $stmt = $this->connect()->prepare($sql);
+
+        // Execute the query, put it as array when it is array
+        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])){
+            $this->handleException("Error when deleting row from $tableName.", $stmt->errorInfo()[2]);
+        }
+        return true;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*  MVC Model Version v0.2.1-alpha
+    *  Old version code will remain until all codes are tested perfectly
+    */
+
+    protected function dbSelectAllRange($tableName, $start, $range){
+        $sql = "SELECT * FROM $tableName LIMIT ".$start.", ".$range;
+        $stmt = $this->connect()->prepare($sql);
+        if(!$stmt->execute()) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
+        $results = $stmt->fetchAll();
+        return $results;
+    }
+
     private $DATABASE_TABLE = [
 
         "items" => [
@@ -90,138 +652,10 @@ class Model extends Dbh{
 
     ];
 
-
-
-
-
-    /*  Concat the symbol into a string
-
-    Example:
-    $primaryChar = '?'; $saperateWith = ', '; $count = 3;
-    $output = ?, ?, ?
-    */
-    private function concatToStrChar($primaryChar, $saperateWith, $count){
-        $str = "$primaryChar";
-
-        for($i = 1; $i < $count; $i++){
-            $str = $str . $saperateWith . $primaryChar;
-        }
-        return $str;
-    }
-
-
-
-
-
-    /*  Connect multiple attribute with clause by using this function
-
-    Example:
-    $attrArray = ["i_name", "i_brand"]; $clause = "AND";
-    $output = "i_name = ? AND i_brand = ?"
-    */
-    private function clauseConnector($attrArray, $clause){
-        $str = $attrArray[0] . " = ?";
-
-        for($i = 1; $i < sizeof($attrArray); $i++){
-            $str = $str . " " . $clause . " " . $attrArray[$i] . " = ?";
-        }
-        return $str;
-    }
-
-
-
-
-
-    /*  Insert into database
-    Syntax:
-    dbInsert: INSERT INTO {table name} VALUE({number of '?' is equal to nnumber of column of the table})
-    */
     protected function dbInsert($configName, $data){
-        $sql = "INSERT INTO ".$this->DATABASE_TABLE[$configName]["columnsToInsert"]." VALUE(".$this->concatToStrChar('?', ', ', $this->DATABASE_TABLE[$configName]["columnsCountToInsert"]).")";
+        $sql = "INSERT INTO ".$this->DATABASE_TABLE[$configName]["columnsToInsert"]." VALUE(".$this->concatString('?', ', ', $this->DATABASE_TABLE[$configName]["columnsCountToInsert"]).")";
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute($data)) die("Database inserting " . $this->DATABASE_TABLE["$configName"]["tableName"] . "error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-    }
-
-
-
-
-
-    /*  Select from database
-    Syntax:
-    dbSelectAll: SELECT * FROM {table name}
-    dbSelectRange: SELECT * FROM {table name} LIMIT {start from}, {how many times/range}
-    dbSelectRow: SELECT * FROM {table name} WHERE {attribute to search} = {attribute content to search}
-    dbSelectColumn: SELECT {attribute to select} FRM {table name} WHERE {attribute to search} = {attribute content to search}
-    dbSelectAttribute: SELECT {attribute to select} FROM {table name} WHERE {attribute to search} = {attribute content to search}
-    dbSelectCount: SELECT COUNT(*) FROM {table name}
-    dbSelectAttributeCount: SELECT COUNT(*) FROM {table name} WHERE {attribute to search} = {attribute content to search}
-    dbSelectAttributeCount_MultiSearch: SELECT COUNT(*) FROM {table name} WHERE {first attribute to search} = {first attribute content to search} AND {second attribute to search} = {second attribute content to search} ...
-
-    Output: (To retrive the cell data)
-    dbSelectAll: data[row(number)][column(column name)]
-    dbSelectRange: data[row(number)][column(column name)]
-    dbSelectRow: data[row(number)][column(column name)]
-    dbSelectColumn: data[column(column name)]
-    dbSelectAttribute: data (Auto use the first result as the main result) (Return false when not found)
-    dbSelectCount: data count
-    dbSelectAttributeCount: data count
-    dbSelectAttributeCount_MultiSearch: data count
-
-    Coming soon:
-    1. Select function with clause ORDER BY
-    2. Select function with combined table (WIP)
-    */
-    protected function dbSelectAll($tableName){
-        $sql = "SELECT * FROM ".$tableName;
-        $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute()) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-        $results = $stmt->fetchAll();
-        return $results;
-    }
-
-    protected function dbSelectAllRange($tableName, $start, $range){
-        $sql = "SELECT * FROM $tableName LIMIT ".$start.", ".$range;
-        $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute()) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-        $results = $stmt->fetchAll();
-        return $results;
-    }
-
-    protected function dbSelectRow($tableName, $attrToSearch, $attrContentToSearch){
-        // Check is multiple search or not
-        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
-            // Make number of attribute and number of content are the same
-            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-            $sql = "SELECT * FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
-        } else {
-            $sql = "SELECT * FROM $tableName WHERE $attrToSearch = ?";
-        }
-
-        $stmt = $this->connect()->prepare($sql);
-
-        //  Follow the mysql syntax
-        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting $tableName error. MySQL error message: " . $stmt->errorInfo()[2] . "<br>");
-
-        $results = $stmt->fetchAll();
-        return $results;
-    }
-
-    protected function dbSelectColumn($tableName, $attrToSelect){
-        $sql = "SELECT $attrToSelect FROM $tableName";
-
-        $stmt = $this->connect()->prepare($sql);
-
-        //  Follow the mysql syntax
-        if(!$stmt->execute()) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-
-        $results = $stmt->fetchAll();
-
-        // Convert value into ordered array
-        $columns = array();
-        foreach($results as $row){
-            array_push($columns, $row[$attrToSelect]);
-        }
-        return $columns;
     }
 
     protected function dbSelectRowRange($tableName, $attrToSearch, $attrContentToSearch, $start, $range){
@@ -243,14 +677,14 @@ class Model extends Dbh{
         return $results;
     }
 
-    protected function dbSelectRowAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
+    protected function dbSelectAttributeCount($tableName, $attrToSearch, $attrContentToSearch){
         // Check is multiple search or not
         if(is_array($attrToSearch) or is_array($attrContentToSearch)){
             // Make number of attribute and number of content are the same
             if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-            $sql = "SELECT $attrToSelect FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
+            $sql = "SELECT COUNT(*) AS count FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
         } else {
-            $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
+            $sql = "SELECT COUNT(*) AS count FROM $tableName WHERE $attrToSearch = ?";
         }
 
         $stmt = $this->connect()->prepare($sql);
@@ -258,56 +692,8 @@ class Model extends Dbh{
         //  Follow the mysql syntax
         if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
 
-        $results = $stmt->fetchAll();
-
-        return $results;
-    }
-
-    protected function dbSelectColumnAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
-        // Check is multiple search or not
-        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
-            // Make number of attribute and number of content are the same
-            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-            $sql = "SELECT $attrToSelect FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
-        } else {
-            $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
-        }
-
-        $stmt = $this->connect()->prepare($sql);
-
-        //  Follow the mysql syntax
-        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-
-        $results = $stmt->fetchAll();
-
-        // Convert value into ordered array
-        $columns = array();
-        foreach($results as $row){
-            array_push($columns, $row[$attrToSelect]);
-        }
-        return $columns;
-    }
-
-    protected function dbSelectAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
-        // Check is multiple search or not
-        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
-            // Make number of attribute and number of content are the same
-            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-            $sql = "SELECT $attrToSelect FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
-        } else {
-            $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
-        }
-
-        $stmt = $this->connect()->prepare($sql);
-
-        //  Follow the mysql syntax
-        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-
-        $results = $stmt->fetchAll();
-
-        // If nothing is found, directly return null to avoid array indexing error
-        if($results != null) return $results[0][$attrToSelect];
-        else return null;
+        $results = $stmt->fetch();
+        return $results['count'];
     }
 
     protected function dbSelectAllRange_JoinTable($tableNameA, $tableNameB, $tableNameC, $foreignKeyAB, $foreignKeyBC, $attrToSearch, $attrContentToSearch, $start, $range){
@@ -373,101 +759,6 @@ class Model extends Dbh{
         $results = $stmt->fetchAll();
         return $results;
     }
-
-    protected function dbSelectCount($tableName){
-        $sql = "SELECT COUNT(*) AS count FROM ".$tableName;
-        $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute()) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-        $results = $stmt->fetch();
-        return $results['count'];
-    }
-
-    protected function dbSelectAttributeCount($tableName, $attrToSearch, $attrContentToSearch){
-        // Check is multiple search or not
-        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
-            // Make number of attribute and number of content are the same
-            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-            $sql = "SELECT COUNT(*) AS count FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
-        } else {
-            $sql = "SELECT COUNT(*) AS count FROM $tableName WHERE $attrToSearch = ?";
-        }
-
-        $stmt = $this->connect()->prepare($sql);
-
-        //  Follow the mysql syntax
-        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database selecting $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-
-        $results = $stmt->fetch();
-        return $results['count'];
-    }
-
-
-
-
-
-
-
-    /*  Update database
-    Syntax:
-    dbUpdate: UPDATE {table name} SET {attribute to update} = {attribute content to update} WHERE {attribute to search} = {attribute content to search}
-    */
-    protected function dbUpdate($tableName, $attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
-        // Check is multiple search or not
-        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
-            // Make number of attribute and number of content are the same
-            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-            $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE " . $this->clauseConnector($attrToSearch, "AND");
-        } else {
-            $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $attrToSearch = ?";
-        }
-
-        $stmt = $this->connect()->prepare($sql);
-
-        $variables = array();
-        $variables[] = $attrContentToUpdate;
-
-        if(is_array($attrContentToSearch)){
-            foreach($attrContentToSearch as $element){
-                $variables[] = $element;
-            }
-        } else{
-            $variables[] = $attrContentToSearch;
-        }
-
-        if(!$stmt->execute($variables)) die("Database updating $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-    }
-
-
-
-
-
-    /*  Delete database data
-    Syntax:
-    dbDelete: DELETE FROM {table name} WHERE {attribute to search} = {attribute content to search}
-
-    */
-    protected function dbDelete($tableName, $attrToSearch, $attrContentToSearch){
-
-        // Check is multiple search or not
-        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
-            // Make number of attribute and number of content are the same
-            if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
-            $sql = "DELETE FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
-        } else {
-            $sql = "DELETE FROM $tableName WHERE $attrToSearch = ?";
-        }
-
-        $stmt = $this->connect()->prepare($sql);
-        if(!$stmt->execute(is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])) die("Database deleting from $tableName error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
-        return true;
-    }
-
-
-
-
-
-
-
 
 
     /*  MVC Model Version: v0.1.1-alpha
