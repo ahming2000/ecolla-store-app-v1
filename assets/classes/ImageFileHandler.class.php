@@ -148,7 +148,10 @@ class ImageFileHandler{
         }
 
         // Create a directory if it is not existed
-        @mkdir($path, 0700);
+        if (!is_dir($path)){
+            mkdir($path, 0700);
+            die("Break");
+        }
 
         // Upload to server
         $fullPath = $path . $fileName . "." . $extension;
