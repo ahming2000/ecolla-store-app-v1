@@ -150,7 +150,6 @@ class ImageFileHandler{
         // Create a directory if it is not existed
         if (!is_dir($path)){
             mkdir($path, 0700);
-            die("Break");
         }
 
         // Upload to server
