@@ -280,6 +280,7 @@ $(document).ready(function(){
         StepOneOffset = $('#step-one').offset().top;
         StepTwoOffset = $('#step-two').offset().top - 100;
         StepThreeOffset = $('#step-three').offset().top - 100;
+        StepFourOffset = $('#step-four').offset().top - 100;
 
         if (Scroll < StepTwoOffset) {
             $("#step-one-link").addClass("active");
@@ -299,6 +300,13 @@ $(document).ready(function(){
             $("#step-two-link").removeClass("active");
         } else {
             $("#step-three-link").removeClass("active");
+        }
+
+        if (Scroll >= StepFourOffset) {
+            $("#step-two-link").addClass("active");
+            $("#step-three-link").removeClass("active");
+        } else {
+            $("#step-four-link").removeClass("active");
         }
     });
 

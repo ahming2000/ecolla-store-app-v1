@@ -143,6 +143,13 @@ if(isset($_POST["list"])){
     header("refresh: 0"); //Refresh page immediately
 }
 
+// Reset view count
+if(isset($_POST["reset-view-count-button"])){
+    $controller->resetViewCount($i_id);
+    UsefulFunction::generateAlert("重置浏览次数成功！");
+    header("refresh: 0"); //Refresh page immediately
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -548,6 +555,39 @@ if(isset($_POST["list"])){
 
                         </div><!-- Variety image section -->
 
+
+
+
+                        <div classs="col-12 mb-3">
+                            <div class="row">
+                                <div class="h2" id="step-four">其他商品设定</div><br>
+                                <div class="col-12">
+                                    <div class="mx-auto">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">设定名称</th>
+                                                    <th scope="col">数值</th>
+                                                    <th scope="col">操作</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr>
+                                                    <td>商品浏览次数</td>
+                                                    <td><input type="text" class="form-control form-control-sm" value="<?= $item->getViewCount(); ?>" disabled/></td>
+                                                    <td><button type="submit" class="btn btn-primary btn-sm" name="reset-view-count-button">重置</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+
                         <div class="col-12 text-center mb-3">
                             <input class="btn btn-primary mr-2" type="submit" value="保存" name="save" style="width: 200px">
                             <input class="btn btn-primary" type="submit" value="保存并上架" name="list" style="width: 200px">
@@ -563,10 +603,11 @@ if(isset($_POST["list"])){
             <!-- Navigation guideline -->
             <div class="col-sm-0 col-md-2">
                 <div style="position: fixed;" id="menu-list">
-                    <ul class="list-group">
+                    <ul class="list-group text-center">
                         <a href="#step-one" id="step-one-link" class="item-create-step-info list-group-item list-group-item-action active">基本资讯</a>
                         <a href="#step-two" id="step-two-link" class="item-create-step-info list-group-item list-group-item-action">销售资料</a>
                         <a href="#step-three" id="step-three-link" class="item-create-step-info list-group-item list-group-item-action">媒体管理</a>
+                        <a href="#step-four" id="step-four-link" class="item-create-step-info list-group-item list-group-item-action">其他商品设定</a>
                     </ul>
                 </div>
             </div><!-- Navigation guideline -->
