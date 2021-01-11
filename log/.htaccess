@@ -1,0 +1,11 @@
+#<--Below this line-->
+AuthUserFile /dev/null
+AuthGroupFile /dev/null
+
+RewriteEngine On
+
+RewriteCond %{HTTP_REFERER} !^http://localhost.* [NC]
+
+
+RewriteRule /* http://localhost/index.php [R,L]
+#<--To above this line-->

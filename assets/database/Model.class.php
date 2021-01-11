@@ -1,6 +1,6 @@
 <?php
 
-/*  MVC Model Version: v0.3.0-alpha
+/*  MVC Model Version: v0.3.1-alpha
 *   Created by AhMing
 *   Commit Details: https://github.com/ahming2000/EcollaWebsite/commits/main/assets/database/Model.class.php
 *   Go to README.MD for changing log.
@@ -13,15 +13,59 @@ class Model extends Dbh{
     /*** Utility ***/
     /*  Print the error for debugging use */
     private function handleException($errorLocation, $detail){
-        echo "Internal error<br>";
-        echo "$errorLocation<br>";
-        echo "Error message: $detail";
+        echo "Internal error<br>$errorLocation<br>Error message: $detail";
+        $this->log("[Error] $errorLocation Error message: $detail");
         die();
     }
 
+    /* Get client IP address */
+    private function getClientIPAddress(){
+        //whether ip is from the share internet
+        if(!empty($_SERVER['HTTP_CLIENT_IP'])) {
+            $ip = $_SERVER['HTTP_CLIENT_IP'];
+        }
+        //whether ip is from the proxy
+        else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        //whether ip is from the remote address
+        else{
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        return $ip;
+    }
+
+    /* Get current page name */
+    private function getCurrentPageLocation(){
+        return substr($_SERVER['REQUEST_URI'], 1);
+    }
+
     /* Log to file for any changes */
-    private function log(){
-        //To-do: Logging to file for every function
+    private function log($message){
+
+        $date = date("Y-m-d");
+        $time = date("H:i:s");
+        $ip = $this->getClientIPAddress();
+        $pageLocation = $this->getCurrentPageLocation();
+
+        // Make dir if it is not existed
+        if(!is_dir("log/")) mkdir("log/", 0700);
+        if(!is_dir("log/model/")) mkdir("log/model/", 0700);
+
+        // Create file pointer
+        if(file_exists($_SERVER['DOCUMENT_ROOT'] . "/log/model/model-log-$date.log")){
+            $fptr = fopen($_SERVER['DOCUMENT_ROOT'] . "/log/model/model-log-$date.log", "a") or die("Cannot open log file correctly!");
+        } else{
+            $fptr = fopen($_SERVER['DOCUMENT_ROOT'] . "/log/model/model-log-$date.log", "w") or die("Cannot open log file correctly!");
+        }
+
+        $logLine = "[$time][$ip accessing $pageLocation]$message\n";
+
+        // Write to file
+        if(!fwrite($fptr, $logLine)){
+            $this->handleException("Error when logging.", "Please check the file pointer!");
+        }
+        fclose($fptr);
     }
 
     private $DB_CONFIG;
@@ -75,7 +119,7 @@ class Model extends Dbh{
     private function clauseConnector($attrArray, $clause){
         $str = $attrArray[0] . " = ?";
         for($i = 1; $i < sizeof($attrArray); $i++){
-            $str = $str . " " . $clause . " " . $attrArray[$i] . " = ?";
+            $str = $str . " " . $clause . " " . $attrArray[$i] . " LIKE ?";
         }
         return $str;
     }
@@ -91,6 +135,9 @@ class Model extends Dbh{
         Return true when run a query without result
     */
     protected function dbQuery($sql){
+
+        $this->log("Start query: $sql");
+
         $stmt = $this->connect()->prepare($sql);
 
         // Execute the query
@@ -100,6 +147,7 @@ class Model extends Dbh{
 
         // Return the results into php variable
         $results = $stmt->fetchAll();
+        $this->log("Query \"$sql\" run successfully!");
         return $results == null ? true : $results;
     }
 
@@ -108,6 +156,9 @@ class Model extends Dbh{
         dbInsert: INSERT INTO {table name} VALUE({data to insert})
     */
     protected function dbInsert_new($configName, $data){
+
+        $this->log("[Info] Inserting with config name \"$configName\"");
+
         // Check availability of the database table config
         if (!array_key_exists($configName, $this->DB_CONFIG)) {
             $this->handleException("$configName is not existed in database table config.", "Please make sure config is available in the database table config file!");
@@ -163,6 +214,9 @@ class Model extends Dbh{
             $sql = "SELECT * FROM $tableName";
         }
 
+        $l = $hasLimit ? "with" : "without";
+        $this->log("[Info] Selecting all row(s) from $tableName $l range set.");
+
         // Prepare the query
         $stmt = $this->connect()->prepare($sql);
 
@@ -212,7 +266,7 @@ class Model extends Dbh{
                 $whereClause = $this->clauseConnector($attrToSearch, "AND");
                 $sql = "SELECT * FROM $tableName WHERE $whereClause LIMIT $start, $range";
             } else{
-                $sql = "SELECT * FROM $tableName WHERE $attrToSearch = ? LIMIT $start, $range";
+                $sql = "SELECT * FROM $tableName WHERE $attrToSearch LIKE ? LIMIT $start, $range";
             }
         }
         else{
@@ -220,9 +274,13 @@ class Model extends Dbh{
                 $whereClause = $this->clauseConnector($attrToSearch, "AND");
                 $sql = "SELECT * FROM $tableName WHERE $whereClause";
             } else{
-                $sql = "SELECT * FROM $tableName WHERE $attrToSearch = ?";
+                $sql = "SELECT * FROM $tableName WHERE $attrToSearch LIKE ?";
             }
         }
+
+        $l = $hasLimit ? "with" : "without";
+        $c = $hasMultipleSearch ? "with" : "without";
+        $this->log("[Info] Selecting row(s) from $tableName $c multiple condition set and $l range set.");
 
         // Prepare the query
         $stmt = $this->connect()->prepare($sql);
@@ -259,6 +317,9 @@ class Model extends Dbh{
             $sql = "SELECT $attrToSelect FROM $tableName";
         }
 
+        $l = $hasLimit ? "with" : "without";
+        $this->log("[Info] Selecting column(s) from $tableName $l range set.");
+
         // Prepare the query
         $stmt = $this->connect()->prepare($sql);
 
@@ -284,6 +345,7 @@ class Model extends Dbh{
 
         $hasLimit = false;
         $hasMultipleSearch = false;
+        $hasMultipleSelect = false;
 
         // If $start and $range is set, query with LIMIT CLAUSE
         if($range != 0) $hasLimit = true;
@@ -303,22 +365,53 @@ class Model extends Dbh{
             }
         }
 
+        // If $attrToSearch is array, enable multiple select
+        if(is_array($attrToSelect)){
+            $hasMultipleSelect = true;
+        }
+
         if($hasLimit){
             if($hasMultipleSearch){
-                $whereClause = $this->clauseConnector($attrToSearch, "AND");
-                $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause LIMIT $start, $range";
+                if($hasMultipleSelect){
+                    $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                    $selectClause = $this->concatString($attrToSelect, ", ");
+                    $sql = "SELECT $selectClause FROM $tableName WHERE $whereClause LIMIT $start, $range";
+                } else{
+                    $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                    $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause LIMIT $start, $range";
+                }
             } else{
-                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ? LIMIT $start, $range";
+                if($hasMultipleSelect){
+                    $selectClause = $this->concatString($attrToSelect, ", ");
+                    $sql = "SELECT $selectClause FROM $tableName WHERE $attrToSearch LIKE ? LIMIT $start, $range";
+                } else{
+                    $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch LIKE ? LIMIT $start, $range";
+                }
             }
         }
         else{
             if($hasMultipleSearch){
-                $whereClause = $this->clauseConnector($attrToSearch, "AND");
-                $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause";
+                if($hasMultipleSelect){
+                    $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                    $selectClause = $this->concatString($attrToSelect, ", ");
+                    $sql = "SELECT $selectClause FROM $tableName WHERE $whereClause";
+                } else{
+                    $whereClause = $this->clauseConnector($attrToSearch, "AND");
+                    $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause";
+                }
             } else{
-                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
+                if($hasMultipleSelect){
+                    $selectClause = $this->concatString($attrToSelect, ", ");
+                    $sql = "SELECT $selectClause FROM $tableName WHERE $attrToSearch LIKE ?";
+                } else{
+                    $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch LIKE ?";
+                }
             }
         }
+
+        $l = $hasLimit ? "with" : "without";
+        $c = $hasMultipleSearch ? "with" : "without";
+        $this->log("[Info] Selecting row(s) from $tableName $c multiple condition set and $l range set.");
 
         // Prepare the query
         $stmt = $this->connect()->prepare($sql);
@@ -370,7 +463,7 @@ class Model extends Dbh{
                 $whereClause = $this->clauseConnector($attrToSearch, "AND");
                 $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause LIMIT $start, $range";
             } else{
-                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ? LIMIT $start, $range";
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch LIKE ? LIMIT $start, $range";
             }
         }
         else{
@@ -378,9 +471,13 @@ class Model extends Dbh{
                 $whereClause = $this->clauseConnector($attrToSearch, "AND");
                 $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause";
             } else{
-                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
+                $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch LIKE ?";
             }
         }
+
+        $l = $hasLimit ? "with" : "without";
+        $c = $hasMultipleSearch ? "with" : "without";
+        $this->log("[Info] Selecting column(s) from $tableName $c multiple condition set and $l range set.");
 
         // Prepare the query
         $stmt = $this->connect()->prepare($sql);
@@ -403,7 +500,7 @@ class Model extends Dbh{
         1. Relevent data with selected column and one or some attributes (Value)
         2. Relevent data with selected column and one or some attributes within range set (Value)
     */
-    protected function dbSelectAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch, $start = 0, $range = 0){
+    protected function dbSelectAttribute($tableName, $attrToSelect, $attrToSearch, $attrContentToSearch){
 
         $hasMultipleSearch = false;
 
@@ -426,8 +523,11 @@ class Model extends Dbh{
             $whereClause = $this->clauseConnector($attrToSearch, "AND");
             $sql = "SELECT $attrToSelect FROM $tableName WHERE $whereClause";
         } else{
-            $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch = ?";
+            $sql = "SELECT $attrToSelect FROM $tableName WHERE $attrToSearch LIKE ?";
         }
+
+        $c = $hasMultipleSearch ? "with" : "without";
+        $this->log("[Info] Selecting data from $tableName $c multiple condition set.");
 
         // Prepare the query
         $stmt = $this->connect()->prepare($sql);
@@ -439,6 +539,10 @@ class Model extends Dbh{
 
         // Return the results into php variable
         $results = $stmt->fetchAll();
+        // Log for warning if the row get is more than 1
+        if(!empty($results[1])){
+            $this->log("[Warning] The attribute to select have more than 2 rows in results, this will only return first result.");
+        }
         // If nothing is found, directly return null to avoid array indexing error
         if($results != null) return $results[0][$attrToSelect];
         else return null;
@@ -449,7 +553,7 @@ class Model extends Dbh{
         $hasMultipleSearch = false;
 
         // If $attrToSearch and $attrContentToSearch are array, enable multiple search
-        if(is_array($attrToSearch) or is_array($attrContentToSearch)){
+        if((is_array($attrToSearch) or is_array($attrContentToSearch)) and (!empty($attrToSearch) and !empty($attrContentToSearch)){
             $hasMultipleSearch = true;
 
             // Error when one of it is not array
@@ -462,6 +566,9 @@ class Model extends Dbh{
                 $this->handleException("Error when selecting count from $tableName.", "You must have same amount of attribute and attribute content for WHERE clause!");
             }
         }
+
+        $c = $hasMultipleSearch ? "with" : "without";
+        $this->log("[Info] Selecting count of $tableName $c multiple condition set.");
 
         if($hasMultipleSearch){
             $whereClause = $this->clauseConnector($attrToSearch, "AND");
@@ -506,18 +613,21 @@ class Model extends Dbh{
             }
         }
 
+        $c = $hasMultipleSearch ? "with" : "without";
+        $this->log("[Info] Updating $attrToUpdate to $attrContentToUpdate from $tableName $c multiple condition set.");
+
         if($hasMultipleSearch){
             $whereClause = $this->clauseConnector($attrToSearch, "AND");
             $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $whereClause";
         } else{
-            $sql = "UPDATE $tableName SET $attrToUpdate = ?";
+            $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $attrToSearch LIKE ?";
         }
 
         // Prepare the query
         $stmt = $this->connect()->prepare($sql);
 
         // Execute the query, put it as array when it is array
-        if(!$stmt->execute(array_merge([$attrContentToUpdate], is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch])){
+        if(!$stmt->execute(array_merge([$attrContentToUpdate], is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch]))){
             $this->handleException("Error when updating $attrToUpdate from $tableName.", $stmt->errorInfo()[2]);
         }
     }
@@ -545,11 +655,14 @@ class Model extends Dbh{
             }
         }
 
+        $c = $hasMultipleSearch ? "with" : "without";
+        $this->log("[Info] Deleting row from $tableName $c multiple condition set.");
+
         if($hasMultipleSearch){
             $whereClause = $this->clauseConnector($attrToSearch, "AND");
             $sql = "DELETE FROM $tableName WHERE $whereClause";
         } else{
-            $sql = "DELETE FROM $tableName WHERE $attrToSearch = ?";
+            $sql = "DELETE FROM $tableName WHERE $attrToSearch LIKE ?";
         }
 
         // Prepare the query
@@ -665,7 +778,7 @@ class Model extends Dbh{
             if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
             $sql = "SELECT * FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND") . " LIMIT $start, $range";
         } else {
-            $sql = "SELECT * FROM $tableName WHERE $attrToSearch = ? LIMIT $start, $range";
+            $sql = "SELECT * FROM $tableName WHERE $attrToSearch LIKE ? LIMIT $start, $range";
         }
 
         $stmt = $this->connect()->prepare($sql);
@@ -684,7 +797,7 @@ class Model extends Dbh{
             if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
             $sql = "SELECT COUNT(*) AS count FROM $tableName WHERE " . $this->clauseConnector($attrToSearch, "AND");
         } else {
-            $sql = "SELECT COUNT(*) AS count FROM $tableName WHERE $attrToSearch = ?";
+            $sql = "SELECT COUNT(*) AS count FROM $tableName WHERE $attrToSearch LIKE ?";
         }
 
         $stmt = $this->connect()->prepare($sql);
@@ -703,7 +816,7 @@ class Model extends Dbh{
             if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
             $sql = "SELECT * FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND " . $this->clauseConnector($attrToSearch, "AND") . " LIMIT $start, $range";
         } else {
-            $sql = "SELECT * FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch = ? LIMIT $start, $range";
+            $sql = "SELECT * FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch LIKE ? LIMIT $start, $range";
         }
 
         $stmt = $this->connect()->prepare($sql);
@@ -719,7 +832,7 @@ class Model extends Dbh{
             if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
             $sql = "SELECT $attrToSelect FROM $tableNameMain JOIN ($tableNameA, $tableNameB) USING ($foreignKeyFromTableA, $foreignKeyFromTableB) WHERE " . $this->clauseConnector($attrToSearch, "AND");
         } else {
-            $sql = "SELECT $attrToSelect FROM $tableNameMain JOIN ($tableNameA, $tableNameB) USING ($foreignKeyFromTableA, $foreignKeyFromTableB) WHERE $attrToSearch = ?";
+            $sql = "SELECT $attrToSelect FROM $tableNameMain JOIN ($tableNameA, $tableNameB) USING ($foreignKeyFromTableA, $foreignKeyFromTableB) WHERE $attrToSearch LIKE ?";
         }
 
         $stmt = $this->connect()->prepare($sql);
@@ -735,7 +848,7 @@ class Model extends Dbh{
             if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
             $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND " . $this->clauseConnector($attrToSearch, "AND");
         } else {
-            $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch = ?";
+            $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch LIKE ?";
         }
 
         $stmt = $this->connect()->prepare($sql);
@@ -751,7 +864,7 @@ class Model extends Dbh{
             if(sizeof($attrToSearch) !== sizeof($attrContentToSearch)) die("Database query error: You must have same amount of attribute and attribute content for WHERE clause!");
             $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND " . $this->clauseConnector($attrToSearch, "AND") . " LIMIT $start, $range";
         } else {
-            $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch = ? LIMIT $start, $range";
+            $sql = "SELECT $attrToSelect FROM $tableNameA a, $tableNameB b, $tableNameC c WHERE a.$foreignKeyAB = b.$foreignKeyAB AND b.$foreignKeyBC = c.$foreignKeyBC AND $attrToSearch LIKE ? LIMIT $start, $range";
         }
 
         $stmt = $this->connect()->prepare($sql);

@@ -1,19 +1,29 @@
-# MVC Model v0.3.0-alpha (Created by AhMing)
+# MVC Model v0.3.1-alpha (Created by AhMing)
 
 Changing Log:
 
-v0.3.1-alpha (Planned)
+v0.4.0-alpha (Planned)
+- Use `dbSelectRowAttribute()` to replace `dbSelectAll()`and `dbSelectRow()`, and rename to `dbSelectRow()` (2D array data selector).
+- Use `dbSelectColumnAttribute()` to replace `dbSelectColumn()` and rename to `dbSelectColumn()` (1D array data Selector).
+- `dbSelectCount()` (counting selector) and `dbSelectAttribute()` (single data selector) will remain unchanged.
+
+v0.3.1-alpha
 - Fix float value searching problem.
+- Multiple attribute select added for `dbSelectRowAttribute()`
 - Order by function added.
-- `log()` added
+- `log()` added.
+- Error on `dbUpdate()` fixed.
+- Add warn logging if more than 1 row found with `dbSelectAttribute()`
+- Residual code at `dbSelectAttribute()` removed.
+- Multiple search flag error fixed at `dbSelectCount()`.
 
 v0.3.0-alpha
 - Range selection now combine with the normal range function.
 - Attribute Count function now combine with normal count function.
 - Joined table removed from this version and use `dbQuery()` instead
-- Multiple attribute added for `dbSelectRowAttribute()`
 - `handleException()` added.
 - `concatStrChar()` renamed to `concatString()` and add one more features which can concat the array
+- Database table information now will read from `db-tables-config.json` for database inserting
 - Comment added for documentation.
 - Code optimize by using php pre-defined function.
 
