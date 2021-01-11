@@ -553,7 +553,7 @@ class Model extends Dbh{
         $hasMultipleSearch = false;
 
         // If $attrToSearch and $attrContentToSearch are array, enable multiple search
-        if((is_array($attrToSearch) or is_array($attrContentToSearch)) and (!empty($attrToSearch) and !empty($attrContentToSearch)){
+        if((is_array($attrToSearch) or is_array($attrContentToSearch)) and (!empty($attrToSearch) and !empty($attrContentToSearch))){
             $hasMultipleSearch = true;
 
             // Error when one of it is not array
