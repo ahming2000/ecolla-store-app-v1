@@ -49,8 +49,8 @@ class Model extends Dbh{
         $pageLocation = $this->getCurrentPageLocation();
 
         // Make dir if it is not existed
-        if(!is_dir("log/")) mkdir("log/", 0700);
-        if(!is_dir("log/model/")) mkdir("log/model/", 0700);
+        if(!is_dir($_SERVER['DOCUMENT_ROOT'] . "log/")) mkdir($_SERVER['DOCUMENT_ROOT'] . "log/", 0700);
+        if(!is_dir($_SERVER['DOCUMENT_ROOT'] . "log/model/")) mkdir($_SERVER['DOCUMENT_ROOT'] . "log/model/", 0700);
 
         // Create file pointer
         if(file_exists($_SERVER['DOCUMENT_ROOT'] . "/log/model/model-log-$date.log")){
