@@ -3,7 +3,7 @@
 require_once __DIR__."\\..\\database\\Model.class.php";
 
 class View extends Model{
-
+    
     public function toItemObjList($dbTable_items){
 
         $items = array();
@@ -69,6 +69,7 @@ class View extends Model{
         // Get all items
         // Query: SELECT * FROM items
         $dbTable_items = $this->dbSelectAll("items");
+
         // Return empty array if no item is found
         if($dbTable_items == null) return array();
 
@@ -148,7 +149,7 @@ class View extends Model{
 
     public function getAllOrders(){
 
-        $dbTable_orders = $this->dbSelectAll("orders");
+        $dbTable_orders = $this->dbQuery("SELECT * FROM orders ORDER BY o_date_time DESC");
 
         return $this->toOrderObjList($dbTable_orders);
     }
