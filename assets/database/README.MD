@@ -10,7 +10,6 @@ v0.4.0-alpha (Planned)
 v0.3.1-alpha
 - Fix float value searching problem.
 - Multiple attribute select added for `dbSelectRowAttribute()`
-- Order by function added.
 - `log()` added.
 - Error on `dbUpdate()` fixed.
 - Add warn logging if more than 1 row found with `dbSelectAttribute()`
