@@ -31,7 +31,7 @@
 
     "order_items" : {
         "tableName" : "order_items",
-        "columns" : ["o_id", "v_barcode", "oi_quantity"]
+        "columns" : ["o_id", "v_barcode", "oi_quantity", "oi_expire_date"]
     },
 
     "users" : {

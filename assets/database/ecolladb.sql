@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Dec 21, 2020 at 11:36 AM
+-- Generation Time: Jan 12, 2021 at 11:44 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -122,38 +122,41 @@ CREATE TABLE IF NOT EXISTS `inventories` (
   `inv_quantity` int(11) NOT NULL,
   PRIMARY KEY (`inv_id`),
   KEY `inventories_FK_v_barcode` (`v_barcode`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `inventories`
 --
 
 INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quantity`) VALUES
-(1, '6902538004045', '2021-01-01', 20),
+(1, '6902538004045', '2021-01-01', 16),
 (2, '6902538005141', '2021-01-01', 20),
 (3, '6902538007367', '2021-01-01', 20),
 (4, '6902538007381', '2021-01-01', 22),
-(5, '6902538007862', '2021-01-01', 22),
-(6, '6902538007886', '2021-01-01', 12),
+(5, '6902538007862', '2021-01-25', 20),
+(6, '6902538007886', '2021-01-01', 0),
 (7, '6931754804900', '2021-01-01', 20),
 (8, '6931754804917', '2021-01-01', 30),
 (9, '6931754804924', '2021-01-01', 23),
 (10, '6931754804931', '2021-01-01', 23),
 (11, '6931754805655', '2021-01-01', 14),
-(12, '6941025700084', '2021-01-01', 23),
+(12, '6941025700084', '2021-01-01', 22),
 (13, '6941025700138', '2021-01-01', 12),
 (14, '6941025701074', '2021-01-01', 14),
 (15, '6941025702019', '2021-01-01', 19),
 (16, '6902538004045', '2021-03-05', 30),
-(17, '6935145301016', '2021-05-20', 20),
+(17, '6935145301016', '2021-05-20', 10),
 (18, '6935145301030', '2021-05-20', 20),
-(19, '6935145301047', '2021-05-20', 20),
+(19, '6935145301047', '2021-05-20', 9),
 (20, '6935145301061', '2021-05-20', 20),
 (21, '6935145301078', '2021-05-20', 39),
-(22, '6935145343030', '2021-07-27', 20),
+(22, '6935145343030', '2021-07-27', 15),
 (23, '6935145343047', '2021-07-27', 20),
-(24, '6935145343061', '2021-07-27', 20),
-(25, '6935145343092', '2021-07-27', 20);
+(24, '6935145343061', '2021-07-27', 16),
+(25, '6935145343092', '2021-07-27', 20),
+(56, '6902538007862', '2021-01-01', 0),
+(57, '1234', '2021-01-12', 12),
+(58, '6935145301016', '2021-01-07', 6);
 
 -- --------------------------------------------------------
 
@@ -173,18 +176,21 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_image_count` int(11) NOT NULL,
   `i_view_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`i_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `items`
 --
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 45),
-(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 367),
-(3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 90),
-(4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 11),
-(5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 10);
+(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 0),
+(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 405),
+(3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 104),
+(4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 25),
+(5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 18),
+(10, '大家乐', '', '', '', '口味', 1, 2, 1),
+(11, 'ABC', '', '', '', '', 0, 0, 0),
+(12, 'hdasdsdasds', '', '', '', '', 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -199,6 +205,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `o_payment_method` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `o_note` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
   `o_delivery_id` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'This attribute will remain NULL before the order is being processed by admin.',
+  `o_status` varchar(20) COLLATE utf8_unicode_ci NOT NULL DEFAULT '待处理' COMMENT 'There is only four Enums available for this column, which is 待处理, 已出货, 已退货, 已取消',
   `c_name` varchar(100) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Since the website does not have customer registration, customer information will combine with this table.',
   `c_phone_mcc` varchar(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT '+60',
   `c_phone` varchar(11) COLLATE utf8_unicode_ci NOT NULL,
@@ -208,6 +215,16 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `c_postal_code` varchar(6) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`o_id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`o_id`, `o_date_time`, `o_payment_method`, `o_note`, `o_delivery_id`, `o_status`, `c_name`, `c_phone_mcc`, `c_phone`, `c_address`, `c_state`, `c_area`, `c_postal_code`) VALUES
+('ECOLLA20210105110145', '2021-01-05 11:01:45', 'TnG', '', '', '已取消', 'Kee', '+60', '143892199', '10, Jalan Suasa 1', 'Perak', 'Kampar', '31900'),
+('ECOLLA20210109083102', '2021-01-09 08:31:02', 'TnG', '', '', '待处理', '123', '+60', '1232131', 'KJL', 'Johor', 'Ayer Baloi', '82100'),
+('ECOLLA20210111081323', '2021-01-11 08:13:23', 'TnG', '', 'ABCSDSDSD', '已出货', 'Alex Lee', '+60', '1232131', '122342', 'Kuala Lumpur', 'Ampang', '68000'),
+('ECOLLA20210112103353', '2021-01-12 10:33:53', 'TnG', '', NULL, '已退款', '123', '+60', '123123', 'dsfsf', 'Kuala Lumpur', 'Setapak', '53300');
 
 -- --------------------------------------------------------
 
@@ -220,9 +237,20 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   `o_id` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `oi_quantity` int(11) NOT NULL DEFAULT '0',
+  `oi_expire_date` date NOT NULL,
   PRIMARY KEY (`o_id`,`v_barcode`),
   KEY `order_items_FK_v_barcode` (`v_barcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`o_id`, `v_barcode`, `oi_quantity`, `oi_expire_date`) VALUES
+('ECOLLA20210105110145', '6935145301016', 6, '2021-01-07'),
+('ECOLLA20210109083102', '6935145301016', 4, '2021-01-21'),
+('ECOLLA20210111081323', '6902538004045', 3, '2021-01-22'),
+('ECOLLA20210112103353', '6935145301047', 3, '2021-05-20');
 
 -- --------------------------------------------------------
 
@@ -268,12 +296,14 @@ CREATE TABLE IF NOT EXISTS `varieties` (
 --
 
 INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_price`, `v_weight`, `v_discount_rate`, `i_id`) VALUES
-('6902538004045', '青柠味600ml', 4.8, 0.6, 0.9, 1),
-('6902538005141', '水蜜桃味600ml', 4.8, 0.6, 0.9, 1),
-('6902538007367', '芒果味600ml', 4.8, 0.6, 0.9, 1),
-('6902538007381', '仙人掌青橘味600ml', 4.8, 0.6, 0.9, 1),
-('6902538007862', '竹子青提味500ml', 4.8, 0.5, 0.9, 1),
-('6902538007886', '卡曼橘味500ml', 4.8, 0.5, 0.9, 1),
+('122345', '阿斯', 23, 34, 1, 12),
+('1234', '阿斯', 12, 1, 1, 10),
+('6902538004045', '青柠味600ml', 4.8, 0.6, 1, 1),
+('6902538005141', '水蜜桃味600ml', 4.8, 0.6, 1, 1),
+('6902538007367', '芒果味600ml', 4.8, 0.6, 1, 1),
+('6902538007381', '仙人掌青橘味600ml', 4.8, 0.6, 1, 1),
+('6902538007862', '竹子青提味500ml', 4.8, 0.5, 1, 1),
+('6902538007886', '卡曼橘味500ml', 4.8, 0.5, 1, 1),
 ('6931754804900', '香辣味26g', 1.5, 0.026, 0.9, 2),
 ('6931754804917', '黑椒味26g', 1.5, 0.026, 1, 2),
 ('6931754804924', '山椒味26g', 1.5, 0.026, 1, 2),
@@ -284,7 +314,7 @@ INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_price`, `v_weight`, `v_di
 ('6935145301047', '蓝玫瑰275ml', 11.5, 0.275, 1, 4),
 ('6935145301061', '混合水果275ml', 11.5, 0.275, 1, 4),
 ('6935145301078', '紫葡萄275ml', 11.5, 0.275, 1, 4),
-('6935145343030', '白桃+白兰地330ml', 8.8, 0.33, 1, 5),
+('6935145343030', '白桃+白兰地330ml', 8.8, 0.33, 0.58, 5),
 ('6935145343047', '葡萄+白兰地330ml', 8.8, 0.33, 1, 5),
 ('6935145343061', '玫瑰+荔枝330ml', 8.8, 0.33, 1, 5),
 ('6935145343092', '果茶乐橘乌龙330ml', 8.8, 0.33, 1, 5),
