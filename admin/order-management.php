@@ -25,6 +25,28 @@ if(isset($_POST["updateDeliveryId"])){
     header("refresh: 0"); //Refresh page immediately
 }
 
+if(isset($_POST["refund"])){
+    if($controller->orderRefund($_POST["orderId"])){
+        UsefulFunction::generateAlert("订单已成功退款！");
+    } else{
+        UsefulFunction::generateAlert("订单必须要是待处理状态！");
+    }
+    header("refresh: 0"); //Refresh page immediately
+}
+
+if(isset($_POST["unbuy"])){
+    if($controller->orderUnbuy($_POST["orderId"])){
+        UsefulFunction::generateAlert("订单已成功反结账！");
+    } else{
+        UsefulFunction::generateAlert("订单必须要是待处理状态！");
+    }
+    header("refresh: 0"); //Refresh page immediately
+}
+
+if(isset($_POST["adjustOrder"])){
+
+}
+
 ?>
 
 <!DOCTYPE html>

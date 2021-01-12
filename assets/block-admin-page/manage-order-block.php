@@ -3,14 +3,15 @@
     <td>
         <?= $order->getDateTime(); ?><br>
         <?= $order->getOrderId(); ?><br>
+        订单状态：<?= $order->getOrderStatus(); ?><br>
         <button type='button' class='btn btn-sm btn-primary' value='<?= "../assets/images/orders/".$order->getOrderId().".jpg"; ?>' onclick='viewReceipt(this)'>查看账单</button>
     </td>
 
     <td>
         <form action="" method="post">
             <input type="text" name="orderId" value="<?= $order->getOrderId(); ?>" hidden/>
-            <input type="text" class="form-control form-control-sm mb-0" name="deliveryId" value="<?= $order->getDeliveryId(); ?>" placeholder="输入运输ID..."/><br>
-            <button type="submit" class="btn btn-sm btn-primary mt-0" name="updateDeliveryId">更新</button>
+            <input type="text" class="form-control form-control-sm mb-0" name="deliveryId" value="<?= $order->getDeliveryId(); ?>" placeholder="输入运输ID..." <?= ($order->getOrderStatus() == "待处理" or $order->getOrderStatus() == "已出货") ? "" : "disabled"; ?>/><br>
+            <button type="submit" class="btn btn-sm btn-primary mt-0" name="updateDeliveryId" <?= ($order->getOrderStatus() == "待处理" or $order->getOrderStatus() == "已出货") ? "" : "disabled"; ?>>更新</button>
         </form>
     </td>
 
@@ -36,9 +37,9 @@
     <td>
         <form action="" method="post">
             <input type="text" name="orderId" value="<?= $order->getOrderId(); ?>" hidden/>
-            <button type="button" class="btn btn-outline-secondary p-2 m-1" name="refund">退款</button><br>
-            <button type="button" class="btn btn-outline-secondary p-2 m-1" name="reverseCheckOut">反结账</button><br>
-            <button type="button" class="btn btn-outline-secondary p-2 m-1" name="adjustOrder">调整订单</button><br>
+            <button type="submit" class="btn btn-outline-secondary p-2 m-1" style="width: 70px;" name="refund">退款</button><br>
+            <button type="submit" class="btn btn-outline-secondary p-2 m-1" style="width: 70px;" name="unbuy">反结账</button><br>
+            <!-- <button type="submit" class="btn btn-outline-secondary p-2 m-1" name="adjustOrder">调整订单</button><br> -->
         </form>
     </td>
 </tr>
