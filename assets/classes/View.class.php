@@ -37,17 +37,24 @@ class View extends Model{
                 // Create new Variety object
                 $variety = new Variety($v['v_barcode'], $v['v_property'], $v['v_price'], $v['v_weight'], $v['v_discount_rate']);
 
-                // Get inventories of current variety
-                // Query: SELECT * FROM inventories WHERE v_barcode = ?
-                $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $v['v_barcode']);
+                // Only loop through when barcode is available
+                if(!empty($v["v_barcode"])){
 
-                foreach($dbTable_inventories as $inv){
+                    // Get inventories of current variety with asc expire date
+                    $dbTable_inventories = $this->dbQuery("SELECT * FROM inventories WHERE v_barcode LIKE " . $v["v_barcode"] . " ORDER BY inv_expire_date");
 
-                    // Create new Inventory object
-                    $inventory = new Inventory($inv["inv_expire_date"], $inv["inv_quantity"]);
+                    // Only loop through when inventory is available
+                    if($dbTable_inventories != 1){ // Result is true due to dbQuery default settings
+                        foreach($dbTable_inventories as $inv){
 
-                    // Add into the variety object
-                    $variety->addInventory($inventory);
+                            // Create new Inventory object
+                            $inventory = new Inventory($inv["inv_expire_date"], $inv["inv_quantity"]);
+
+                            // Add into the variety object
+                            $variety->addInventory($inventory);
+
+                        }
+                    }
 
                 }
 
