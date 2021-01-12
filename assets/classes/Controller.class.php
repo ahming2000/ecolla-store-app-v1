@@ -259,17 +259,21 @@ class Controller extends Model {
 
         foreach($order->getCart()->getCartItems() as $cartItem){
 
-            $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode() , $cartItem->getQuantity()];
-            $this->dbInsert("order_items", $order_items_ready);
+            $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $cartItem->getBarcode());
+            $selected = $this->getEarliestInventory($cartItem->getBarcode());
+            $selectedInventoryExpireDate = $dbTable_inventories[$selected]['inv_expire_date'];
+
+            $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode() , $cartItem->getQuantity(), $selectedInventoryExpireDate];
+            $this->dbInsert_new("order_items", $order_items_ready);
 
             // Edit Inventory
-            $this->editIventoryQuantity($cartItem->getBarcode(), $cartItem->getQuantity());
+            $this->dbUpdate("inventories", "inv_quantity", $dbTable_inventories[$selected]['inv_quantity'] - $cartItem->getQuantity(), ["v_barcode", "inv_expire_date"], [$cartItem->getBarcode(), $selectedInventoryExpireDate]);
 
         }
 
     }
 
-    private function editIventoryQuantity($barcode, $quantity){
+    private function getEarliestInventory($barcode){
         $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $barcode);
 
         $selected = 0;
@@ -279,7 +283,7 @@ class Controller extends Model {
             }
         }
 
-        $this->dbUpdate("inventories", "inv_quantity", $dbTable_inventories[$selected]['inv_quantity'] - $quantity, ["v_barcode", "inv_expire_date"], [$barcode, $dbTable_inventories[$selected]['inv_expire_date']]);
+        return $selected;
     }
 
     public function checkUserPassword($username, $password){
@@ -382,7 +386,61 @@ class Controller extends Model {
     }
 
     public function updateDeliveryId($orderId, $deliveryId){
+
+        // order status must be pending
+        $status = $this->dbSelectAttribute("orders", "o_status", "o_id", $orderId);
+        if($status != "待处理" and $status != "已出货") return false;
+
+        // Update delivery Id
         $this->dbUpdate("orders", "o_delivery_id", $deliveryId, "o_id", $orderId);
+
+        // Update status
+        if($deliveryId == "") $this->dbUpdate("orders", "o_status", "待处理", "o_id", $orderId);
+        else $this->dbUpdate("orders", "o_status", "已出货", "o_id", $orderId);
+        return true;
+    }
+
+    public function resetViewCount($i_id){
+        $this->dbUpdate("items", "i_view_count", 0, "i_id", $i_id);
+    }
+
+    public function orderRefund($orderId){
+
+        // order status must be pending
+        $status = $this->dbSelectAttribute("orders", "o_status", "o_id", $orderId);
+        if($status != "待处理") return false;
+
+        // Update status
+        $this->dbUpdate("orders", "o_status", "已退款", "o_id", $orderId);
+        return true;
+    }
+
+    public function orderUnbuy($orderId){
+
+        // order status must be pending
+        $status = $this->dbSelectAttribute("orders", "o_status", "o_id", $orderId);
+        if($status != "待处理") return false;
+
+        // Restore the purchased quantity into inventory
+        $itemList = $this->dbSelectRowAttribute("order_items", ["v_barcode", "oi_quantity", "oi_expire_date"], "o_id", $orderId);
+        foreach($itemList as $i){
+            $inv = $this->dbSelectRowAttribute("inventories", ["inv_expire_date", "inv_quantity"], ["v_barcode", "inv_expire_date"], [$i["v_barcode"], $i["oi_expire_date"]]);
+            if($inv != null){
+                $this->dbUpdate("inventories", "inv_quantity", $inv[0]["inv_quantity"] + $i["oi_quantity"], ["v_barcode", "inv_expire_date"], [$i["v_barcode"], $i["oi_expire_date"]]);
+            } else{
+                $inventory_ready = [$i["v_barcode"], $i["oi_expire_date"], $i["oi_quantity"]];
+                $this->dbInsert_new("inventories", $inventory_ready);
+            }
+        }
+
+        // Update status
+        $this->dbUpdate("orders", "o_status", "已取消", "o_id", $orderId);
+        return true;
+    }
+
+    public function deleteOrderRecord($orderId){
+        // Delete order from orders table and will cascade delete order items
+        $this->dbDelete("orders", "o_id", $orderId);
     }
 
 

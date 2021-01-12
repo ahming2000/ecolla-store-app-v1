@@ -3,7 +3,7 @@
 require_once __DIR__."\\..\\database\\Model.class.php";
 
 class View extends Model{
-    
+
     public function toItemObjList($dbTable_items){
 
         $items = array();
@@ -139,7 +139,7 @@ class View extends Model{
 
             $customer = new Customer($o["c_name"], $o["c_phone_mcc"], $o["c_phone"], $o["c_address"], $o["c_state"], $o["c_area"], $o["c_postal_code"]);
             $order = new Order($customer);
-            $order->importOrder($o["o_date_time"], $o["o_id"], $cart, $o["o_payment_method"], $o["o_delivery_id"]);
+            $order->importOrder($o["o_date_time"], $o["o_id"], $cart, $o["o_payment_method"], $o["o_delivery_id"], $o["o_status"]);
 
             array_push($orders, $order);
         }
