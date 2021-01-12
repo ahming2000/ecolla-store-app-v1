@@ -136,7 +136,7 @@ class Model extends Dbh{
     */
     protected function dbQuery($sql){
 
-        $this->log("Start query: $sql");
+        $this->log("[Info] Start query: $sql");
 
         $stmt = $this->connect()->prepare($sql);
 
@@ -147,7 +147,6 @@ class Model extends Dbh{
 
         // Return the results into php variable
         $results = $stmt->fetchAll();
-        $this->log("Query \"$sql\" run successfully!");
         return $results == null ? true : $results;
     }
 
