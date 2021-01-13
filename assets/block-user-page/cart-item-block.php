@@ -38,7 +38,7 @@
             <!-- Remove button and price display -->
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <button type="submit" name="removeItem" class="btn btn-primary card-link-secondary small" value="<?= $cartItem->getBarcode() ?>">
+                    <button type="submit" name="removeItem" class="btn btn-primary py-2 px-3 card-link-secondary small" value="<?= $cartItem->getBarcode() ?>">
                         <i class="fas fa-trash-alt mr-1"></i>移除
                     </button>
                 </div>
