@@ -186,6 +186,7 @@ if (isset($_POST["report_date"])) {
 
         /* For Desktop Default View */
         @media only screen and (min-width: 1024px) {
+
             #pie_chart,
             #line_chart {
                 height: 400px;
@@ -199,43 +200,14 @@ if (isset($_POST["report_date"])) {
     <!--Load generate html function from admin_index_generate_html.js -->
     <script src="../assets/js/admin_index_generate_html.js"></script>
 
+    <!--Load Table functions from admin_table.js-->
+    <script src="../assets/js/admin_table.js"></script>
+
     <script>
         //convert php value to javascript
         const date_ = (new Date()).toLocaleDateString('en-CA');
         const price_ = <?php echo $total_price; ?>;
         const sold_ = <?php echo $total_sold; ?>;
-
-        //This part a bit hard code, should be dynamic
-        let table_col = {
-            'name': {
-                ind: 2,
-                flag: true
-            },
-            'variety': {
-                ind: 3,
-                flag: true
-            },
-            'barcode': {
-                ind: 4,
-                flag: true
-            },
-            'count': {
-                ind: 5,
-                flag: true
-            },
-            'price_per_item': {
-                ind: 6,
-                flag: true
-            },
-            'total_price': {
-                ind: 7,
-                flag: true
-            },
-            'time_purchased': {
-                ind: 8,
-                flag: true
-            }
-        };
 
         function update_date() {
             let t_date = new Date(<?php echo strtotime($t_date) ?> * 1000);
@@ -246,63 +218,49 @@ if (isset($_POST["report_date"])) {
         }
 
         //Table functions - show or hide table columns
-        function show_col(ind) {
+        function increase_colspan() {
             let colspan = parseInt($('.orderId_td').attr('colspan'));
-            $(`td:nth-child(${ind}),th:nth-child(${ind})`).show();
             $('.orderId_td').attr('colspan', colspan + 1);
         }
 
-        function show_col_all() {
-            for (let tble in table_col) {
-                if (!table_col[tble].flag) {
-                    show_col(table_col[tble].ind);
-                    $(`#detail_board input[name='${tble}']`).prop("checked", true);
-                    table_col[tble].flag = true;
-                }
-            }
-        }
-
-        function hide_col(ind) {
+        function decrease_colspan() {
             let colspan = parseInt($('.orderId_td').attr('colspan'));
-            $(`td:nth-child(${ind}),th:nth-child(${ind})`).hide();
             $('.orderId_td').attr('colspan', colspan - 1);
         }
 
-        function hide_col_phone() {
+        function hide_col_phone(table_col) {
             // To hide barcode column
-            hide_col(4);
-            $("#detail_board input[name='barcode']").prop("checked", false);
-            table_col['barcode'].flag = false;
+            hide_col_full('Barcode', table_col);
+            decrease_colspan();
 
             // To hide price Per Item column
-            hide_col(6);
-            $("#detail_board input[name='price_per_item']").prop("checked", false);
-            table_col['price_per_item'].flag = false;
+            hide_col_full('Price Per Item', table_col);
+            decrease_colspan();
 
             // To hide time purchased column
-            hide_col(8);
-            $("#detail_board input[name='time_purchased']").prop("checked", false);
-            table_col['time_purchased'].flag = false;
+            hide_col_full('Time Purchased', table_col);
+            decrease_colspan();
         }
 
-        function hide_col_ipad() {
-            // To hide time purchased column
-            hide_col(8);
-            $("#detail_board input[name='time_purchased']").prop("checked", false);
-            table_col['time_purchased'].flag = false;
+        function hide_col_ipad(table_col) {
+            // To hide barcode column
+            hide_col_full('Barcode', table_col);
+            decrease_colspan();
         }
 
         $(function() {
+            let table_col = get_table_col(1);
+            generate_detail_html(table_col);
 
             if ($(window).width() <= 600) {
                 //For phone
                 $("#in_form").append(generate_report_info_phone(date_, price_, sold_));
-                hide_col_phone();
+                hide_col_phone(table_col);
                 $("#weekly_title_cnt").append(generate_week_title_phone());
             } else if ($(window).width() > 600 && $(window).width() < 900) {
                 //For Ipad default width and phone side-view
                 $("#in_form").append(generate_report_info_ipad(date_, price_, sold_));
-                hide_col_ipad();
+                hide_col_ipad(table_col);
                 $("#weekly_title_cnt").append(generate_week_title_default());
             } else {
                 //For Desktop
@@ -378,17 +336,22 @@ if (isset($_POST["report_date"])) {
                 $("#in_form_").remove();
                 $("#weekly_").remove();
 
-                show_col_all();
+                for(let tble in table_col){
+                    if (!table_col[tble].flag){
+                        increase_colspan();
+                    }
+                }
+                show_col_all(table_col); 
 
                 if ($(window).width() <= 600) {
                     //For phone
                     $("#in_form").append(generate_report_info_phone(date_, price_, sold_));
-                    hide_col_phone();
+                    hide_col_phone(table_col);
                     $("#weekly_title_cnt").append(generate_week_title_phone());
                 } else if ($(window).width() > 600 && $(window).width() < 900) {
                     //For Ipad default width and phone side-view
                     $("#in_form").append(generate_report_info_ipad(date_, price_, sold_));
-                    hide_col_ipad();
+                    hide_col_ipad(table_col);
                     $("#weekly_title_cnt").append(generate_week_title_default());
                 } else {
                     //For computers default width
@@ -444,13 +407,6 @@ if (isset($_POST["report_date"])) {
             <div style="position: relative;">
                 <button id="detail_btn" class="btn-sm btn-danger">&#9660; Details</button>
                 <div id="detail_board" style="height: 240px; width: 150px; background-color: white; display: none;position: absolute; z-index: 2; right: 0px;">
-                    &nbsp;<input type="checkbox" name="name" checked="checked" />&nbsp;<label for="name">Name</label><br />
-                    &nbsp;<input type="checkbox" name="variety" checked="checked" />&nbsp;<label for="variety">Variety</label><br />
-                    &nbsp;<input type="checkbox" name="barcode" checked="checked" />&nbsp;<label for="barcode">Barcode</label><br />
-                    &nbsp;<input type="checkbox" name="count" checked="checked" />&nbsp;<label for="count">Count</label><br />
-                    &nbsp;<input type="checkbox" name="price_per_item" checked="checked" />&nbsp;<label for="price_per_item">Price Per Item</label><br />
-                    &nbsp;<input type="checkbox" name="total_price" checked="checked" />&nbsp;<label for="total_price">Total Price</label><br />
-                    &nbsp;<input type="checkbox" name="time_purchased" checked="checked" />&nbsp;<label for="time_purchased">Time Purchased</label>
                 </div>
             </div>
         </div>
@@ -479,16 +435,16 @@ if (isset($_POST["report_date"])) {
                     $tmp_cart = $o->getCart()->getCartItems();
                     foreach ($tmp_cart as $cartItem) {
                         echo
-                            "<tr>" .
-                                "<th scope='row'>" . ++$tmp . "</th>" .
-                                "<td>" . $cartItem->getItem()->getName() . "</td>" .
-                                "<td>" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty()  . "</td>" .
-                                "<td>" . $cartItem->getBarcode() . "</td>" .
-                                "<td>" . $cartItem->getQuantity() . "</td>" .
-                                "<td>" . "RM" . number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate(), 2) . "</td>" .
-                                "<td>" . "RM" . number_format($cartItem->getSubPrice(), 2) . "</td>" .
-                                "<td>" . explode(" ", $o->getDateTime())[1] . "</td>" .
-                                "</tr>";
+                        "<tr>" .
+                            "<th scope='row'>" . ++$tmp . "</th>" .
+                            "<td>" . $cartItem->getItem()->getName() . "</td>" .
+                            "<td>" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty()  . "</td>" .
+                            "<td>" . $cartItem->getBarcode() . "</td>" .
+                            "<td>" . $cartItem->getQuantity() . "</td>" .
+                            "<td>" . "RM" . number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate(), 2) . "</td>" .
+                            "<td>" . "RM" . number_format($cartItem->getSubPrice(), 2) . "</td>" .
+                            "<td>" . explode(" ", $o->getDateTime())[1] . "</td>" .
+                            "</tr>";
                     }
                 }
                 ?>
