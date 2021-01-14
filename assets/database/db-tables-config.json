@@ -24,6 +24,11 @@
         "columns" : ["i_id", "cat_id"]
     },
 
+    "wholesales" : {
+        "tableName" : "wholesales",
+        "columns" : ["i_id", "w_min", "w_max", "w_discount_rate"]
+    },
+
     "orders" : {
         "tableName" : "orders",
         "columns" : ["o_id", "o_date_time", "o_payment_method", "o_note", "c_name", "c_phone_mcc", "c_phone", "c_address", "c_state", "c_area", "c_postal_code"]

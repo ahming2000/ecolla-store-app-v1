@@ -28,6 +28,20 @@ class View extends Model{
 
             }
 
+            // Get wholesales of current item
+            // Query: SELECT * FROM wholesales WHERE i_id = ?
+            $dbTable_wholesales = $this->dbSelectRow("wholesales", "i_id", $i["i_id"]);
+
+            foreach($dbTable_wholesales as $w){
+
+                // Create new Wholesale object
+                $wholesale = new Wholesale($w["w_min"], $w["w_max"], $w["w_discount_rate"]);
+
+                // Add into item object
+                $item->addWholesale($wholesale);
+
+            }
+
             // Get varieties of current item
             // Query: SELECT * FROM varieties WHERE i_id = ?
             $dbTable_varieties = $this->dbSelectRow("varieties", "i_id", $i["i_id"]);

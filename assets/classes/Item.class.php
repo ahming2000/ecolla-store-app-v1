@@ -16,6 +16,7 @@ class Item {
     //Array variable
     private $categories; //Array //String
     private $varieties; //Array //Variety object
+    private $wholesales; //Array //Wholesale object
 
     //Utility variable
     private $categoryCount; //Integer
@@ -33,6 +34,7 @@ class Item {
 
         $this->categories = array();
         $this->varieties = array();
+        $this->wholesales = array();
 
         $this->categoryCount = 0;
     }
@@ -53,6 +55,14 @@ class Item {
 
     public function removeVariety($index){
         UsefulFunction::removeArrayElementI($this->varieties, $index);
+    }
+
+    public function addWholesale($wholesale){
+        array_push($this->wholesales, $wholesale);
+    }
+
+    public function removeWholesale($index){
+        UsefulFunction::removeArrayElementI($this->wholesales, $index);
     }
 
     public function getName() {
@@ -124,6 +134,15 @@ class Item {
 
     public function setVarieties($varieties) {
         $this->varieties = $varieties;
+        return $this;
+    }
+
+    public function getWholesales(){
+        return $this->wholesales;
+    }
+
+    public function setWholesales($wholesales){
+        $this->wholesales = $wholesales;
         return $this;
     }
 

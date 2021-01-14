@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 12, 2021 at 11:44 AM
+-- Generation Time: Jan 14, 2021 at 11:29 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `inventories` (
   `inv_quantity` int(11) NOT NULL,
   PRIMARY KEY (`inv_id`),
   KEY `inventories_FK_v_barcode` (`v_barcode`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `inventories`
@@ -135,7 +135,7 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (4, '6902538007381', '2021-01-01', 22),
 (5, '6902538007862', '2021-01-25', 20),
 (6, '6902538007886', '2021-01-01', 0),
-(7, '6931754804900', '2021-01-01', 20),
+(7, '6931754804900', '2021-06-14', 300),
 (8, '6931754804917', '2021-01-01', 30),
 (9, '6931754804924', '2021-01-01', 23),
 (10, '6931754804931', '2021-01-01', 23),
@@ -155,8 +155,8 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (24, '6935145343061', '2021-07-27', 16),
 (25, '6935145343092', '2021-07-27', 20),
 (56, '6902538007862', '2021-01-01', 0),
-(57, '1234', '2021-01-12', 12),
-(58, '6935145301016', '2021-01-07', 6);
+(58, '6935145301016', '2021-01-07', 6),
+(59, '6931754804900', '2021-01-01', 20);
 
 -- --------------------------------------------------------
 
@@ -183,14 +183,11 @@ CREATE TABLE IF NOT EXISTS `items` (
 --
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 0),
-(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 405),
-(3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 104),
+(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 1),
+(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 408),
+(3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 106),
 (4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 25),
-(5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 18),
-(10, '大家乐', '', '', '', '口味', 1, 2, 1),
-(11, 'ABC', '', '', '', '', 0, 0, 0),
-(12, 'hdasdsdasds', '', '', '', '', 0, 0, 0);
+(5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 18);
 
 -- --------------------------------------------------------
 
@@ -296,15 +293,13 @@ CREATE TABLE IF NOT EXISTS `varieties` (
 --
 
 INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_price`, `v_weight`, `v_discount_rate`, `i_id`) VALUES
-('122345', '阿斯', 23, 34, 1, 12),
-('1234', '阿斯', 12, 1, 1, 10),
 ('6902538004045', '青柠味600ml', 4.8, 0.6, 1, 1),
 ('6902538005141', '水蜜桃味600ml', 4.8, 0.6, 1, 1),
 ('6902538007367', '芒果味600ml', 4.8, 0.6, 1, 1),
 ('6902538007381', '仙人掌青橘味600ml', 4.8, 0.6, 1, 1),
 ('6902538007862', '竹子青提味500ml', 4.8, 0.5, 1, 1),
 ('6902538007886', '卡曼橘味500ml', 4.8, 0.5, 1, 1),
-('6931754804900', '香辣味26g', 1.5, 0.026, 0.9, 2),
+('6931754804900', '香辣味26g', 1.5, 0.026, 1, 2),
 ('6931754804917', '黑椒味26g', 1.5, 0.026, 1, 2),
 ('6931754804924', '山椒味26g', 1.5, 0.026, 1, 2),
 ('6931754804931', '烧烤味26g', 1.5, 0.026, 1, 2),
@@ -322,6 +317,30 @@ INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_price`, `v_weight`, `v_di
 ('6941025700138', '盐焗味20g', 1.2, 0.02, 1, 3),
 ('6941025701074', '卤蛋味20g', 1.2, 0.02, 1, 3),
 ('6941025702019', '泡辣味20g', 1.2, 0.02, 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wholesales`
+--
+
+DROP TABLE IF EXISTS `wholesales`;
+CREATE TABLE IF NOT EXISTS `wholesales` (
+  `w_id` int(11) NOT NULL AUTO_INCREMENT,
+  `i_id` int(11) NOT NULL,
+  `w_min` int(11) NOT NULL,
+  `w_max` int(11) DEFAULT NULL,
+  `w_discount_rate` float NOT NULL,
+  PRIMARY KEY (`w_id`),
+  KEY `wholesales_FK_i_id` (`i_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `wholesales`
+--
+
+INSERT INTO `wholesales` (`w_id`, `i_id`, `w_min`, `w_max`, `w_discount_rate`) VALUES
+(1, 2, 20, NULL, 0.8);
 
 --
 -- Constraints for dumped tables
@@ -352,6 +371,12 @@ ALTER TABLE `order_items`
 --
 ALTER TABLE `varieties`
   ADD CONSTRAINT `varieties_FK_i_id` FOREIGN KEY (`i_id`) REFERENCES `items` (`i_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `wholesales`
+--
+ALTER TABLE `wholesales`
+  ADD CONSTRAINT `wholesales_FK_i_id` FOREIGN KEY (`i_id`) REFERENCES `items` (`i_id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
