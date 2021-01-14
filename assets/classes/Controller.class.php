@@ -16,6 +16,28 @@ class Controller extends Model {
 
     public function updateItem($oldItem, $newItem, $i_id){
 
+        // Avoid saving if deleted from other webpage
+        if($this->dbSelectRow("items", "i_id", $i_id) == null) return false;
+
+        // Check barcode is not duplicated from database
+        $barcodes = $this->dbSelectColumn("varieties", "v_barcode");
+        foreach($newItem->getVarieties() as $v){
+             if(UsefulFunction::isExisted($barcodes, $v->getBarcode())){
+                 return false;
+             }
+        }
+
+        // Check barcode is not duplicated from new item
+        $newB = array();
+        foreach($newItem->getVarieties() as $v){
+            array_push($newB, $v->getBarcode());
+        }
+        foreach($newItem->getVarieties() as $v){
+             if(UsefulFunction::isExisted($newB, $v->getBarcode())){
+                 return false;
+             }
+        }
+
         // No changes
         if($oldItem == $newItem) return true;
         else{
@@ -68,6 +90,9 @@ class Controller extends Model {
                 $this->dbInsert("classifications", $classification_ready);
             }
 
+            /* Wholesales */
+
+
             /* Variety and Inventory */
 
             // Add all old item barcode into an array
@@ -102,7 +127,7 @@ class Controller extends Model {
                     if ($newItem->getVarieties()[$i]->getBarcode() == $b) $newI = $i;
                 }
 
-                // Get new item variety index
+                // Get old item variety index
                 for($i = 0; $i < sizeof($oldItem->getVarieties()); $i++){
                     if ($oldItem->getVarieties()[$i]->getBarcode() == $b) $oldI = $i;
                 }
@@ -264,7 +289,7 @@ class Controller extends Model {
             $selectedInventoryExpireDate = $dbTable_inventories[$selected]['inv_expire_date'];
 
             $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode() , $cartItem->getQuantity(), $selectedInventoryExpireDate];
-            $this->dbInsert_new("order_items", $order_items_ready);
+            $this->dbInsert("order_items", $order_items_ready);
 
             // Edit Inventory
             $this->dbUpdate("inventories", "inv_quantity", $dbTable_inventories[$selected]['inv_quantity'] - $cartItem->getQuantity(), ["v_barcode", "inv_expire_date"], [$cartItem->getBarcode(), $selectedInventoryExpireDate]);
@@ -311,7 +336,7 @@ class Controller extends Model {
         $view = new View();
 
         $dbTable_items = $this->dbSelectRow("items", "i_name", $itemName);
-        if ($dbTable_items == null) die("上架失败<br>错误代码：Item is not in the database.");
+        if ($dbTable_items == null) return "上架失败，商品没有在数据库中！";
 
         $i_id = $this->dbSelectAttribute("items", "i_id", "i_name", $itemName);
         $items = $view->toItemObjList($dbTable_items);
@@ -338,13 +363,13 @@ class Controller extends Model {
                     $isFail = true;
                 }
 
-                if($item->getVarieties()[$i]->getPrice() == null){
-                    $message_fail = $message_fail . "规格 " . $item->getVarieties()[$i]->getProperty() . " 的价钱不可为空！\\n";
+                if($item->getVarieties()[$i]->getPrice() == null or $item->getVarieties()[$i]->getPrice() == 0){
+                    $message_fail = $message_fail . "规格 " . $item->getVarieties()[$i]->getProperty() . " 的价钱不可为空或为零！\\n";
                     $isFail = true;
                 }
 
-                if($item->getVarieties()[$i]->getWeight() == null){
-                    $message_fail = $message_fail . "规格 " . $item->getVarieties()[$i]->getProperty() . " 的重量不可为空！\\n";
+                if($item->getVarieties()[$i]->getWeight() == null or $item->getVarieties()[$i]->getWeight() == 0){
+                    $message_fail = $message_fail . "规格 " . $item->getVarieties()[$i]->getProperty() . " 的重量不可为空或为零！\\n";
                     $isFail = true;
                 }
 
@@ -429,7 +454,7 @@ class Controller extends Model {
                 $this->dbUpdate("inventories", "inv_quantity", $inv[0]["inv_quantity"] + $i["oi_quantity"], ["v_barcode", "inv_expire_date"], [$i["v_barcode"], $i["oi_expire_date"]]);
             } else{
                 $inventory_ready = [$i["v_barcode"], $i["oi_expire_date"], $i["oi_quantity"]];
-                $this->dbInsert_new("inventories", $inventory_ready);
+                $this->dbInsert("inventories", $inventory_ready);
             }
         }
 
