@@ -50,14 +50,14 @@ function updateData($oldItem){
 
             if(isset($_POST["v"][$i]["v_property"]) and $_POST["v"][$i]["v_property"] != ""){
 
-                $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"], 1.0); //$_POST['v'][$i]["v_discount_rate"]
+                $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $_POST["v"][$i]["v_price"] == null ? 0.0 : $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"] == null ? 0.0 : $_POST["v"][$i]["v_weight"], 1.0); //$_POST['v'][$i]["v_discount_rate"]
 
                 if(isset($_POST["v"][$i]["inv"])){
 
                     $_POST["v"][$i]["inv"] = UsefulFunction::arrayIndexRearrage($_POST["v"][$i]["inv"]); //Rearrange array index for make sure all element is looped
                     for($j = 0; $j < sizeof($_POST["v"][$i]["inv"]); $j++){
                         if($_POST["v"][$i]["inv"][$j]["inv_quantity"] != "" and isset($_POST["v"][$i]["inv"][$j]["inv_quantity"])){
-                            $inventory = new Inventory($_POST["v"][$i]["inv"][$j]["inv_expire_date"], $_POST["v"][$i]["inv"][$j]["inv_quantity"]);
+                            $inventory = new Inventory($_POST["v"][$i]["inv"][$j]["inv_expire_date"] == null ? date("Y-m-d") : $_POST["v"][$i]["inv"][$j]["inv_expire_date"], $_POST["v"][$i]["inv"][$j]["inv_quantity"]);
                             $variety->addInventory($inventory); //Add inventory to variety
                         }
                     }
@@ -109,7 +109,7 @@ function updateData($oldItem){
 // Save only
 if(isset($_POST["save"])){
     if(!updateData($item)){
-        $message = "数据库更新失败，请联络客服人员！";
+        $message = "商品保存失败！商品可能没有在数据库，或者货号重叠！";
     } else{
         $message = "保存成功！";
     }
@@ -122,7 +122,7 @@ if(isset($_POST["list"])){
     $message = "";
 
     if(!updateData($item)){
-        $message = "数据库更新失败，请联络客服人员！\\n";
+        $message = "商品保存失败！商品可能没有在数据库，或者货号重叠！\\n";
     } else{
         $message = "保存成功！\\n";
     }
