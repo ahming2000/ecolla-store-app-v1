@@ -154,7 +154,7 @@ class Model extends Dbh{
         Syntax:
         dbInsert: INSERT INTO {table name} VALUE({data to insert})
     */
-    protected function dbInsert_new($configName, $data){
+    protected function dbInsert($configName, $data){
 
         $this->log("[Info] Inserting with config name \"$configName\"");
 
@@ -764,7 +764,7 @@ class Model extends Dbh{
 
     ];
 
-    protected function dbInsert($configName, $data){
+    protected function dbInsert_old($configName, $data){
         $sql = "INSERT INTO ".$this->DATABASE_TABLE[$configName]["columnsToInsert"]." VALUE(".$this->concatString('?', ', ', $this->DATABASE_TABLE[$configName]["columnsCountToInsert"]).")";
         $stmt = $this->connect()->prepare($sql);
         if(!$stmt->execute($data)) die("Database inserting " . $this->DATABASE_TABLE["$configName"]["tableName"] . "error. MySQL error message: ".$stmt->errorInfo()[2]."<br>");
