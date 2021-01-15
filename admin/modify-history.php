@@ -5,7 +5,7 @@ if(!isset($_COOKIE["username"])) header("location: login.php");
 /* Initialization */
 // Standard variable declaration
 $upperDirectoryCount = 1;
-$title = "网站设定";
+$title = "历史修改记录";
 $mode = "admin";
 
 // Auto loader for classes

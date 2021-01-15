@@ -32,7 +32,7 @@ $controller = new Controller();
     <header><?php include_once "../assets/block-admin-page/header.php"; ?></header>
 
     <main class="container">
-
+        Coming Soon
 
     </main>
 
