@@ -1,7 +1,7 @@
 <?php
 /* Authorization */
-if(!isset($_COOKIE["username"])) header("location: login.php");
-if(!isset($_GET["itemName"])) header("location: item-management.php");
+if (!isset($_COOKIE["username"])) header("location: login.php");
+if (!isset($_GET["itemName"])) header("location: item-management.php");
 
 /* Initialization */
 // Standard variable declaration
@@ -18,7 +18,7 @@ $controller = new Controller();
 
 //Get item information
 $item = $view->getItem($_GET["itemName"]);
-if($item == null) header("location: item-management.php");
+if ($item == null) header("location: item-management.php");
 $i_id = $view->getItemId($item);
 $categoryCount = sizeof($item->getCategories());
 $propertyCount = sizeof($item->getVarieties());
@@ -26,15 +26,16 @@ $propertyCount = sizeof($item->getVarieties());
 /* Operation */
 
 // Update data
-function updateData($oldItem){
+function updateData($oldItem)
+{
 
     // Convert file pointer to better array arrangement. Reference: https://www.php.net/manual/en/features.file-upload.multiple.php#53240
     $generalImageList = UsefulFunction::reArrayFiles($_FILES["item-image"]);
     $varietyImageList =  UsefulFunction::reArrayFiles($_FILES["variety-image"]);
 
     $generalImageCount = 0;
-    foreach($generalImageList as $g){
-        if($g["name"] != "" and $g["name"] != "image-upload-alt.png"){
+    foreach ($generalImageList as $g) {
+        if ($g["name"] != "" and $g["name"] != "image-upload-alt.png") {
             $generalImageCount++;
         }
     }
@@ -43,38 +44,36 @@ function updateData($oldItem){
     $newItem = new Item($_POST["i_name"], $_POST["i_desc"], $_POST["i_brand"], $_POST["i_origin"], $_POST["i_property_name"], 0, $generalImageCount, 0); // New item's default value of listing and view count is 0
 
     // Declare into variety object
-    if(isset($_POST["v"])){
+    if (isset($_POST["v"])) {
 
         $_POST["v"] = UsefulFunction::arrayIndexRearrage($_POST["v"]); //Rearrange array index for make sure all element is looped
-        for($i = 0; $i < sizeof($_POST["v"]); $i++){
+        for ($i = 0; $i < sizeof($_POST["v"]); $i++) {
 
-            if(isset($_POST["v"][$i]["v_property"]) and $_POST["v"][$i]["v_property"] != ""){
+            if (isset($_POST["v"][$i]["v_property"]) and $_POST["v"][$i]["v_property"] != "") {
 
                 $discountedRate = $_POST['v'][$i]["v_discounted_price"] == null ? 1.00 : $_POST['v'][$i]["v_discounted_price"] / $_POST['v'][$i]["v_price"];
                 $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $_POST["v"][$i]["v_price"] == null ? 0.0 : $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"] == null ? 0.0 : $_POST["v"][$i]["v_weight"], $discountedRate);
 
-                if(isset($_POST["v"][$i]["inv"])){
+                if (isset($_POST["v"][$i]["inv"])) {
 
                     $_POST["v"][$i]["inv"] = UsefulFunction::arrayIndexRearrage($_POST["v"][$i]["inv"]); //Rearrange array index for make sure all element is looped
-                    for($j = 0; $j < sizeof($_POST["v"][$i]["inv"]); $j++){
-                        if($_POST["v"][$i]["inv"][$j]["inv_quantity"] != "" and isset($_POST["v"][$i]["inv"][$j]["inv_quantity"])){
+                    for ($j = 0; $j < sizeof($_POST["v"][$i]["inv"]); $j++) {
+                        if ($_POST["v"][$i]["inv"][$j]["inv_quantity"] != "" and isset($_POST["v"][$i]["inv"][$j]["inv_quantity"])) {
                             $inventory = new Inventory($_POST["v"][$i]["inv"][$j]["inv_expire_date"] == null ? date("Y-m-d") : $_POST["v"][$i]["inv"][$j]["inv_expire_date"], $_POST["v"][$i]["inv"][$j]["inv_quantity"]);
                             $variety->addInventory($inventory); //Add inventory to variety
                         }
                     }
-
                 }
 
                 $newItem->addVariety($variety); //Add variety to item
             }
-
         }
     }
 
     // Declare into catogories array
-    if (isset($_POST["category"])){
-        for($i = 0; $i < sizeof($_POST["category"]); $i++){
-            if($_POST["category"][$i] != "" and isset($_POST["category"][$i])){
+    if (isset($_POST["category"])) {
+        for ($i = 0; $i < sizeof($_POST["category"]); $i++) {
+            if ($_POST["category"][$i] != "" and isset($_POST["category"][$i])) {
                 $newItem->addCategory($_POST["category"][$i]); //Add category to item
             }
         }
@@ -84,7 +83,7 @@ function updateData($oldItem){
     $view = new View();
     $controller = new Controller();
     $i_id = $view->getItemId($oldItem);
-    if(!$controller->updateItem($oldItem, $newItem, $i_id)) return false;
+    if (!$controller->updateItem($oldItem, $newItem, $i_id)) return false;
 
     // General image upload
     $imageFileHandler = new ImageFileHandler($generalImageList, $i_id);
@@ -92,12 +91,12 @@ function updateData($oldItem){
 
     // Variety image upload
     $oldBarcodeList = array();
-    foreach($oldItem->getVarieties() as $v){
+    foreach ($oldItem->getVarieties() as $v) {
         array_push($oldBarcodeList, $v->getBarcode());
     }
 
     $newBarcodeList = array();
-    foreach($_POST["v"] as $v){
+    foreach ($_POST["v"] as $v) {
         array_push($newBarcodeList, $v["v_barcode"]);
     }
 
@@ -108,10 +107,10 @@ function updateData($oldItem){
 }
 
 // Save only
-if(isset($_POST["save"])){
-    if(!updateData($item)){
+if (isset($_POST["save"])) {
+    if (!updateData($item)) {
         $message = "商品保存失败！商品可能没有在数据库，或者货号重叠！";
-    } else{
+    } else {
         $message = "保存成功！";
     }
     UsefulFunction::generateAlert($message);
@@ -119,21 +118,21 @@ if(isset($_POST["save"])){
 }
 
 // Save and list
-if(isset($_POST["list"])){
+if (isset($_POST["list"])) {
     $message = "";
 
-    if(!updateData($item)){
+    if (!updateData($item)) {
         $message = "商品保存失败！商品可能没有在数据库，或者货号重叠！\\n";
-    } else{
+    } else {
         $message = "保存成功！\\n";
     }
 
     $listingErrorMessage = $controller->list($_POST["i_name"]);
 
-    if($listingErrorMessage == null){
-        if(UsefulFunction::createItemPage(json_decode($_POST["markup"]))){
+    if ($listingErrorMessage == null) {
+        if (UsefulFunction::createItemPage(json_decode($_POST["markup"]))) {
             $message = $message . "上架成功！\\n";
-        } else{
+        } else {
             die("创建商品页面失败<br>错误代码：Error on php fwrite function.");
         }
     }
@@ -145,7 +144,7 @@ if(isset($_POST["list"])){
 }
 
 // Reset view count
-if(isset($_POST["reset-view-count-button"])){
+if (isset($_POST["reset-view-count-button"])) {
     $controller->resetViewCount($i_id);
     UsefulFunction::generateAlert("重置浏览次数成功！");
     header("refresh: 0"); //Refresh page immediately
@@ -155,6 +154,7 @@ if(isset($_POST["reset-view-count-button"])){
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <?php include "../assets/includes/stylesheet.inc.php"; ?>
 </head>
@@ -184,7 +184,7 @@ if(isset($_POST["reset-view-count-button"])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <input type="text" class="form-control" name="i_name" aria-describedby="i-name" maxlength="250" value="<?= $item->getName(); ?>" required/>
+                                    <input type="text" class="form-control" name="i_name" aria-describedby="i-name" maxlength="250" value="<?= $item->getName(); ?>" required />
                                 </div>
                             </div>
                         </div><!-- Name -->
@@ -208,7 +208,7 @@ if(isset($_POST["reset-view-count-button"])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <input type="text" class="form-control" name="i_origin" aria-describedby="i-origin" value="<?= $item->getOrigin(); ?>"/>
+                                    <input type="text" class="form-control" name="i_origin" aria-describedby="i-origin" value="<?= $item->getOrigin(); ?>" />
                                 </div>
                             </div>
                         </div><!-- Origin -->
@@ -220,7 +220,7 @@ if(isset($_POST["reset-view-count-button"])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <input type="text" class="form-control" name="i_brand" aria-describedby="i-brand" value="<?= $item->getBrand(); ?>"/>
+                                    <input type="text" class="form-control" name="i_brand" aria-describedby="i-brand" value="<?= $item->getBrand(); ?>" />
                                 </div>
                             </div>
                         </div><!-- Brand -->
@@ -228,7 +228,7 @@ if(isset($_POST["reset-view-count-button"])){
                         <div class="col-12">
                             <!-- Current category list -->
                             <datalist id="category-list">
-                                <?php foreach($view->getCategoryList() as $category) : ?>
+                                <?php foreach ($view->getCategoryList() as $category) : ?>
                                     <option value="<?= $category["cat_name"]; ?>"><?= $category["cat_name"]; ?></option>
                                 <?php endforeach; ?>
                             </datalist><!-- Current category list -->
@@ -242,13 +242,13 @@ if(isset($_POST["reset-view-count-button"])){
                                     <div id="category-section">
                                         <?php if ($categoryCount == 0) : ?>
                                             <div class="row">
-                                                <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[0]" aria-describedby="category" list="category-list" maxlength="20"/></div>
+                                                <div class="col-10 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[0]" aria-describedby="category" list="category-list" maxlength="20" /></div>
                                                 <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                             </div>
                                         <?php else : ?>
-                                            <?php for($i = 0; $i < $categoryCount; $i++) : ?>
+                                            <?php for ($i = 0; $i < $categoryCount; $i++) : ?>
                                                 <div class="row">
-                                                    <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[<?= $i; ?>]" aria-describedby="category" list="category-list" maxlength="20" value="<?= $item->getCategories()[$i]; ?>"/></div>
+                                                    <div class="col-10 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[<?= $i; ?>]" aria-describedby="category" list="category-list" maxlength="20" value="<?= $item->getCategories()[$i]; ?>" /></div>
                                                     <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                 </div>
                                             <?php endfor; ?>
@@ -271,7 +271,7 @@ if(isset($_POST["reset-view-count-button"])){
                                 </div>
 
                                 <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
-                                    <input type="text" class="form-control" name="i_property_name" aria-describedby="i-property-name" value="<?= $item->getPropertyName(); ?>"/>
+                                    <input type="text" class="form-control" name="i_property_name" aria-describedby="i-property-name" value="<?= $item->getPropertyName(); ?>" />
                                 </div>
                             </div>
                         </div><!-- Property Name -->
@@ -286,13 +286,13 @@ if(isset($_POST["reset-view-count-button"])){
                                     <div id="property-section">
                                         <?php if ($propertyCount == 0) : ?>
                                             <div class="row">
-                                                <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[0][v_property]" aria-describedby="v-property" maxlength="100"/></div>
+                                                <div class="col-10 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[0][v_property]" aria-describedby="v-property" maxlength="100" /></div>
                                                 <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button property-remove-button px-3 py-1">X</button></div>
                                             </div>
                                         <?php else : ?>
-                                            <?php for($i = 0; $i < $propertyCount; $i++) : ?>
+                                            <?php for ($i = 0; $i < $propertyCount; $i++) : ?>
                                                 <div class="row">
-                                                    <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[<?= $i; ?>][v_property]" aria-describedby="v-property" maxlength="100" value="<?= $item->getVarieties()[$i]->getProperty(); ?>"/></div>
+                                                    <div class="col-10 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[<?= $i; ?>][v_property]" aria-describedby="v-property" maxlength="100" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" /></div>
                                                     <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button property-remove-button px-3 py-1">X</button></div>
                                                 </div>
                                             <?php endfor; ?>
@@ -306,105 +306,101 @@ if(isset($_POST["reset-view-count-button"])){
 
                         <!-- Variety -->
                         <div class="col-12"><label>规格销售</label></div>
-                        <div class="col-12 mb-3">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">选择</th>
-                                            <th scope="col">商品货号</th>
-                                            <th scope="col">价格(RM)</th>
-                                            <th scope="col">重量(kg)</th>
-                                            <th scope="col">折扣价钱</th>
-                                        </tr>
-                                    </thead>
+                        <div class="col-12 mb-3" style="overflow-x: scroll;">
+                            <table class="table table-bordered" style="width: 900px;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">选择</th>
+                                        <th scope="col">商品货号</th>
+                                        <th scope="col">价格(RM)</th>
+                                        <th scope="col">重量(kg)</th>
+                                        <th scope="col">折扣价钱</th>
+                                    </tr>
+                                </thead>
 
-                                    <tbody id="variety-table-section">
-                                        <?php if($propertyCount == 0) : ?>
+                                <tbody id="variety-table-section">
+                                    <?php if ($propertyCount == 0) : ?>
+                                        <tr>
+                                            <td><input type="text" class="form-control v-property-view" disabled /></td>
+                                            <td><input type="text" class="form-control" name="v[0][v_barcode]" aria-describedby="v-barcode" maxlength="20" /></td>
+                                            <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_price]" aria-describedby="v-price" maxlength="10" /></td>
+                                            <td><input type="number" step="0.001" min="0" class="form-control" name="v[0][v_weight]" aria-describedby="v-weight" maxlength="10" /></td>
+                                            <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_discount_price]" aria-describedby="v-discounted-price" maxlength="10" /></td>
+                                        </tr>
+                                    <?php else : ?>
+                                        <?php for ($i = 0; $i < $propertyCount; $i++) : ?>
                                             <tr>
-                                                <td><input type="text" class="form-control v-property-view" disabled/></td>
-                                                <td><input type="text" class="form-control" name="v[0][v_barcode]" aria-describedby="v-barcode" maxlength="20"/></td>
-                                                <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_price]" aria-describedby="v-price" maxlength="10"/></td>
-                                                <td><input type="number" step="0.001" min="0" class="form-control" name="v[0][v_weight]" aria-describedby="v-weight" maxlength="10"/></td>
-                                                <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_discount_price]" aria-describedby="v-discounted-price" maxlength="10"/></td>
+                                                <td><input type="text" class="form-control v-property-view" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" disabled /></td>
+                                                <td><input type="text" class="form-control" name="v[<?= $i; ?>][v_barcode]" aria-describedby="v-barcode" maxlength="20" value="<?= $item->getVarieties()[$i]->getBarcode(); ?>" /></td>
+                                                <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_price]" aria-describedby="v-price" maxlength="10" value="<?= $item->getVarieties()[$i]->getPrice(); ?>" /></td>
+                                                <td><input type="number" step="0.001" min="0" class="form-control" name="v[<?= $i; ?>][v_weight]" aria-describedby="v-weight" maxlength="10" value="<?= $item->getVarieties()[$i]->getWeight(); ?>" /></td>
+                                                <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_discounted_price]" aria-describedby="v-discounted-price" maxlength="10" value="<?= number_format($item->getVarieties()[$i]->getPrice() * $item->getVarieties()[$i]->getDiscountRate(), 2); ?>" /></td>
                                             </tr>
-                                        <?php else : ?>
-                                            <?php for($i = 0; $i < $propertyCount; $i++) : ?>
-                                                <tr>
-                                                    <td><input type="text" class="form-control v-property-view" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" disabled/></td>
-                                                    <td><input type="text" class="form-control" name="v[<?= $i; ?>][v_barcode]" aria-describedby="v-barcode" maxlength="20" value="<?= $item->getVarieties()[$i]->getBarcode(); ?>"/></td>
-                                                    <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_price]" aria-describedby="v-price" maxlength="10" value="<?= $item->getVarieties()[$i]->getPrice(); ?>"/></td>
-                                                    <td><input type="number" step="0.001" min="0" class="form-control" name="v[<?= $i; ?>][v_weight]" aria-describedby="v-weight" maxlength="10" value="<?= $item->getVarieties()[$i]->getWeight(); ?>"/></td>
-                                                    <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_discounted_price]" aria-describedby="v-discounted-price" maxlength="10" value="<?= number_format($item->getVarieties()[$i]->getPrice() * $item->getVarieties()[$i]->getDiscountRate(), 2); ?>"/></td>
-                                                </tr>
-                                            <?php endfor; ?>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        <?php endfor; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
                         </div><!-- Variety -->
 
                         <!-- Inventory -->
                         <div class="col-12"><label>规格库存</label></div>
-                        <div class="col-12 mb-3">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">选择</th>
-                                            <th scope="col">过期日期</th>
-                                            <th scope="col">数量</th>
-                                        </tr>
-                                    </thead>
+                        <div class="col-12 mb-3" style="overflow-x: scroll;">
+                            <table class="table table-bordered" style="width: 900px;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">选择</th>
+                                        <th scope="col">过期日期</th>
+                                        <th scope="col">数量</th>
+                                    </tr>
+                                </thead>
 
-                                    <tbody id="inventory-table-section">
-                                        <?php if($propertyCount == 0) : ?>
+                                <tbody id="inventory-table-section">
+                                    <?php if ($propertyCount == 0) : ?>
+                                        <tr>
+                                            <td><input type="text" class="form-control v-property-view" disabled /></td>
+                                            <td colspan="2">
+                                                <div class="variety-inventory-table-section">
+                                                    <div class="row">
+                                                        <div class="col-5"><input type="date" class="form-control mb-1" name="v[0][inv][0][inv_expire_date]" aria-describedby="inv-expire-date" /></div>
+                                                        <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[0][inv][0][inv_quantity]" aria-describedby="inv-quantity" /></div>
+                                                        <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
+                                                    </div>
+                                                </div>
+                                                <!-- Add extra inventory button -->
+                                                <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-button">添加更多库存</button></div>
+                                            </td>
+                                        </tr>
+                                    <?php else : ?>
+                                        <?php for ($i = 0; $i < $propertyCount; $i++) : ?>
                                             <tr>
-                                                <td><input type="text" class="form-control v-property-view" disabled/></td>
+                                                <td><input type="text" class="form-control v-property-view" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" disabled /></td>
                                                 <td colspan="2">
                                                     <div class="variety-inventory-table-section">
-                                                        <div class="row">
-                                                            <div class="col-5"><input type="date" class="form-control mb-1" name="v[0][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>
-                                                            <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[0][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>
-                                                            <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
-                                                        </div>
+                                                        <?php $currentIventoryCount = sizeof($item->getVarieties()[$i]->getInventories()); ?>
+                                                        <?php if ($currentIventoryCount == 0) : ?>
+                                                            <div class="row">
+                                                                <div class="col-5"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_expire_date]" aria-describedby="inv-expire-date" /></div>
+                                                                <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_quantity]" aria-describedby="inv-quantity" /></div>
+                                                                <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
+                                                            </div>
+                                                        <?php else : ?>
+                                                            <?php for ($j = 0; $j < $currentIventoryCount; $j++) : ?>
+                                                                <div class="row">
+                                                                    <div class="col-5"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_expire_date]" aria-describedby="inv-expire-date" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getExpireDate(); ?>" /></div>
+                                                                    <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_quantity]" aria-describedby="inv-quantity" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getQuantity(); ?>" /></div>
+                                                                    <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
+                                                                </div>
+                                                            <?php endfor; ?>
+                                                        <?php endif; ?>
                                                     </div>
                                                     <!-- Add extra inventory button -->
                                                     <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-button">添加更多库存</button></div>
                                                 </td>
                                             </tr>
-                                        <?php else : ?>
-                                            <?php for($i = 0; $i < $propertyCount; $i++) : ?>
-                                                <tr>
-                                                    <td><input type="text" class="form-control v-property-view"  value="<?= $item->getVarieties()[$i]->getProperty(); ?>" disabled/></td>
-                                                    <td colspan="2">
-                                                        <div class="variety-inventory-table-section">
-                                                            <?php $currentIventoryCount = sizeof($item->getVarieties()[$i]->getInventories()); ?>
-                                                            <?php if ($currentIventoryCount == 0) : ?>
-                                                                <div class="row">
-                                                                    <div class="col-5"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>
-                                                                    <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>
-                                                                    <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
-                                                                </div>
-                                                            <?php else : ?>
-                                                                <?php for($j = 0; $j < $currentIventoryCount; $j++) : ?>
-                                                                    <div class="row">
-                                                                        <div class="col-5"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_expire_date]" aria-describedby="inv-expire-date" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getExpireDate(); ?>"/></div>
-                                                                        <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_quantity]" aria-describedby="inv-quantity" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getQuantity(); ?>"/></div>
-                                                                        <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
-                                                                    </div>
-                                                                <?php endfor; ?>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                        <!-- Add extra inventory button -->
-                                                        <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-inventory-button">添加更多库存</button></div>
-                                                    </td>
-                                                </tr>
-                                            <?php endfor; ?>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        <?php endfor; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
                         </div><!-- Inventory -->
 
                         <!-- Wholesale -->
@@ -422,18 +418,18 @@ if(isset($_POST["reset-view-count-button"])){
 
                                     <tbody id="wholesale-table-section">
                                         <?php $wholesaleCount = sizeof($item->getWholesales()); ?>
-                                        <?php if($wholesaleCount == 0) : ?>
+                                        <?php if ($wholesaleCount == 0) : ?>
                                             <tr>
-                                                <td><input type="number" class="form-control mb-1" min="1" name="w[0][w_min]" aria-describedby="w-min"/></td>
-                                                <td><input type="number" class="form-control mb-1" min="1" name="w[0][w_max]" aria-describedby="w-max"/></td>
-                                                <td><input type="number" class="form-control mb-1" step="0.01" min="0" max="0" name="w[0][w_price]" aria-describedby="w-price"/></td>
+                                                <td><input type="number" class="form-control mb-1" min="1" name="w[0][w_min]" aria-describedby="w-min" /></td>
+                                                <td><input type="number" class="form-control mb-1" min="1" name="w[0][w_max]" aria-describedby="w-max" /></td>
+                                                <td><input type="number" class="form-control mb-1" step="0.01" min="0" max="0" name="w[0][w_price]" aria-describedby="w-price" /></td>
                                             </tr>
                                         <?php else : ?>
-                                            <?php for($i = 0; $i < $wholesaleCount; $i++) : ?>
+                                            <?php for ($i = 0; $i < $wholesaleCount; $i++) : ?>
                                                 <tr>
-                                                    <td><input type="number" class="form-control mb-1" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>"/></td>
-                                                    <td><input type="number" class="form-control mb-1" min="1" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>"/></td>
-                                                    <td><input type="number" class="form-control mb-1" step="0.01" min="0" max="0" name="w[<?= $i; ?>][w_price]" aria-describedby="w-price" value="<?= number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2); ?>"/></td>
+                                                    <td><input type="number" class="form-control mb-1" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>" /></td>
+                                                    <td><input type="number" class="form-control mb-1" min="1" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>" /></td>
+                                                    <td><input type="number" class="form-control mb-1" step="0.01" min="0" max="0" name="w[<?= $i; ?>][w_price]" aria-describedby="w-price" value="<?= number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2); ?>" /></td>
                                                 </tr>
                                             <?php endfor; ?>
                                         <?php endif; ?>
@@ -447,7 +443,7 @@ if(isset($_POST["reset-view-count-button"])){
                         <div class="h2" id="step-three">媒体管理</div>
 
                         <style>
-                            .img-upload-container{
+                            .img-upload-container {
                                 position: relative;
                                 width: 100%;
                                 max-width: 400px;
@@ -467,11 +463,11 @@ if(isset($_POST["reset-view-count-button"])){
                             }
 
 
-                            .img-upload-container:hover .img-upload-overlay{
+                            .img-upload-container:hover .img-upload-overlay {
                                 opacity: 1.0;
                             }
 
-                            .icofont-ui-delete:hover .icofont-edit:hover{
+                            .icofont-ui-delete:hover .icofont-edit:hover {
                                 color: #eee;
                             }
 
@@ -482,21 +478,20 @@ if(isset($_POST["reset-view-count-button"])){
                                 text-align: center;
                             }
 
-                            .remove-img-button{
+                            .remove-img-button {
                                 font-size: 20px;
                                 position: absolute;
                                 top: 50%;
                                 right: 15%;
                             }
 
-                            .edit-img-button{
+                            .edit-img-button {
                                 font-size: 20px;
                                 position: absolute;
                                 top: 50%;
                                 left: 30%;
                             }
-
-                            </style>
+                        </style>
 
                         <div class="col-12 mb-3">
 
@@ -506,10 +501,10 @@ if(isset($_POST["reset-view-count-button"])){
 
                                 <!-- Cover picture (0.jpg) -->
                                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <input type="file" name="item-image[0]" class="image-file-selector" style="display:none;"/>
+                                    <input type="file" name="item-image[0]" class="image-file-selector" style="display:none;" />
                                     <figure class="figure">
                                         <div class="img-upload-container">
-                                            <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/0.jpg") ? "../assets/images/items/$i_id/0.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
+                                            <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/0.jpg") ? "../assets/images/items/$i_id/0.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>" />
                                             <div class="img-upload-overlay">
                                                 <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
                                                     <i class="icofont-edit"></i>
@@ -524,24 +519,25 @@ if(isset($_POST["reset-view-count-button"])){
                                 </div><!-- Cover picture (0.jpg) -->
 
                                 <!-- General picture -->
-                                <?php for($i = 1; $i <= 8; $i++) : ?>
-                                <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                    <input type="file" name="item-image[<?= $i; ?>]" class="image-file-selector" style="display:none;"/>
-                                    <figure class="figure">
-                                        <div class="img-upload-container">
-                                            <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/$i.jpg") ? "../assets/images/items/$i_id/$i.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
-                                            <div class="img-upload-overlay">
-                                                <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
-                                                    <i class="icofont-edit"></i>
-                                                </div>
-                                                <div class="img-upload-overlay-icon remove-img-button" title="Remove Image" onclick="removeImage(this)">
-                                                    <i class="icofont-ui-delete"></i>
+                                <?php for ($i = 1; $i <= 8; $i++) : ?>
+                                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+                                        <input type="file" name="item-image[<?= $i; ?>]" class="image-file-selector" style="display:none;" />
+                                        <figure class="figure">
+                                            <div class="img-upload-container">
+                                                <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/$i.jpg") ? "../assets/images/items/$i_id/$i.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>" />
+                                                <div class="img-upload-overlay">
+                                                    <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
+                                                        <i class="icofont-edit"></i>
+                                                    </div>
+                                                    <div class="img-upload-overlay-icon remove-img-button" title="Remove Image" onclick="removeImage(this)">
+                                                        <i class="icofont-ui-delete"></i>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <figcaption class="figure-caption text-center">照片 <?= $i ?></figcaption>
-                                    </figure>
-                                </div><?php endfor; ?><!-- General picture -->
+                                            <figcaption class="figure-caption text-center">照片 <?= $i ?></figcaption>
+                                        </figure>
+                                    </div><?php endfor; ?>
+                                <!-- General picture -->
 
                             </div>
 
@@ -554,10 +550,10 @@ if(isset($_POST["reset-view-count-button"])){
                                 <div class="col-12"><label>规格照片<label></div>
                                 <?php if ($propertyCount == 0) : ?>
                                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                        <input type="file" name="variety-image[0]" class="image-file-selector" style="display:none;"/>
+                                        <input type="file" name="variety-image[0]" class="image-file-selector" style="display:none;" />
                                         <figure class="figure">
                                             <div class="img-upload-container">
-                                                <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png"/>
+                                                <img class="img-fluid image-preview" src="../assets/images/alt/image-upload-alt.png" />
                                                 <div class="img-upload-overlay">
                                                     <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
                                                         <i class="icofont-edit"></i>
@@ -571,13 +567,13 @@ if(isset($_POST["reset-view-count-button"])){
                                         </figure>
                                     </div>
                                 <?php else : ?>
-                                    <?php for($i = 0; $i < $propertyCount; $i++) : ?>
+                                    <?php for ($i = 0; $i < $propertyCount; $i++) : ?>
                                         <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                                            <input type="file" name="variety-image[<?= $i; ?>]" class="image-file-selector" style="display:none;"/>
+                                            <input type="file" name="variety-image[<?= $i; ?>]" class="image-file-selector" style="display:none;" />
                                             <figure class="figure">
                                                 <div class="img-upload-container">
                                                     <?php $b = $item->getVarieties()[$i]->getBarcode(); ?>
-                                                    <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/$b.jpg") ? "../assets/images/items/$i_id/$b.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>"/>
+                                                    <img class="img-fluid image-preview" src="<?= file_exists("../assets/images/items/$i_id/$b.jpg") ? "../assets/images/items/$i_id/$b.jpg" : "../assets/images/alt/image-upload-alt.png"; ?>" />
                                                     <div class="img-upload-overlay">
                                                         <div class="img-upload-overlay-icon edit-img-button" title="Upload Image" onclick="uploadImage(this)">
                                                             <i class="icofont-edit"></i>
@@ -616,7 +612,7 @@ if(isset($_POST["reset-view-count-button"])){
                                             <tbody>
                                                 <tr>
                                                     <td>商品浏览次数</td>
-                                                    <td><input type="text" class="form-control form-control-sm" value="<?= $item->getViewCount(); ?>" disabled/></td>
+                                                    <td><input type="text" class="form-control form-control-sm" value="<?= $item->getViewCount(); ?>" disabled /></td>
                                                     <td><button type="submit" class="btn btn-primary btn-sm" name="reset-view-count-button">重置</button></td>
                                                 </tr>
                                             </tbody>
@@ -636,7 +632,7 @@ if(isset($_POST["reset-view-count-button"])){
 
                     </div>
 
-                    <input type="text" name="markup" value="empty" id="markup" hidden/>
+                    <input type="text" name="markup" value="empty" id="markup" hidden />
 
                 </form>
             </div>
@@ -662,4 +658,5 @@ if(isset($_POST["reset-view-count-button"])){
     <script src="../assets/js/admin-item-management-page.js"></script>
 
 </body>
+
 </html>
