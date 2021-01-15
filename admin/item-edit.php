@@ -404,7 +404,7 @@ if (isset($_POST["reset-view-count-button"])) {
                         </div><!-- Inventory -->
 
                         <!-- Wholesale -->
-                        <div class="col-12"><label>批发价管理（单件规格折扣将无视此设定）</label></div>
+                        <div class="col-12"><label>批发价管理（单件规格折扣后的规格将无视此设定）</label></div>
                         <div class="col-12 mb-3">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
