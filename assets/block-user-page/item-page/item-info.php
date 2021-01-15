@@ -16,7 +16,7 @@
             <div class="h4 price-view" id="variety-<?= $variety->getBarcode(); ?>" <?= $i++ != 0 ? "hidden" : ""; ?>>
                 <span class="grey-text mr-1" style="font-size: 15px"><del>RM<?= number_format($variety->getPrice(), 2); ?></del></span>
                 <span class="red-text font-weight-bold mr-1"><strong>RM<?= number_format($variety->getPrice() * $variety->getDiscountRate(), 2); ?></strong></span>
-                <span class="badge badge-danger mr-1"><?= (1 - $variety->getDiscountRate()) * 100 ?>% OFF<span>
+                <span class="badge badge-danger mr-1"><?= number_format((1 - $variety->getDiscountRate()) * 100, 2) ?>% OFF<span>
             </div>
         <?php else : ?>
             <div class="h4 price-view pl-3 font-weight-bold blue-text" id="variety-<?= $variety->getBarcode(); ?>" <?= $i++ != 0 ? "hidden" : ""; ?>>
