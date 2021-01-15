@@ -73,6 +73,15 @@ function getExtraVarietyImageBoxHTML(propertyCount){
     `</div>`;
 }
 
+function getExtraWholesaleTableRowHTML(wholesaleCount, max, price){
+    return `` +
+    `<tr>` +
+        `<td><input type="number" class="form-control mb-1 w-min" min="1" name="w[${wholesaleCount}][w_min]" aria-describedby="w-min" value="${max}" disabled/></td>` +
+        `<td><input type="number" class="form-control mb-1 w-max" min="${max}" name="w[${wholesaleCount}][w_max]" aria-describedby="w-max"/></td>` +
+        `<td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="${price}" name="w[${wholesaleCount}][w_price]" aria-describedby="w-price"/></td>` +
+    `</tr>`;
+}
+
 /* Get form information */
 function getCategoryCount(){
     return $("#category-section div.row").length;
@@ -88,6 +97,10 @@ function getIventoryRowCount(source){
 
 function getInventoryCount(source){
     return $(source).parent().parent().find(".variety-inventory-table-section div.row").length;
+}
+
+function getWholesaleCount(){
+    return $("#wholesale-section tr").length;
 }
 
 // Extra inventory
@@ -109,6 +122,28 @@ $(document).on("change", ".v-property", function(e){ // To detect and modify rea
     $(".v-property-view").eq(propertyIndex).val(value); // Variety table
     $(".v-property-view").eq(propertyIndex + propertyCount - 1).val(value); // Inventory table  // Minus 1 of property count to index
     $(".variety-property-caption").eq(propertyIndex).html(value); // Variety Image Box Caption
+});
+
+// Wholesale w-max column auto sync
+$(document).on("change", ".w-max", function(e){
+    e.preventDefault();
+
+    var index = $(".w-max").index(this);
+    var nextMin = parseInt($(this).val()) + 1;
+
+    $(".w-min").eq(index + 1).val(nextMin); // Set w-min of next row sync value with current w-max
+    $(".w-max").eq(index + 1).attr("min", nextMin); // Set min value of w-max of next row with current w-max
+});
+
+// Wholesale w-price column auto sync
+$(document).on("change", ".w-price", function(e){
+    e.preventDefault();
+
+    var index =  $(".w-price").index(this);
+    var nextMaxPrice = $(this).val();
+
+    $(".w-price").eq(index + 1).attr("max", nextMaxPrice); // Set max value of w-price of next row with current w-price
+
 });
 
 // Category or property or inventory remove button
@@ -271,6 +306,18 @@ $(document).ready(function(){
         $('#variety-table-section').append(getExtraVarietyTableRowHTML(propertyCount));
         $('#inventory-table-section').append(getExtraInventoryTableRowHTML(propertyCount));
         $("#variety-image-section").append(getExtraVarietyImageBoxHTML(propertyCount));
+    });
+
+    // Extra wholesale
+    $("#extra-wholesale-button").on("click", function(){
+        var max = parseInt($("#wholesale-table-section tr").last().find("input.w-max").val()) + 1;
+        var price = $("#wholesale-table-section tr").last().find("input.w-price").val();
+        $("#wholesale-table-section").append(getExtraWholesaleTableRowHTML(getWholesaleCount(), max, price));
+    });
+
+    // Wholesale first w-min column auto sync
+    $(".w-min").first().change(function(){
+        $(this).parent().parent().first().find("input.w-max").attr("min", $(this).val()); // Set min value for w-max in same row
     });
 
     // For changing "active tag" when scrolling

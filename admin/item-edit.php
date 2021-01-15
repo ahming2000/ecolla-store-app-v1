@@ -404,7 +404,7 @@ if (isset($_POST["reset-view-count-button"])) {
                         </div><!-- Inventory -->
 
                         <!-- Wholesale -->
-                        <div class="col-12"><label>批发价管理</label></div>
+                        <div class="col-12"><label>批发价管理（单件规格折扣将无视此设定）</label></div>
                         <div class="col-12 mb-3">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
@@ -420,24 +420,27 @@ if (isset($_POST["reset-view-count-button"])) {
                                         <?php $wholesaleCount = sizeof($item->getWholesales()); ?>
                                         <?php if ($wholesaleCount == 0) : ?>
                                             <tr>
-                                                <td><input type="number" class="form-control mb-1" min="1" name="w[0][w_min]" aria-describedby="w-min" /></td>
-                                                <td><input type="number" class="form-control mb-1" min="1" name="w[0][w_max]" aria-describedby="w-max" /></td>
-                                                <td><input type="number" class="form-control mb-1" step="0.01" min="0" max="0" name="w[0][w_price]" aria-describedby="w-price" /></td>
+                                                <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[0][w_min]" aria-describedby="w-min"/></td>
+                                                <td><input type="number" class="form-control mb-1 w-max" min="1" name="w[0][w_max]" aria-describedby="w-max"/></td>
+                                                <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" name="w[0][w_price]" aria-describedby="w-price"/></td>
                                             </tr>
                                         <?php else : ?>
-                                            <?php for ($i = 0; $i < $wholesaleCount; $i++) : ?>
+                                            <?php $maxPrice = $item->getVarieties()[0]->getPrice(); ?>
+                                            <?php for($i = 0; $i < $wholesaleCount; $i++) : ?>
+                                                <?php $discountedPrice = number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2); ?>
                                                 <tr>
-                                                    <td><input type="number" class="form-control mb-1" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>" /></td>
-                                                    <td><input type="number" class="form-control mb-1" min="1" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>" /></td>
-                                                    <td><input type="number" class="form-control mb-1" step="0.01" min="0" max="0" name="w[<?= $i; ?>][w_price]" aria-describedby="w-price" value="<?= number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2); ?>" /></td>
+                                                    <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>" <?= $i != 0 ? "disabled" : ""; ?>/></td>
+                                                    <td><input type="number" class="form-control mb-1 w-max" min="<?= $item->getWholesales()[$i]->getMin(); ?>" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>"/></td>
+                                                    <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="<?= $maxPrice ?>" name="w[<?= $i; ?>][w_price]" aria-describedby="w-price" value="<?= $discountedPrice ?>"/></td>
                                                 </tr>
+                                                <?php $maxPrice = $discountedPrice; ?>
                                             <?php endfor; ?>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
                             </div>
                             <!-- Add extra wholesales button -->
-                            <div class="text-center"><button type="button" class="btn btn-secondary mt-1 extra-wholesale-button">添加更多批发价</button></div>
+                            <div class="text-center"><button type="button" class="btn btn-secondary mt-1" id="extra-wholesale-button">添加更多批发价</button></div>
                         </div><!-- Wholesale -->
 
                         <div class="h2" id="step-three">媒体管理</div>
