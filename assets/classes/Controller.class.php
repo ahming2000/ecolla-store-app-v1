@@ -19,21 +19,33 @@ class Controller extends Model {
         // Avoid saving if deleted from other webpage
         if($this->dbSelectRow("items", "i_id", $i_id) == null) return false;
 
-        // Check barcode is not duplicated from database
-        $barcodes = $this->dbSelectColumn("varieties", "v_barcode");
+        // Add all old item barcode into an array
+        $oldItemBarcode = array();
+        foreach($oldItem->getVarieties() as $v){
+            array_push($oldItemBarcode, $v->getBarcode());
+        }
+
+        $newItemBarcode = array();
         foreach($newItem->getVarieties() as $v){
-             if(UsefulFunction::isExisted($barcodes, $v->getBarcode())){
+            array_push($newItemBarcode, $v->getBarcode());
+        }
+
+        // Get modify information
+        $barcodeRemained = array_intersect($oldItemBarcode, $newItemBarcode);
+        $barcodeToRemove = array_diff($oldItemBarcode, $newItemBarcode);
+        $barcodeToAdd = array_diff($newItemBarcode, $oldItemBarcode);
+
+        // Check barcode is not duplicated from new item
+        foreach($newItem->getVarieties() as $v){
+             if(UsefulFunction::isExisted($newItem->getVarieties(), $v->getBarcode())){
                  return false;
              }
         }
 
-        // Check barcode is not duplicated from new item
-        $newB = array();
+        // Check barcode is not duplicated from database
         foreach($newItem->getVarieties() as $v){
-            array_push($newB, $v->getBarcode());
-        }
-        foreach($newItem->getVarieties() as $v){
-             if(UsefulFunction::isExisted($newB, $v->getBarcode())){
+            $barcodes = $this->dbSelectColumnAttribute("varieties", "v_barcode", "v_barcode", $v->getBarcode());
+             if(sizeof($barcodes) == 2){
                  return false;
              }
         }
@@ -94,22 +106,6 @@ class Controller extends Model {
 
 
             /* Variety and Inventory */
-
-            // Add all old item barcode into an array
-            $oldItemBarcode = array();
-            foreach($oldItem->getVarieties() as $v){
-                array_push($oldItemBarcode, $v->getBarcode());
-            }
-
-            $newItemBarcode = array();
-            foreach($newItem->getVarieties() as $v){
-                array_push($newItemBarcode, $v->getBarcode());
-            }
-
-            // Get modify information
-            $barcodeRemained = array_intersect($oldItemBarcode, $newItemBarcode);
-            $barcodeToRemove = array_diff($oldItemBarcode, $newItemBarcode);
-            $barcodeToAdd = array_diff($newItemBarcode, $oldItemBarcode);
 
             // Remove variety (Auto remove inventory with cascade delete rule)
             foreach($barcodeToRemove as $b){
