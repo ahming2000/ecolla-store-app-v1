@@ -242,13 +242,13 @@ if (isset($_POST["reset-view-count-button"])) {
                                     <div id="category-section">
                                         <?php if ($categoryCount == 0) : ?>
                                             <div class="row">
-                                                <div class="col-10 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[0]" aria-describedby="category" list="category-list" maxlength="20" /></div>
+                                                <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[0]" aria-describedby="category" list="category-list" maxlength="20" /></div>
                                                 <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                             </div>
                                         <?php else : ?>
                                             <?php for ($i = 0; $i < $categoryCount; $i++) : ?>
                                                 <div class="row">
-                                                    <div class="col-10 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[<?= $i; ?>]" aria-describedby="category" list="category-list" maxlength="20" value="<?= $item->getCategories()[$i]; ?>" /></div>
+                                                    <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control" name="category[<?= $i; ?>]" aria-describedby="category" list="category-list" maxlength="20" value="<?= $item->getCategories()[$i]; ?>" /></div>
                                                     <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                 </div>
                                             <?php endfor; ?>
@@ -286,13 +286,13 @@ if (isset($_POST["reset-view-count-button"])) {
                                     <div id="property-section">
                                         <?php if ($propertyCount == 0) : ?>
                                             <div class="row">
-                                                <div class="col-10 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[0][v_property]" aria-describedby="v-property" maxlength="100" /></div>
+                                                <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[0][v_property]" aria-describedby="v-property" maxlength="100" /></div>
                                                 <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button property-remove-button px-3 py-1">X</button></div>
                                             </div>
                                         <?php else : ?>
                                             <?php for ($i = 0; $i < $propertyCount; $i++) : ?>
                                                 <div class="row">
-                                                    <div class="col-10 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[<?= $i; ?>][v_property]" aria-describedby="v-property" maxlength="100" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" /></div>
+                                                    <div class="col-11 mb-1 mr-0 pr-0"><input type="text" class="form-control v-property" name="v[<?= $i; ?>][v_property]" aria-describedby="v-property" maxlength="100" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" /></div>
                                                     <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button property-remove-button px-3 py-1">X</button></div>
                                                 </div>
                                             <?php endfor; ?>
@@ -323,8 +323,8 @@ if (isset($_POST["reset-view-count-button"])) {
                                         <tr>
                                             <td><input type="text" class="form-control v-property-view" disabled /></td>
                                             <td><input type="text" class="form-control" name="v[0][v_barcode]" aria-describedby="v-barcode" maxlength="20" /></td>
-                                            <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_price]" aria-describedby="v-price" maxlength="10" /></td>
-                                            <td><input type="number" step="0.001" min="0" class="form-control" name="v[0][v_weight]" aria-describedby="v-weight" maxlength="10" /></td>
+                                            <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_price]" aria-describedby="v-price"/></td>
+                                            <td><input type="number" step="0.001" min="0" class="form-control" name="v[0][v_weight]" aria-describedby="v-weight"/></td>
                                             <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_discount_price]" aria-describedby="v-discounted-price" maxlength="10" /></td>
                                         </tr>
                                     <?php else : ?>
@@ -332,8 +332,8 @@ if (isset($_POST["reset-view-count-button"])) {
                                             <tr>
                                                 <td><input type="text" class="form-control v-property-view" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" disabled /></td>
                                                 <td><input type="text" class="form-control" name="v[<?= $i; ?>][v_barcode]" aria-describedby="v-barcode" maxlength="20" value="<?= $item->getVarieties()[$i]->getBarcode(); ?>" /></td>
-                                                <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_price]" aria-describedby="v-price" maxlength="10" value="<?= $item->getVarieties()[$i]->getPrice(); ?>" /></td>
-                                                <td><input type="number" step="0.001" min="0" class="form-control" name="v[<?= $i; ?>][v_weight]" aria-describedby="v-weight" maxlength="10" value="<?= $item->getVarieties()[$i]->getWeight(); ?>" /></td>
+                                                <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_price]" aria-describedby="v-price" value="<?= $item->getVarieties()[$i]->getPrice(); ?>" /></td>
+                                                <td><input type="number" step="0.001" min="0" class="form-control" name="v[<?= $i; ?>][v_weight]" aria-describedby="v-weight" value="<?= $item->getVarieties()[$i]->getWeight(); ?>" /></td>
                                                 <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_discounted_price]" aria-describedby="v-discounted-price" maxlength="10" value="<?= number_format($item->getVarieties()[$i]->getPrice() * $item->getVarieties()[$i]->getDiscountRate(), 2); ?>" /></td>
                                             </tr>
                                         <?php endfor; ?>
@@ -361,7 +361,7 @@ if (isset($_POST["reset-view-count-button"])) {
                                             <td colspan="2">
                                                 <div class="variety-inventory-table-section">
                                                     <div class="row">
-                                                        <div class="col-5"><input type="date" class="form-control mb-1" name="v[0][inv][0][inv_expire_date]" aria-describedby="inv-expire-date" /></div>
+                                                        <div class="col-6"><input type="date" class="form-control mb-1" name="v[0][inv][0][inv_expire_date]" aria-describedby="inv-expire-date" /></div>
                                                         <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[0][inv][0][inv_quantity]" aria-describedby="inv-quantity" /></div>
                                                         <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                     </div>
@@ -379,14 +379,14 @@ if (isset($_POST["reset-view-count-button"])) {
                                                         <?php $currentIventoryCount = sizeof($item->getVarieties()[$i]->getInventories()); ?>
                                                         <?php if ($currentIventoryCount == 0) : ?>
                                                             <div class="row">
-                                                                <div class="col-5"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_expire_date]" aria-describedby="inv-expire-date" /></div>
+                                                                <div class="col-6"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_expire_date]" aria-describedby="inv-expire-date" /></div>
                                                                 <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][0][inv_quantity]" aria-describedby="inv-quantity" /></div>
                                                                 <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                             </div>
                                                         <?php else : ?>
                                                             <?php for ($j = 0; $j < $currentIventoryCount; $j++) : ?>
                                                                 <div class="row">
-                                                                    <div class="col-5"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_expire_date]" aria-describedby="inv-expire-date" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getExpireDate(); ?>" /></div>
+                                                                    <div class="col-6"><input type="date" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_expire_date]" aria-describedby="inv-expire-date" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getExpireDate(); ?>" /></div>
                                                                     <div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[<?= $i; ?>][inv][<?= $j; ?>][inv_quantity]" aria-describedby="inv-quantity" value="<?= $item->getVarieties()[$i]->getInventories()[$j]->getQuantity(); ?>" /></div>
                                                                     <div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>
                                                                 </div>
@@ -405,40 +405,41 @@ if (isset($_POST["reset-view-count-button"])) {
 
                         <!-- Wholesale -->
                         <div class="col-12"><label>批发价管理（单件规格折扣后的规格将无视此设定）</label></div>
-                        <div class="col-12 mb-3">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">开始数量</th>
-                                            <th scope="col">结束数量</th>
-                                            <th scope="col">价格(RM)</th>
-                                        </tr>
-                                    </thead>
+                        <div class="col-12 mb-3" style="overflow-x: scroll;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">开始数量</th>
+                                        <th scope="col">结束数量</th>
+                                        <th scope="col">价格(RM)</th>
+                                        <th scope="col">操作</th>
+                                    </tr>
+                                </thead>
 
-                                    <tbody id="wholesale-table-section">
-                                        <?php $wholesaleCount = sizeof($item->getWholesales()); ?>
-                                        <?php if ($wholesaleCount == 0) : ?>
+                                <tbody id="wholesale-table-section">
+                                    <?php $wholesaleCount = sizeof($item->getWholesales()); ?>
+                                    <?php if ($wholesaleCount == 0) : ?>
+                                        <tr>
+                                            <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[0][w_min]" aria-describedby="w-min"/></td>
+                                            <td><input type="number" class="form-control mb-1 w-max" min="1" name="w[0][w_max]" aria-describedby="w-max"/></td>
+                                            <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" name="w[0][w_price]" aria-describedby="w-price"/></td>
+                                            <td><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></td>
+                                        </tr>
+                                    <?php else : ?>
+                                        <?php $maxPrice = $item->getVarieties()[0]->getPrice(); ?>
+                                        <?php for($i = 0; $i < $wholesaleCount; $i++) : ?>
+                                            <?php $discountedPrice = number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2); ?>
                                             <tr>
-                                                <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[0][w_min]" aria-describedby="w-min"/></td>
-                                                <td><input type="number" class="form-control mb-1 w-max" min="1" name="w[0][w_max]" aria-describedby="w-max"/></td>
-                                                <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" name="w[0][w_price]" aria-describedby="w-price"/></td>
+                                                <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>" <?= $i != 0 ? "disabled" : ""; ?>/></td>
+                                                <td><input type="number" class="form-control mb-1 w-max" min="<?= $item->getWholesales()[$i]->getMin(); ?>" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>"/></td>
+                                                <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="<?= $maxPrice ?>" name="w[<?= $i; ?>][w_price]" aria-describedby="w-price" value="<?= $discountedPrice ?>"/></td>
+                                                <td><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></td>
                                             </tr>
-                                        <?php else : ?>
-                                            <?php $maxPrice = $item->getVarieties()[0]->getPrice(); ?>
-                                            <?php for($i = 0; $i < $wholesaleCount; $i++) : ?>
-                                                <?php $discountedPrice = number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2); ?>
-                                                <tr>
-                                                    <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>" <?= $i != 0 ? "disabled" : ""; ?>/></td>
-                                                    <td><input type="number" class="form-control mb-1 w-max" min="<?= $item->getWholesales()[$i]->getMin(); ?>" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>"/></td>
-                                                    <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="<?= $maxPrice ?>" name="w[<?= $i; ?>][w_price]" aria-describedby="w-price" value="<?= $discountedPrice ?>"/></td>
-                                                </tr>
-                                                <?php $maxPrice = $discountedPrice; ?>
-                                            <?php endfor; ?>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
-                            </div>
+                                            <?php $maxPrice = $discountedPrice; ?>
+                                        <?php endfor; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
                             <!-- Add extra wholesales button -->
                             <div class="text-center"><button type="button" class="btn btn-secondary mt-1" id="extra-wholesale-button">添加更多批发价</button></div>
                         </div><!-- Wholesale -->

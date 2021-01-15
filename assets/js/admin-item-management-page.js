@@ -20,8 +20,9 @@ function getExtraVarietyTableRowHTML(propertyCount){
     `<tr>` +
         `<td><input type="text" class="form-control v-property-view" disabled/></td>` +
         `<td><input type="text" class="form-control" name="v[${propertyCount}][v_barcode]" aria-describedby="v-barcode" maxlength="20"/></td>` +
-        `<td><input type="number" step="0.01" min="0" class="form-control" name="v[${propertyCount}][v_price]" aria-describedby="v-price" maxlength="10"/></td>` +
-        `<td><input type="number" step="0.001" min="0" class="form-control" name="v[${propertyCount}][v_weight]" aria-describedby="v-weight" maxlength="10"/></td>` +
+        `<td><input type="number" step="0.01" min="0" class="form-control" name="v[${propertyCount}][v_price]" aria-describedby="v-price"/></td>` +
+        `<td><input type="number" step="0.001" min="0" class="form-control" name="v[${propertyCount}][v_weight]" aria-describedby="v-weight"/></td>` +
+        `<td><input type="number" step="0.01" min="0" class="form-control" name="v[${propertyCount}][v_discount_price]" aria-describedby="v-discounted-price"/></td>` +
     `</tr>`;
 }
 
@@ -32,7 +33,7 @@ function getExtraInventoryTableRowHTML(propertyCount){
         `<td colspan="2">` +
             `<div class="variety-inventory-table-section">` +
                 `<div class="row">` +
-                    `<div class="col-5"><input type="date" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
+                    `<div class="col-6"><input type="date" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
                     `<div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[${propertyCount}][inv][0][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
                     `<div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>` +
                 `</div>` +
@@ -46,7 +47,7 @@ function getExtraInventoryTableRowHTML(propertyCount){
 function getExtraInventoryHTML(currentVarietyIndex, inventoryCount){
     return `` +
     `<div class="row">` +
-        `<div class="col-5"><input type="date" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
+        `<div class="col-6"><input type="date" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_expire_date]" aria-describedby="inv-expire-date"/></div>` +
         `<div class="col-5"><input type="number" min="0" class="form-control mb-1" name="v[${currentVarietyIndex}][inv][${inventoryCount}][inv_quantity]" aria-describedby="inv-quantity"/></div>` +
         `<div class="col-1 mb-1 ml-0 pl-0"><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></div>` +
     `</div>`;
@@ -79,6 +80,7 @@ function getExtraWholesaleTableRowHTML(wholesaleCount, max, price){
         `<td><input type="number" class="form-control mb-1 w-min" min="1" name="w[${wholesaleCount}][w_min]" aria-describedby="w-min" value="${max}" disabled/></td>` +
         `<td><input type="number" class="form-control mb-1 w-max" min="${max}" name="w[${wholesaleCount}][w_max]" aria-describedby="w-max"/></td>` +
         `<td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="${price}" name="w[${wholesaleCount}][w_price]" aria-describedby="w-price"/></td>` +
+        `<td><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></td>` +
     `</tr>`;
 }
 
@@ -100,7 +102,7 @@ function getInventoryCount(source){
 }
 
 function getWholesaleCount(){
-    return $("#wholesale-section tr").length;
+    return $("#wholesale-table-section tr").length;
 }
 
 // Extra inventory
