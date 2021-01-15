@@ -398,7 +398,7 @@ class Controller extends Model {
             $this->dbUpdate("items", "i_is_listed", 0, "i_name", $itemName);
             return true;
         } else{
-            if($this->list($itemName) != null){
+            if($this->list($itemName) == null){
                 return true;
             } else{
                 return false;
