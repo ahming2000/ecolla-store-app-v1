@@ -103,6 +103,66 @@ class Controller extends Model {
             }
 
             /* Wholesales */
+            $wCountDiff = sizeof($newItem->getWholesales()) - sizeof($oldItem->getWholesales());
+            $w_ids = $this->dbSelectColumnAttribute("wholesales", "w_id", "i_id", $i_id);
+
+            if ($wCountDiff < 0){ // Old wholesale is more than new wholesale
+
+                // Delete extra wholesale
+                for($i = 0; $i < abs($wCountDiff); $i++){
+                    $this->dbDelete("wholesales", "w_id", $w_ids[0]); //Delete first w_id row found
+                    array_shift($w_ids); // Remove the first inv_id which deleted from inventories table
+                }
+
+                // Update current available data
+                for($i = 0; $i < sizeof($newItem->getWholesales()); $i++){
+
+                    // Wholesale min
+                    $this->dbUpdate("wholesales", "w_min", $newItem->getWholesales()[$i]->getMin(), "w_id", $w_ids[$i]);
+
+                    // Wholesale max
+                    $this->dbUpdate("wholesales", "w_max", $newItem->getWholesales()[$i]->getMax(), "w_id", $w_ids[$i]);
+
+                    // Wholesale discount rate
+                    $this->dbUpdate("wholesales", "w_discount_rate", $newItem->getWholesales()[$i]->getDiscountRate(), "w_id", $w_ids[$i]);
+
+                }
+            } else if ($wCountDiff > 0){ // Old wholesale is less than new wholesale
+
+                // Insert the new one first
+                for($i = 0; $i < $wCountDiff; $i++){
+                    $wholesale_ready = [$i_id, $newItem->getWholesales()[$i]->getMin(), $newItem->getWholesales()[$i]->getMax(), $newItem->getWholesales()[$i]->getDiscountRate()];
+                    $this->dbInsert("wholesales", $wholesale_ready);
+                }
+
+                // Update current available data
+                for($i = $wCountDiff; $i < sizeof($newItem->getWholesales()); $i++){
+
+                    // Wholesale min
+                    $this->dbUpdate("wholesales", "w_min", $newItem->getWholesales()[$i]->getMin(), "w_id", $w_ids[$i - $wCountDiff]);
+
+                    // Wholesale max
+                    $this->dbUpdate("wholesales", "w_max", $newItem->getWholesales()[$i]->getMax(), "w_id", $w_ids[$i - $wCountDiff]);
+
+                    // Wholesale discount rate
+                    $this->dbUpdate("wholesales", "w_discount_rate", $newItem->getWholesales()[$i]->getDiscountRate(), "w_id", $w_ids[$i - $wCountDiff]);
+
+                }
+            } else{ // Old wholesale is same with new wholesale
+                // Update current available data
+                for($i = 0; $i < sizeof($newItem->getWholesales()); $i++){
+
+                    // Wholesale min
+                    $this->dbUpdate("wholesales", "w_min", $newItem->getWholesales()[$i]->getMin(), "w_id", $w_ids[$i]);
+
+                    // Wholesale max
+                    $this->dbUpdate("wholesales", "w_max", $newItem->getWholesales()[$i]->getMax(), "w_id", $w_ids[$i]);
+
+                    // Wholesale discount rate
+                    $this->dbUpdate("wholesales", "w_discount_rate", $newItem->getWholesales()[$i]->getDiscountRate(), "w_id", $w_ids[$i]);
+
+                }
+            }
 
 
             /* Variety and Inventory */

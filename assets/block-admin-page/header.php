@@ -40,6 +40,8 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="<?= $upperDirectory; ?>admin/account-settings.php">账号设置</a>
                   <a class="dropdown-item" href="<?= $upperDirectory; ?>admin/logout.php">登出</a>
+                  <a class="dropdown-item" href="#">Main: v0.2.0-alpha</a>
+                  <a class="dropdown-item" href="#">MVC: v0.3.1-alpha</a>
                 </div>
             </li>
         </ul>
