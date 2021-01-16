@@ -79,6 +79,29 @@ function updateData($oldItem)
         }
     }
 
+    // Declare into wholesales array
+    if(isset($_POST["w"]) and isset($_POST["v"])) {
+
+        $_POST["w"] = UsefulFunction::arrayIndexRearrage($_POST["w"]); //Rearrange array index for make sure all element is looped
+
+        // Set min using min from first row
+        $min = $_POST["w"][0]["w_min"];
+
+        for($i = 0; $i < sizeof($_POST["w"]); $i++){
+            if($_POST["w"][$i]["w_price"] != "" and isset($_POST["w"][$i]["w_price"])){
+
+                // Add wholesale to item
+                $discountRate = $_POST["w"][$i]["w_price"] / $_POST["v"][0]["v_price"];
+                $newItem->addWholesale(new Wholesale($min, $_POST["w"][$i]["w_max"], $discountRate));
+
+                if($_POST["w"][$i]["w_max"] == null) break; // If the max is null, it will treat this as the last row to insert
+
+                // Update min with current min from current row
+                $min = $_POST["w"][$i]["w_max"] + 1;
+            }
+        }
+    }
+
     // Update data in database
     $view = new View();
     $controller = new Controller();
