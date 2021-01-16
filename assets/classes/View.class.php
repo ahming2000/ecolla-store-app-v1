@@ -263,6 +263,67 @@ class View extends Model{
         return $this->dbSelectAttribute("orders", "o_date_time", "o_id", $orderId);
     }
 
-}
+    public function querySearch($query){
+        //i_name, i_brand, i_desc, i_origin, v_barcode, v_property, cat_name
+        $usr_search_arr = preg_split("/,[\s]+|[\s]+,|[,]/", $query);
+        $tmp_item_arr = $this->getAllItems();
+        $item_arr = array();
+        
+        foreach($tmp_item_arr as $arr_item){
+            foreach($arr_item->getVarieties() as $variety){
+                if($this->checkItem($arr_item->getName(), $arr_item->getBrand(), $arr_item->getDescription(), $arr_item->getOrigin()
+                ,$variety->getBarcode(), $variety->getProperty(), $arr_item->getCategories(), $usr_search_arr)){
+                    if(count($item_arr) >= 1){
+                        $flag = false;
+                        foreach($item_arr as $arr_item_2){
+                            if($arr_item->getName() == $arr_item_2->getName())
+                                $flag = true;
+                        }
 
-?>
+                        if($flag)
+                            continue;
+                    }
+                    array_push($item_arr, $this->getItem($arr_item->getName()));
+                }
+            }
+        }
+        return $item_arr;
+    }
+
+    public function checkItem($name, $brand, $description, $origin, $barcode, $property, $categories, $search_str){
+        $arr = array($name, $brand, $description, $origin, $barcode, $property);
+        foreach($categories as $c){
+            array_push($arr, $c);
+        }
+
+        $flag = false;
+        if(count($search_str) == 1){
+            for($i = 0; $i < count($arr); $i++){
+                if(strpos($arr[$i], $search_str[0]) !== false){
+                    //If it matches at least one, then flag returns true;
+                    $flag = true;
+                }
+            }
+        } else {
+            $flag = true;
+            $flag_arr = array();
+            for($i = 0; $i < count($search_str); $i++){
+                array_push($flag_arr, false);
+            }
+
+            for($i = 0; $i < count($search_str); $i++){
+                for($j = 0; $j < count($arr); $j++){
+                    if(strpos($arr[$j], $search_str[$i]) !== false)
+                        $flag_arr[$i] = true;
+                }
+            }
+
+            for($i = 0; $i < count($flag_arr); $i++){
+                if(!$flag_arr[$i])
+                    $flag = false;
+            }
+        }
+        return $flag;
+    }
+
+}
