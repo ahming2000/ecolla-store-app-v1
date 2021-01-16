@@ -3,7 +3,7 @@
 require_once __DIR__."\\..\\database\\Model.class.php";
 
 class View extends Model{
-
+    
     public function toItemObjList($dbTable_items){
 
         $items = array();
@@ -29,8 +29,8 @@ class View extends Model{
             }
 
             // Get wholesales of current item
-            // Query: SELECT * FROM wholesales WHERE i_id = ?
-            $dbTable_wholesales = $this->dbSelectRow("wholesales", "i_id", $i["i_id"]);
+            // Query: SELECT * FROM wholesales WHERE i_id = ? ORDER BY w_min
+            $dbTable_wholesales = $this->dbQuery("SELECT * FROM wholesales WHERE i_id = " . $i["i_id"] . " ORDER BY w_min");
 
             foreach($dbTable_wholesales as $w){
 
