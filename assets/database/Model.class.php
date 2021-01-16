@@ -1,6 +1,6 @@
 <?php
 
-/*  MVC Model Version: v0.3.1-alpha
+/*  MVC Model Version: v0.3.2-alpha
 *   Created by AhMing
 *   Commit Details: https://github.com/ahming2000/EcollaWebsite/commits/main/assets/database/Model.class.php
 *   Go to README.MD for changing log.
@@ -596,6 +596,7 @@ class Model extends Dbh{
     protected function dbUpdate($tableName, $attrToUpdate, $attrContentToUpdate, $attrToSearch, $attrContentToSearch){
 
         $hasMultipleSearch = false;
+        $hasUpdateNullVal = false;
 
         // If $attrToSearch and $attrContentToSearch are array, enable multiple search
         if(is_array($attrToSearch) or is_array($attrContentToSearch)){
@@ -612,21 +613,38 @@ class Model extends Dbh{
             }
         }
 
+        // If $attrContentToUpdate is null, enable null value update
+        if($attrContentToUpdate == null){
+            $hasUpdateNullVal = true;
+        }
+
         $c = $hasMultipleSearch ? "with" : "without";
         $this->log("[Info] Updating $attrToUpdate to $attrContentToUpdate from $tableName $c multiple condition set.");
 
         if($hasMultipleSearch){
             $whereClause = $this->clauseConnector($attrToSearch, "AND");
-            $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $whereClause";
+            if ($hasUpdateNullVal){
+                $sql = "UPDATE $tableName SET $attrToUpdate = NULL WHERE $whereClause";
+            } else{
+                $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $whereClause";
+            }
         } else{
-            $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $attrToSearch LIKE ?";
+            if ($hasUpdateNullVal){
+                $sql = "UPDATE $tableName SET $attrToUpdate = NULL WHERE $attrToSearch LIKE ?";
+            } else{
+                $sql = "UPDATE $tableName SET $attrToUpdate = ? WHERE $attrToSearch LIKE ?";
+            }
         }
+
+        $this->log("Executing: " . $sql);
 
         // Prepare the query
         $stmt = $this->connect()->prepare($sql);
 
+        $value = $hasUpdateNullVal ? is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch] : array_merge([$attrContentToUpdate], is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch]);
+
         // Execute the query, put it as array when it is array
-        if(!$stmt->execute(array_merge([$attrContentToUpdate], is_array($attrContentToSearch) ? $attrContentToSearch : [$attrContentToSearch]))){
+        if(!$stmt->execute($value)){
             $this->handleException("Error when updating $attrToUpdate from $tableName.", $stmt->errorInfo()[2]);
         }
     }

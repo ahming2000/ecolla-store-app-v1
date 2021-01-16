@@ -1,4 +1,4 @@
-# MVC Model v0.3.1-alpha (Created by AhMing)
+# MVC Model v0.3.2-alpha (Created by AhMing)
 
 Changing Log:
 
@@ -6,6 +6,9 @@ v0.4.0-alpha (Planned)
 - Use `dbSelectRowAttribute()` to replace `dbSelectAll()`and `dbSelectRow()`, and rename to `dbSelectRow()` (2D array data selector).
 - Use `dbSelectColumnAttribute()` to replace `dbSelectColumn()` and rename to `dbSelectColumn()` (1D array data Selector).
 - `dbSelectCount()` (counting selector) and `dbSelectAttribute()` (single data selector) will remain unchanged.
+
+v0.3.2-alpha
+- Fix `dbUpdate()` cannot set null value problem
 
 v0.3.1-alpha
 - Fix float value searching problem.
