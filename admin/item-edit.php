@@ -51,8 +51,11 @@ function updateData($oldItem)
 
             if (isset($_POST["v"][$i]["v_property"]) and $_POST["v"][$i]["v_property"] != "") {
 
-                $discountedRate = $_POST['v'][$i]["v_discounted_price"] == null ? 1.00 : $_POST['v'][$i]["v_discounted_price"] / $_POST['v'][$i]["v_price"];
-                $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $_POST["v"][$i]["v_price"] == null ? 0.0 : $_POST["v"][$i]["v_price"], $_POST["v"][$i]["v_weight"] == null ? 0.0 : $_POST["v"][$i]["v_weight"], $discountedRate);
+                $price = $_POST["v"][$i]["v_price"] == null ? 0.0 : $_POST["v"][$i]["v_price"];
+                $discountedPrice = $_POST['v'][$i]["v_discounted_price"] == null ? 1.00 : $_POST['v'][$i]["v_discounted_price"];
+                $discountRate = $price == 0.0 ? 1.0 : $discountedPrice / $price;
+
+                $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $price, $_POST["v"][$i]["v_weight"] == null ? 0.0 : $_POST["v"][$i]["v_weight"], $discountedRate);
 
                 if (isset($_POST["v"][$i]["inv"])) {
 
@@ -68,6 +71,19 @@ function updateData($oldItem)
                 $newItem->addVariety($variety); //Add variety to item
             }
         }
+
+        if (isset($_POST["v"][0]["v_property"]) and $_POST["v"][0]["v_property"] != ""){
+            // Check all variety has same price
+            $hasSamePrice = true;
+            $firstPrice = $newItem->getVarieties()[0]->getPrice();
+            foreach($newItem->getVarieties() as $v){
+                if($v->getPrice() != $firstPrice){
+                    $hasSamePrice = false;
+                    break;
+                }
+            }
+        }
+
     }
 
     // Declare into catogories array
@@ -80,7 +96,7 @@ function updateData($oldItem)
     }
 
     // Declare into wholesales array
-    if(isset($_POST["w"]) and isset($_POST["v"])) {
+    if(isset($_POST["w"]) and isset($_POST["v"]) and $hasSamePrice) {
 
         $_POST["w"] = UsefulFunction::arrayIndexRearrage($_POST["w"]); //Rearrange array index for make sure all element is looped
 
@@ -346,18 +362,18 @@ if (isset($_POST["reset-view-count-button"])) {
                                         <tr>
                                             <td><input type="text" class="form-control v-property-view" disabled /></td>
                                             <td><input type="text" class="form-control" name="v[0][v_barcode]" aria-describedby="v-barcode" maxlength="20" /></td>
-                                            <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_price]" aria-describedby="v-price"/></td>
+                                            <td><input type="number" step="0.01" min="0" class="form-control v-price" name="v[0][v_price]" aria-describedby="v-price"/></td>
                                             <td><input type="number" step="0.001" min="0" class="form-control" name="v[0][v_weight]" aria-describedby="v-weight"/></td>
-                                            <td><input type="number" step="0.01" min="0" class="form-control" name="v[0][v_discount_price]" aria-describedby="v-discounted-price" maxlength="10" /></td>
+                                            <td><input type="number" step="0.01" min="0" class="form-control v-discounted-price" name="v[0][v_discount_price]" aria-describedby="v-discounted-price"/></td>
                                         </tr>
                                     <?php else : ?>
                                         <?php for ($i = 0; $i < $propertyCount; $i++) : ?>
                                             <tr>
                                                 <td><input type="text" class="form-control v-property-view" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" disabled /></td>
                                                 <td><input type="text" class="form-control" name="v[<?= $i; ?>][v_barcode]" aria-describedby="v-barcode" maxlength="20" value="<?= $item->getVarieties()[$i]->getBarcode(); ?>" /></td>
-                                                <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_price]" aria-describedby="v-price" value="<?= $item->getVarieties()[$i]->getPrice(); ?>" /></td>
+                                                <td><input type="number" step="0.01" min="0" class="form-control v-price" name="v[<?= $i; ?>][v_price]" aria-describedby="v-price" value="<?= $item->getVarieties()[$i]->getPrice(); ?>" /></td>
                                                 <td><input type="number" step="0.001" min="0" class="form-control" name="v[<?= $i; ?>][v_weight]" aria-describedby="v-weight" value="<?= $item->getVarieties()[$i]->getWeight(); ?>" /></td>
-                                                <td><input type="number" step="0.01" min="0" class="form-control" name="v[<?= $i; ?>][v_discounted_price]" aria-describedby="v-discounted-price" maxlength="10" value="<?= number_format($item->getVarieties()[$i]->getPrice() * $item->getVarieties()[$i]->getDiscountRate(), 2); ?>" /></td>
+                                                <td><input type="number" step="0.01" min="0" max="<?= $item->getVarieties()[$i]->getPrice(); ?>" class="form-control v-discounted-price" name="v[<?= $i; ?>][v_discounted_price]" aria-describedby="v-discounted-price" value="<?= number_format($item->getVarieties()[$i]->getPrice() * $item->getVarieties()[$i]->getDiscountRate(), 2); ?>" /></td>
                                             </tr>
                                         <?php endfor; ?>
                                     <?php endif; ?>
@@ -427,8 +443,8 @@ if (isset($_POST["reset-view-count-button"])) {
                         </div><!-- Inventory -->
 
                         <!-- Wholesale -->
-                        <div class="col-12"><label>批发价管理（单件规格折扣后的规格将无视此设定）</label></div>
-                        <div class="col-12 mb-3" style="overflow-x: scroll;">
+                        <div class="col-12 wholesale-section"><label>批发价管理（单件规格折扣后的规格将无视此设定）</label></div>
+                        <div class="col-12 mb-3 wholesale-section" style="overflow-x: scroll;">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>

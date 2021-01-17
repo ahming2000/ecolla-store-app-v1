@@ -20,9 +20,9 @@ function getExtraVarietyTableRowHTML(propertyCount){
     `<tr>` +
         `<td><input type="text" class="form-control v-property-view" disabled/></td>` +
         `<td><input type="text" class="form-control" name="v[${propertyCount}][v_barcode]" aria-describedby="v-barcode" maxlength="20"/></td>` +
-        `<td><input type="number" step="0.01" min="0" class="form-control" name="v[${propertyCount}][v_price]" aria-describedby="v-price"/></td>` +
+        `<td><input type="number" step="0.01" min="0" class="form-control v-price" name="v[${propertyCount}][v_price]" aria-describedby="v-price"/></td>` +
         `<td><input type="number" step="0.001" min="0" class="form-control" name="v[${propertyCount}][v_weight]" aria-describedby="v-weight"/></td>` +
-        `<td><input type="number" step="0.01" min="0" class="form-control" name="v[${propertyCount}][v_discount_price]" aria-describedby="v-discounted-price"/></td>` +
+        `<td><input type="number" step="0.01" min="0" class="form-control v-discounted-price" name="v[${propertyCount}][v_discount_price]" aria-describedby="v-discounted-price"/></td>` +
     `</tr>`;
 }
 
@@ -170,6 +170,30 @@ $(document).on("click", ".remove-button", function(){
         $("#wholesale-table-section").find(".remove-button").attr("disabled", "disabled");
         $("#wholesale-table-section").find(".remove-button").last().removeAttr("disabled");
     }
+});
+
+// Disable wholesales if all variety price is difference
+$(document).on("change", ".v-price", function(){
+
+    // Wholesale settings
+    var first = $(".v-price").eq(0).val();
+    var isSame = true;
+    for(var i = 1; i < $(".v-price").length; i++){
+        if ($(".v-price").eq(i).val() != first){
+            isSame = false;
+            break;
+        }
+    }
+
+    if(isSame){
+        $(".wholesale-section").show();
+    } else{
+        $(".wholesale-section").hide();
+    }
+
+    // Discount price settings
+    var index = $(".v-price").index(this);
+    $(".v-price").eq(index).parent().parent().find(".v-discounted-price").attr("max", $(this).val());
 });
 
 // For separate image upload
@@ -333,6 +357,22 @@ $(document).ready(function(){
     $(".w-min").first().change(function(){
         $(this).parent().parent().first().find("input.w-max").attr("min", $(this).val()); // Set min value for w-max in same row
     });
+
+    // Wholesale settings
+    var first = $(".v-price").eq(0).val();
+    var isSame = true;
+    for(var i = 1; i < $(".v-price").length; i++){
+        if ($(".v-price").eq(i).val() != first){
+            isSame = false;
+            break;
+        }
+    }
+
+    if(isSame){
+        $(".wholesale-section").show();
+    } else{
+        $(".wholesale-section").hide();
+    }
 
     // For changing "active tag" when scrolling
     // Reference: https://www.steckinsights.com/change-active-menu-as-you-scroll-with-jquery/
