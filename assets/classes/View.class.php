@@ -2,9 +2,11 @@
 
 require_once __DIR__ . "\\..\\database\\Model.class.php";
 
-class View extends Model{
+class View extends Model
+{
 
-    public function toItemObjList($dbTable_items){
+    public function toItemObjList($dbTable_items)
+    {
 
         $items = array();
 
@@ -31,15 +33,14 @@ class View extends Model{
             // Query: SELECT * FROM wholesales WHERE i_id = ? ORDER BY w_min
             $dbTable_wholesales = $this->dbQuery("SELECT * FROM wholesales WHERE i_id = " . $i["i_id"] . " ORDER BY w_min");
 
-            if($dbTable_wholesales != 1){ // Result is true due to dbQuery default settings
-                foreach($dbTable_wholesales as $w){
+            if ($dbTable_wholesales != 1) { // Result is true due to dbQuery default settings
+                foreach ($dbTable_wholesales as $w) {
 
                     // Create new Wholesale object
                     $wholesale = new Wholesale($w["w_min"], $w["w_max"], $w["w_discount_rate"]);
 
                     // Add into item object
                     $item->addWholesale($wholesale);
-
                 }
             }
 
@@ -292,7 +293,6 @@ class View extends Model{
             //Get Variety Arr, Classifications Arr and Categories Arr
             $variety_arr = $this->dbQuery("Select v_barcode, v_property from varieties where i_id = $id");
 
-<<<<<<< HEAD
             foreach ($variety_arr as $variety) {
                 //Get Categories
                 $classifications_arr = $this->dbQuery("Select cat_id from classifications where i_id = $id");
@@ -326,56 +326,14 @@ class View extends Model{
                         foreach ($name_arr as $name_arr_item) {
                             if ($tmp_item["name"] == $name_arr_item)
                                 $flag = true;
-=======
-            if($variety_arr != 1){
-                foreach ($variety_arr as $variety) {
-                    //Get Categories
-                    $classifications_arr = $this->dbQuery("Select cat_id from classifications where i_id = $id");
-                    //Returns only cat_id in string format
-                    $classifications_str =
-                        '(' .
-                        implode(', ', array_map(function ($e) {
-                            return $e['cat_id'];
-                        }, $classifications_arr)) .
-                        ')';
-
-                    $category_arr = $this->dbQuery("Select cat_name from categories where cat_id in $classifications_str");
-                    $category_arr = array_map(function ($e) {
-                        return $e['cat_name'];
-                    }, $category_arr);
-
-                    //Create a temporary item (multi-dimensional array / dictionary - Phyton, Object - Javascript, HashMap - Java/C++) for verification
-                    $tmp_item = array();
-                    $tmp_item["name"] = $arr_item["i_name"];
-                    $tmp_item["brand"] = $arr_item["i_brand"];
-                    $tmp_item["description"] = $arr_item["i_desc"];
-                    $tmp_item["origin"] = $arr_item["i_origin"];
-                    $tmp_item["barcode"] = $variety["v_barcode"];
-                    $tmp_item["property"] = $variety["v_property"];
-                    $tmp_item["categories"] = $category_arr;
-
-                    if ($this->checkItem($tmp_item, $usr_search_arr)) {
-                        //If got duplication
-                        if (count($item_arr) >= 1) {
-                            $flag = false;
-                            foreach ($item_arr as $arr_item_2) {
-                                if ($tmp_item["name"] == $arr_item_2->getName())
-                                    $flag = true;
-                            }
-
-                            if ($flag)
-                                continue;
->>>>>>> 605d90f6bb8f05aabfd7628ff6bf791b2ca18b15
                         }
-                        array_push($item_arr, $this->getItem($tmp_item["name"]));
+                        
+                        if ($flag)
+                            continue;
                     }
-<<<<<<< HEAD
                     array_push($name_arr, $tmp_item["name"]);
-=======
->>>>>>> 605d90f6bb8f05aabfd7628ff6bf791b2ca18b15
                 }
             }
-
         }
         return $name_arr;
     }
@@ -406,7 +364,7 @@ class View extends Model{
             for ($j = 0; $j < count($arr); $j++) {
                 $str2 = $arr[$j];
                 //If both string 1 and string 2 have english characters, extract the substring from string_2 then uppercase it and match
-                if(preg_match("/^[A-Za-z]+$/", $search_str[$i]) && preg_match("/[A-Za-z]+/", $arr[$j])){
+                if (preg_match("/^[A-Za-z]+$/", $search_str[$i]) && preg_match("/[A-Za-z]+/", $arr[$j])) {
                     $matches = array();
                     preg_match("/[A-Za-z]+/", $search_str[$i], $matches);
                     $str = strtoupper($matches[0]);
