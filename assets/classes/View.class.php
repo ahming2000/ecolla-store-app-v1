@@ -2,11 +2,9 @@
 
 require_once __DIR__ . "\\..\\database\\Model.class.php";
 
-class View extends Model
-{
+class View extends Model{
 
-    public function toItemObjList($dbTable_items)
-    {
+    public function toItemObjList($dbTable_items){
 
         $items = array();
 
@@ -33,15 +31,17 @@ class View extends Model
             // Query: SELECT * FROM wholesales WHERE i_id = ? ORDER BY w_min
             // $dbTable_wholesales = $this->dbQuery("SELECT * FROM wholesales WHERE i_id = " . $i["i_id"] . " ORDER BY w_min");
 
-            // foreach($dbTable_wholesales as $w){
+            if($dbTable_wholesales != 1){ // Result is true due to dbQuery default settings
+                foreach($dbTable_wholesales as $w){
 
-            //     // Create new Wholesale object
-            //     $wholesale = new Wholesale($w["w_min"], $w["w_max"], $w["w_discount_rate"]);
+                    // Create new Wholesale object
+                    $wholesale = new Wholesale($w["w_min"], $w["w_max"], $w["w_discount_rate"]);
 
-            //     // Add into item object
-            //     $item->addWholesale($wholesale);
+                    // Add into item object
+                    $item->addWholesale($wholesale);
 
-            // }
+                }
+            }
 
             // Get varieties of current item
             // Query: SELECT * FROM varieties WHERE i_id = ?
