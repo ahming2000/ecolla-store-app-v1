@@ -55,7 +55,7 @@ function updateData($oldItem)
                 $discountedPrice = $_POST['v'][$i]["v_discounted_price"] == null ? 1.00 : $_POST['v'][$i]["v_discounted_price"];
                 $discountRate = $price == 0.0 ? 1.0 : $discountedPrice / $price;
 
-                $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $price, $_POST["v"][$i]["v_weight"] == null ? 0.0 : $_POST["v"][$i]["v_weight"], $discountedRate);
+                $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $price, $_POST["v"][$i]["v_weight"] == null ? 0.0 : $_POST["v"][$i]["v_weight"], $discountRate);
 
                 if (isset($_POST["v"][$i]["inv"])) {
 
@@ -470,7 +470,7 @@ if (isset($_POST["reset-view-count-button"])) {
                                             <?php $discountedPrice = number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2); ?>
                                             <tr>
                                                 <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>" <?= $i != 0 ? "disabled" : ""; ?>/></td>
-                                                <td><input type="number" class="form-control mb-1 w-max" min="<?= $item->getWholesales()[$i]->getMin(); ?>" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>"/></td>
+                                                <td><input type="number" class="form-control mb-1 w-max" min="<?= $item->getWholesales()[$i]->getMin(); ?>" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>" <?= ($i == ($wholesaleCount - 1)) ? "disabled" : ""; ?>/></td>
                                                 <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="<?= $maxPrice ?>" name="w[<?= $i; ?>][w_price]" aria-describedby="w-price" value="<?= $discountedPrice ?>"/></td>
                                                 <td><button type="button" class="btn default-color white-text btn-sm remove-button wholesale-remove-button px-3 py-1" <?= $i != $wholesaleCount - 1 ? "disabled" : ""; ?>>X</button></td>
                                             </tr>

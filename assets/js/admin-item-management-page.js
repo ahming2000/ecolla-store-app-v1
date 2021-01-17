@@ -69,7 +69,7 @@ function getExtraVarietyImageBoxHTML(propertyCount){
                     `</div>` +
                 `</div>` +
             `</div>` +
-            `<figcaption class="figure-caption text-center">照片 <?= $i ?></figcaption>` +
+            `<figcaption class="figure-caption text-center variety-property-caption"></figcaption>` +
         `</figure>` +
     `</div>`;
 }
@@ -79,7 +79,7 @@ function getExtraWholesaleTableRowHTML(wholesaleCount, max, price){
     return `` +
     `<tr>` +
         `<td><input type="number" class="form-control mb-1 w-min" min="1" name="w[${wholesaleCount}][w_min]" aria-describedby="w-min" value="${max}" ${d}/></td>` +
-        `<td><input type="number" class="form-control mb-1 w-max" min="${max}" name="w[${wholesaleCount}][w_max]" aria-describedby="w-max"/></td>` +
+        `<td><input type="number" class="form-control mb-1 w-max" min="${max}" name="w[${wholesaleCount}][w_max]" aria-describedby="w-max" disabled/></td>` +
         `<td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="${price}" name="w[${wholesaleCount}][w_price]" aria-describedby="w-price"/></td>` +
         `<td><button type="button" class="btn default-color white-text btn-sm remove-button wholesale-remove-button px-3 py-1">X</button></td>` +
     `</tr>`;
@@ -119,11 +119,11 @@ $(document).on("change", ".v-property", function(e){ // To detect and modify rea
     e.preventDefault();
 
     var value = $(this).val();
-    var propertyCount = getPropertyCount();
+    var propertyCount = $("#property-section div.row").has("div").length;
     var propertyIndex = $(".v-property").index(this);
 
     $(".v-property-view").eq(propertyIndex).val(value); // Variety table
-    $(".v-property-view").eq(propertyIndex + propertyCount - 1).val(value); // Inventory table  // Minus 1 of property count to index
+    $(".v-property-view").eq(propertyIndex + propertyCount).val(value); // Inventory table  // Minus 1 of property count to index
     $(".variety-property-caption").eq(propertyIndex).html(value); // Variety Image Box Caption
 });
 
@@ -169,6 +169,10 @@ $(document).on("click", ".remove-button", function(){
         // Last romove button of wholesale table will always enable and the rest will be disabled
         $("#wholesale-table-section").find(".remove-button").attr("disabled", "disabled");
         $("#wholesale-table-section").find(".remove-button").last().removeAttr("disabled");
+
+        // Last max column will always disabled and the rest will be enabled
+        $(".w-max").removeAttr("disabled");
+        $(".w-max").last().attr("disabled", "disabled");
     }
 });
 
@@ -351,6 +355,10 @@ $(document).ready(function(){
         // Last romove button of wholesale table will always enable and the rest will be disabled
         $("#wholesale-table-section").find(".remove-button").attr("disabled", "disabled");
         $("#wholesale-table-section").find(".remove-button").last().removeAttr("disabled");
+
+        // Last max column will always disabled and the rest will be enabled
+        $(".w-max").removeAttr("disabled");
+        $(".w-max").last().attr("disabled", "disabled");
     });
 
     // Wholesale first w-min column auto sync
