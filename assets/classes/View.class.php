@@ -29,7 +29,7 @@ class View extends Model{
 
             // Get wholesales of current item
             // Query: SELECT * FROM wholesales WHERE i_id = ? ORDER BY w_min
-            // $dbTable_wholesales = $this->dbQuery("SELECT * FROM wholesales WHERE i_id = " . $i["i_id"] . " ORDER BY w_min");
+            $dbTable_wholesales = $this->dbQuery("SELECT * FROM wholesales WHERE i_id = " . $i["i_id"] . " ORDER BY w_min");
 
             if($dbTable_wholesales != 1){ // Result is true due to dbQuery default settings
                 foreach($dbTable_wholesales as $w){
