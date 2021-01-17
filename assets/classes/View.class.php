@@ -285,7 +285,7 @@ class View extends Model{
         //i_name, i_brand, i_desc, i_origin, v_barcode, v_property, cat_name
         $usr_search_arr = preg_split("/,[\s]+|[\s]+,|[,]/", $query);
         $full_item_arr = $this->dbQuery("Select i_id, i_name, i_brand, i_desc, i_origin from items");
-        $item_arr = array();
+        $name_arr = array();
         foreach ($full_item_arr as $arr_item) {
             $id = $arr_item["i_id"];
 
@@ -320,21 +320,21 @@ class View extends Model{
 
                 if ($this->checkItem($tmp_item, $usr_search_arr)) {
                     //If got duplication
-                    if (count($item_arr) >= 1) {
+                    if (count($name_arr) >= 1) {
                         $flag = false;
-                        foreach ($item_arr as $arr_item_2) {
-                            if ($tmp_item["name"] == $arr_item_2->getName())
+                        foreach ($name_arr as $name_arr_item) {
+                            if ($tmp_item["name"] == $name_arr_item)
                                 $flag = true;
                         }
 
                         if ($flag)
                             continue;
                     }
-                    array_push($item_arr, $this->getItem($tmp_item["name"]));
+                    array_push($name_arr, $tmp_item["name"]);
                 }
             }
         }
-        return $item_arr;
+        return $name_arr;
     }
 
     public function checkItem($item, $search_str)
