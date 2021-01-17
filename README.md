@@ -55,7 +55,7 @@ Component used for this project:
 ?>
 ```
 ### Admin login page
-You may login to the admin page with username `ahming` and password `Ksm10072000`
+You may register account using `registerAccount()` at Controller class, export the user data from database and send it to me.
 
 ### Problem faced when setup the wamp64
 - Only 2 of 3 services running, the one which not running is MySQL
