@@ -154,9 +154,8 @@ class View extends Model
 
                 $i_id = $this->dbSelectAttribute("varieties", "i_id", "v_barcode", $oi["v_barcode"]);
                 $i_name = $this->dbSelectAttribute("items", "i_name", "i_id", $i_id);
-                $i_brand = $this->dbSelectAttribute("items", "i_brand", "i_id", $i_id);
 
-                $item = $this->getItem($i_name, $i_brand);
+                $item = $this->getItem($i_name);
                 $cartItem = new CartItem($item, $oi["oi_quantity"], $oi["v_barcode"]);
                 $cart->addItem($cartItem);
             }
@@ -327,7 +326,7 @@ class View extends Model
                             if ($tmp_item["name"] == $name_arr_item)
                                 $flag = true;
                         }
-                        
+
                         if ($flag)
                             continue;
                     }
