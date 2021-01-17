@@ -48,6 +48,13 @@ $(document).ready(function() {
         $(".price-view").attr("hidden", "hidden");
         $("#variety-" + selectedVarietyBarcode).removeAttr("hidden");
 
+        // Change the wholesale information view
+        if($("#variety-" + selectedVarietyBarcode).hasClass("discounted-price")){
+            $(".wholesale-view").hide();
+        } else{
+            $(".wholesale-view").show();
+        }
+
         // Change the variety total inventory quantity
         $("#inventory").val(selectedVarietyInventory);
 
@@ -102,6 +109,45 @@ $(document).ready(function() {
         } else{
             quantityUnlockControl();
         }
+
+        // Update wholesale information
+        var quantity = parseInt($("#quantity").val());
+        // Get wholesale range index
+        var currentWholesaleIndex = -1; //Default does not involve in any wholesale
+        //if($(".wholesale-view").eq(0).find(".wholesale-min").val() == 1) currentWholesaleIndex = 0; // If the first wholesale min is 1, set index to 0
+        for(var i = 0; i < $(".wholesale-view").length; i++){
+            if (i != $(".wholesale-view").length - 1){
+                if(quantity >= $(".wholesale-view").eq(i).find(".wholesale-min").val()){
+                    if(quantity < $(".wholesale-view").eq(i + 1).find(".wholesale-min").val()){
+                        currentWholesaleIndex = i;
+                        break;
+                    }
+                } else{
+                    break; // Current quantity didnt reach wholesale min
+                }
+            } else {
+                currentWholesaleIndex = $(".wholesale-view").length - 1; // Last and to infinity
+            }
+        }
+
+        // Update price view and information
+        if(currentWholesaleIndex >= 0){
+            $(".price-view-normal").attr("hidden", "hidden");
+
+            $(".price-view-wholesale").attr("hidden", "hidden");
+            min = $(".wholesale-view").eq(currentWholesaleIndex).find(".wholesale-min").val();
+            $(".wholesale-" + min).removeAttr("hidden");
+
+            $(".wholesale-view").attr("hidden", "hidden");
+            $(".wholesale-view").eq(currentWholesaleIndex + 1).removeAttr("hidden");
+        } else{
+            $(".price-view-normal").removeAttr("hidden");
+
+            $(".price-view-wholesale").attr("hidden", "hidden");
+
+            $(".wholesale-view").attr("hidden", "hidden");
+            $(".wholesale-view").eq(0).removeAttr("hidden");
+        }
     });
 
     // Quantity controller
@@ -142,6 +188,45 @@ $(document).ready(function() {
                 $(this).parent().children('.quantity-increase-button').removeAttr('disabled');
                 $(this).removeAttr('disabled');
             }
+        }
+
+        // Update wholesale information
+        var quantity = parseInt($(this).parent().children('input').val());
+        // Get wholesale range index
+        var currentWholesaleIndex = -1; //Default does not involve in any wholesale
+        //if($(".wholesale-view").eq(0).find(".wholesale-min").val() == 1) currentWholesaleIndex = 0; // If the first wholesale min is 1, set index to 0
+        for(var i = 0; i < $(".wholesale-view").length; i++){
+            if (i != $(".wholesale-view").length - 1){
+                if(quantity >= $(".wholesale-view").eq(i).find(".wholesale-min").val()){
+                    if(quantity < $(".wholesale-view").eq(i + 1).find(".wholesale-min").val()){
+                        currentWholesaleIndex = i;
+                        break;
+                    }
+                } else{
+                    break; // Current quantity didnt reach wholesale min
+                }
+            } else {
+                currentWholesaleIndex = $(".wholesale-view").length - 1; // Last and to infinity
+            }
+        }
+
+        // Update price view and information
+        if(currentWholesaleIndex >= 0){
+            $(".price-view-normal").attr("hidden", "hidden");
+
+            $(".price-view-wholesale").attr("hidden", "hidden");
+            min = $(".wholesale-view").eq(currentWholesaleIndex).find(".wholesale-min").val();
+            $(".wholesale-" + min).removeAttr("hidden");
+
+            $(".wholesale-view").attr("hidden", "hidden");
+            $(".wholesale-view").eq(currentWholesaleIndex + 1).removeAttr("hidden");
+        } else{
+            $(".price-view-normal").removeAttr("hidden");
+
+            $(".price-view-wholesale").attr("hidden", "hidden");
+
+            $(".wholesale-view").attr("hidden", "hidden");
+            $(".wholesale-view").eq(0).removeAttr("hidden");
         }
 
     });
