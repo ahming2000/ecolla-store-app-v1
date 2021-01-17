@@ -59,7 +59,12 @@ class CartItem {
     }
 
     private function setSubPrice(){
-        return $this->quantity * ($this->item->getVarieties()[$this->varietyIndex]->getPrice() * $this->item->getVarieties()[$this->varietyIndex]->getDiscountRate());
+
+        if($this->item->getVarieties()[$this->varietyIndex]->getDiscountRate() == 1.0 and !empty($this->item->getWholesales())){
+            return $this->quantity * ($this->item->getVarieties()[$this->varietyIndex]->getPrice() * $this->item->getWholesalesDiscountRate($this->quantity));
+        } else{
+            return $this->quantity * ($this->item->getVarieties()[$this->varietyIndex]->getPrice() * $this->item->getVarieties()[$this->varietyIndex]->getDiscountRate());
+        }
     }
 }
 
