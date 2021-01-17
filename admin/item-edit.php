@@ -446,7 +446,7 @@ if (isset($_POST["reset-view-count-button"])) {
                                             <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[0][w_min]" aria-describedby="w-min"/></td>
                                             <td><input type="number" class="form-control mb-1 w-max" min="1" name="w[0][w_max]" aria-describedby="w-max"/></td>
                                             <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" name="w[0][w_price]" aria-describedby="w-price"/></td>
-                                            <td><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></td>
+                                            <td><button type="button" class="btn default-color white-text btn-sm remove-button wholesale-remove-button px-3 py-1">X</button></td>
                                         </tr>
                                     <?php else : ?>
                                         <?php $maxPrice = $item->getVarieties()[0]->getPrice(); ?>
@@ -456,7 +456,7 @@ if (isset($_POST["reset-view-count-button"])) {
                                                 <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>" <?= $i != 0 ? "disabled" : ""; ?>/></td>
                                                 <td><input type="number" class="form-control mb-1 w-max" min="<?= $item->getWholesales()[$i]->getMin(); ?>" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>"/></td>
                                                 <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="<?= $maxPrice ?>" name="w[<?= $i; ?>][w_price]" aria-describedby="w-price" value="<?= $discountedPrice ?>"/></td>
-                                                <td><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></td>
+                                                <td><button type="button" class="btn default-color white-text btn-sm remove-button wholesale-remove-button px-3 py-1" <?= $i != $wholesaleCount - 1 ? "disabled" : ""; ?>>X</button></td>
                                             </tr>
                                             <?php $maxPrice = $discountedPrice; ?>
                                         <?php endfor; ?>
