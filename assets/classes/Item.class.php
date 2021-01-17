@@ -65,6 +65,27 @@ class Item {
         UsefulFunction::removeArrayElementI($this->wholesales, $index);
     }
 
+    public function getWholesalesDiscountRate($quantity){
+        $discountRate = 1.0; // Default
+
+        for($i = 0; $i < sizeof($this->wholesales); $i++){
+            if($i != sizeof($this->wholesales) - 1){
+                if($quantity >= $this->wholesales[$i]->getMin()){
+                    if($quantity < $this->wholesales[$i + 1]->getMin()){
+                        $discountRate = $this->wholesales[$i]->getDiscountRate();
+                        break;
+                    }
+                } else{
+                    break;
+                }
+            } else{
+                $discountRate = $this->wholesales[sizeof($this->wholesales) - 1]->getDiscountRate();
+            }
+        }
+
+        return $discountRate;
+    }
+
     public function getName() {
         return $this->name;
     }
