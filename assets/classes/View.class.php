@@ -284,64 +284,101 @@ class View extends Model
     {
         //i_name, i_brand, i_desc, i_origin, v_barcode, v_property, cat_name
         $usr_search_arr = preg_split("/,[\s]+|[\s]+,|[,]/", $query);
-        $tmp_item_arr = $this->getAllItems();
+        $full_item_arr = $this->dbQuery("Select i_id, i_name, i_brand, i_desc, i_origin from items");
         $item_arr = array();
+        foreach ($full_item_arr as $arr_item) {
+            $id = $arr_item["i_id"];
 
-        foreach ($tmp_item_arr as $arr_item) {
-            foreach ($arr_item->getVarieties() as $variety) {
-                if ($this->checkItem(
-                    $arr_item->getName(),
-                    $arr_item->getBrand(),
-                    $arr_item->getDescription(),
-                    $arr_item->getOrigin(),
-                    $variety->getBarcode(),
-                    $variety->getProperty(),
-                    $arr_item->getCategories(),
-                    $usr_search_arr
-                )) {
+            //Get Variety Arr, Classifications Arr and Categories Arr
+            $variety_arr = $this->dbQuery("Select v_barcode, v_property from varieties where i_id = $id");
+
+            foreach ($variety_arr as $variety) {
+                //Get Categories
+                $classifications_arr = $this->dbQuery("Select cat_id from classifications where i_id = $id");
+                //Returns only cat_id in string format
+                $classifications_str =
+                    '(' .
+                    implode(', ', array_map(function ($e) {
+                        return $e['cat_id'];
+                    }, $classifications_arr)) .
+                    ')';
+
+                $category_arr = $this->dbQuery("Select cat_name from categories where cat_id in $classifications_str");
+                $category_arr = array_map(function ($e) {
+                    return $e['cat_name'];
+                }, $category_arr);
+
+                //Create a temporary item (multi-dimensional array / dictionary - Phyton, Object - Javascript, HashMap - Java/C++) for verification
+                $tmp_item = array();
+                $tmp_item["name"] = $arr_item["i_name"];
+                $tmp_item["brand"] = $arr_item["i_brand"];
+                $tmp_item["description"] = $arr_item["i_desc"];
+                $tmp_item["origin"] = $arr_item["i_origin"];
+                $tmp_item["barcode"] = $variety["v_barcode"];
+                $tmp_item["property"] = $variety["v_property"];
+                $tmp_item["categories"] = $category_arr;
+
+                if ($this->checkItem($tmp_item, $usr_search_arr)) {
                     //If got duplication
                     if (count($item_arr) >= 1) {
                         $flag = false;
                         foreach ($item_arr as $arr_item_2) {
-                            if ($arr_item->getName() == $arr_item_2->getName())
+                            if ($tmp_item["name"] == $arr_item_2->getName())
                                 $flag = true;
                         }
 
                         if ($flag)
                             continue;
                     }
-                    array_push($item_arr, $this->getItem($arr_item->getName()));
+                    array_push($item_arr, $this->getItem($tmp_item["name"]));
                 }
             }
         }
         return $item_arr;
     }
 
-    public function checkItem($name, $brand, $description, $origin, $barcode, $property, $categories, $search_str)
+    public function checkItem($item, $search_str)
     {
-        $arr = array($name, $brand, $description, $origin, $barcode, $property);
-        foreach ($categories as $c) {
+        //7 properties - name, brand, description, origin, barcode, property, categories
+        $arr = array();
+        $ind = 0;
+        foreach ($item as $i) {
+            array_push($arr, $i);
+            $ind++;
+            if ($ind == 6)
+                break;
+        }
+        foreach ($item["categories"] as $c) {
             array_push($arr, $c);
         }
 
-        $flag = true;
+        $flag = false;
         $flag_arr = array();
         for ($i = 0; $i < count($search_str); $i++) {
             array_push($flag_arr, false);
         }
 
         for ($i = 0; $i < count($search_str); $i++) {
-            $str = preg_match("/[A-Za-z]+/", $search_str[$i]) ? strtoupper($search_str[$i]) : $search_str[$i];
+            $str = $search_str[$i];
             for ($j = 0; $j < count($arr); $j++) {
-                $str_2 = preg_match("/[A-Za-z]+/", $arr[$j]) ? strtoupper($arr[$j]) : $arr[$j];
-                if (strpos($str_2, $str) !== false)
+                $str2 = $arr[$j];
+                //If both string 1 and string 2 have english characters, extract the substring from string_2 then uppercase it and match
+                if(preg_match("/^[A-Za-z]+$/", $search_str[$i]) && preg_match("/[A-Za-z]+/", $arr[$j])){
+                    $matches = array();
+                    preg_match("/[A-Za-z]+/", $search_str[$i], $matches);
+                    $str = strtoupper($matches[0]);
+                    $matches = array();
+                    preg_match("/[A-Za-z]+/", $arr[$j], $matches);
+                    $str2 = strtoupper($matches[0]);
+                }
+                if (strpos($str2, $str) !== false)
                     $flag_arr[$i] = true;
             }
         }
 
         for ($i = 0; $i < count($flag_arr); $i++) {
-            if (!$flag_arr[$i])
-                $flag = false;
+            if ($flag_arr[$i])
+                $flag = true;
         }
 
         return $flag;
