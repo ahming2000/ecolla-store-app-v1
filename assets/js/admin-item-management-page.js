@@ -75,12 +75,13 @@ function getExtraVarietyImageBoxHTML(propertyCount){
 }
 
 function getExtraWholesaleTableRowHTML(wholesaleCount, max, price){
+    var d = $("#wholesale-table-section tr").has("td").length == 0 ? "" : "disabled";
     return `` +
     `<tr>` +
-        `<td><input type="number" class="form-control mb-1 w-min" min="1" name="w[${wholesaleCount}][w_min]" aria-describedby="w-min" value="${max}" disabled/></td>` +
+        `<td><input type="number" class="form-control mb-1 w-min" min="1" name="w[${wholesaleCount}][w_min]" aria-describedby="w-min" value="${max}" ${d}/></td>` +
         `<td><input type="number" class="form-control mb-1 w-max" min="${max}" name="w[${wholesaleCount}][w_max]" aria-describedby="w-max"/></td>` +
         `<td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" max="${price}" name="w[${wholesaleCount}][w_price]" aria-describedby="w-price"/></td>` +
-        `<td><button type="button" class="btn default-color white-text btn-sm remove-button px-3 py-1">X</button></td>` +
+        `<td><button type="button" class="btn default-color white-text btn-sm remove-button wholesale-remove-button px-3 py-1">X</button></td>` +
     `</tr>`;
 }
 
@@ -162,6 +163,13 @@ $(document).on("click", ".remove-button", function(){
     }
 
     $(this).parent().parent().html("");
+
+    // Checking after delete the html
+    if($(this).hasClass("wholesale-remove-button")){
+        // Last romove button of wholesale table will always enable and the rest will be disabled
+        $("#wholesale-table-section").find(".remove-button").attr("disabled", "disabled");
+        $("#wholesale-table-section").find(".remove-button").last().removeAttr("disabled");
+    }
 });
 
 // For separate image upload
@@ -315,6 +323,10 @@ $(document).ready(function(){
         var max = parseInt($("#wholesale-table-section tr").last().find("input.w-max").val()) + 1;
         var price = $("#wholesale-table-section tr").last().find("input.w-price").val();
         $("#wholesale-table-section").append(getExtraWholesaleTableRowHTML(getWholesaleCount(), max, price));
+
+        // Last romove button of wholesale table will always enable and the rest will be disabled
+        $("#wholesale-table-section").find(".remove-button").attr("disabled", "disabled");
+        $("#wholesale-table-section").find(".remove-button").last().removeAttr("disabled");
     });
 
     // Wholesale first w-min column auto sync
