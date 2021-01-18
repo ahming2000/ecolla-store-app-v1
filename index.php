@@ -8,6 +8,10 @@ include "assets/includes/class-auto-loader.inc.php";
 
 // Database Interaction
 $cart = new Cart();
+$view = new View();
+
+$new = $view->getItemWithSpecificCategory("新品", 0, 10);
+$hot = $view->getItemWithSpecificCategory("热卖", 0, 10);
 ?>
 
 <!DOCTYPE html>
@@ -58,18 +62,28 @@ $cart = new Cart();
         <!-- Hot Sells Items -->
         <section class="section1">
             <div class="container mt-5">
-                <h3 class="pt-3 pl-5">New !</h3>
+                <h3 class="pt-3 pl-5">新品</h3>
                 <div class="owl-carousel mousescroll owl-theme">
-                    <?php include "assets/block-user-page/item-carousel.php";?>
+                    <?php
+                        for($i = 0; $i < sizeof($new); $i++){
+                            $item = $new[$i];
+                            include "assets/block-user-page/item-carousel.php";
+                        }
+                    ?>
                 </div>
             </div>
         </section>
 
         <section class="section2">
             <div class="container mt-5">
-                <h3 class="pt-3 pl-5">Hot !</h3>
+                <h3 class="pt-3 pl-5">热卖</h3>
                 <div class="owl-carousel mousescroll1 owl-theme">
-                    <?php include "assets/block-user-page/item-carousel.php";?>
+                    <?php
+                        for($i = 0; $i < sizeof($hot); $i++){
+                            $item = $hot[$i];
+                            include "assets/block-user-page/item-carousel.php";
+                        }
+                    ?>
                 </div>
             </div>
         </section>
