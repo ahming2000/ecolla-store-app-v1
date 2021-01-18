@@ -1,84 +1,11 @@
 <div class="item">
-<div class="card">
-    <a href="items/脉动-维生素功能饮料">
-        <img class="card-img-top" src="assets/images/items/1/0.png">
-    </a>
-    <div class="card-body">
-    <h5 class="card-title">脉动-维生素功能饮料</h5>
-    <p class="card-text text-muted">RM4.32</p>
+    <div class="card">
+        <a href="items/<?= $item->getName(); ?>.php">
+            <img class="card-img-top" src="assets/images/items/<?= $view->getItemId($item); ?>/0.jpg">
+        </a>
+        <div class="card-body">
+            <h5 class="card-title"><?= $item->getName();  ?></h5>
+            <p class="card-text text-muted">RM<?= number_format($item->getVarieties()[0]->getPrice(), 2); ?></p>
+        </div>
     </div>
-</div>
-</div>
-
-<div class="item">
-<div class="card">
-<a href="items/好味屋-手撕素肉排">
-        <img class="card-img-top" src="assets/images/items/2/0.png">
-    </a>
-    <div class="card-body">
-    <h5 class="card-title">好味屋-手撕素肉排</h5>
-    <p class="card-text text-muted">RM1.50</p>
-    </div>
-</div>
-</div>
-
-<div class="item">
-<div class="card">
-<a href="items/湖湘贡-鹌鹑蛋">
-        <img class="card-img-top" src="assets/images/items/3/0.png">
-    </a>
-    <div class="card-body">
-    <h5 class="card-title">湖湘贡-鹌鹑蛋</h5>
-    <p class="card-text text-muted">RM1.20</p>
-    </div>
-</div>
-</div>
-
-<div class="item">
-<div class="card">
-<a href="items/湖湘贡-鹌鹑蛋">
-        <img class="card-img-top" src="assets/images/items/3/0.png">
-    </a>
-    <div class="card-body">
-    <h5 class="card-title">湖湘贡-鹌鹑蛋</h5>
-    <p class="card-text text-muted">RM1.20</p>
-    </div>
-</div>
-</div>
-
-<div class="item">
-<div class="card">
-<a href="items/脉动-维生素功能饮料">
-        <img class="card-img-top" src="assets/images/items/1/1.png">
-    </a>
-    <div class="card-body">
-    <h5 class="card-title">脉动-维生素功能饮料</h5>
-    <p class="card-text text-muted">RM4.32</p>
-    </div>
-</div>
-</div>
-
-<div class="item">
-<div class="card">
-<a href="items/好味屋-手撕素肉排">
-        <img class="card-img-top" src="assets/images/items/2/1.png">
-    </a>
-    <div class="card-body">
-    <h5 class="card-title">好味屋-手撕素肉排</h5>
-    <p class="card-text text-muted">RM1.50</p>
-    </div>
-</div>
-</div>
-
-
-<div class="item">
-<div class="card">
-<a href="items/湖湘贡-鹌鹑蛋">
-        <img class="card-img-top" src="assets/images/items/3/1.png">
-    </a>
-    <div class="card-body">
-    <h5 class="card-title">湖湘贡-鹌鹑蛋</h5>
-    <p class="card-text text-muted">RM1.20</p>
-    </div>
-</div>
 </div>
