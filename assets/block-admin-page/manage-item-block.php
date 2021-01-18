@@ -44,9 +44,9 @@
          <form action="" method="post">
             <input type="text" name="name" value="<?= $item->getName() ?>" hidden/>
             <input type="text" name="brand" value="<?= $item->getBrand() ?>" hidden/>
-            <button class="btn btn-outline-secondary p-2 m-1" type="submit" name="list"><?= $item->isListed() ? "下架" : "上架"; ?></button><br>
-            <button class="btn btn-outline-secondary p-2 m-1" type="submit" name='edit'>编辑</button><br>
-            <button class="btn btn-outline-secondary p-2 m-1" type="submit" name="delete">删除</button><br>
+            <button class="btn btn-outline-secondary p-2 m-1" type="submit" name="list" style="width: 50px;"><?= $item->isListed() ? "下架" : "上架"; ?></button><br>
+            <button class="btn btn-outline-secondary p-2 m-1" type="submit" name='edit' style="width: 50px;">编辑</button><br>
+            <button class="btn btn-outline-secondary p-2 m-1" type="submit" name="delete" style="width: 50px;">删除</button><br>
          </form>
 
 

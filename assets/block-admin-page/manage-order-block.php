@@ -36,7 +36,10 @@
     }
     ?></td>
 
-    <td><?php echo "RM".number_format($order->getCart()->getSubtotal() + $order->getCart()->getShippingFee(), 2)." (包含 RM".number_format($order->getCart()->getShippingFee(), 2)." 的运输费）"; ?></td>
+    <td>
+        <?= "付款：RM" . number_format($order->getCart()->getSubtotal(), 2); ?><br>
+        <?= "运费：RM" . number_format($order->getCart()->getShippingFee(), 2); ?>
+    </td>
 
     <td>
         <form action="" method="post">
