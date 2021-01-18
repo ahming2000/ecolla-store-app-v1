@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 14, 2021 at 11:29 AM
+-- Generation Time: Jan 18, 2021 at 04:08 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `categories`
@@ -45,7 +45,9 @@ INSERT INTO `categories` (`cat_id`, `cat_name`) VALUES
 (4, '小零食'),
 (5, '能量饮品'),
 (6, '中国出产'),
-(7, '酒精饮品');
+(7, '酒精饮品'),
+(8, '热卖'),
+(9, '新品');
 
 -- --------------------------------------------------------
 
@@ -82,7 +84,17 @@ INSERT INTO `classifications` (`i_id`, `cat_id`) VALUES
 (4, 6),
 (5, 6),
 (4, 7),
-(5, 7);
+(5, 7),
+(1, 8),
+(2, 8),
+(3, 8),
+(4, 8),
+(5, 8),
+(1, 9),
+(2, 9),
+(3, 9),
+(4, 9),
+(5, 9);
 
 -- --------------------------------------------------------
 
@@ -129,14 +141,14 @@ CREATE TABLE IF NOT EXISTS `inventories` (
 --
 
 INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quantity`) VALUES
-(1, '6902538004045', '2021-01-01', 16),
-(2, '6902538005141', '2021-01-01', 20),
+(1, '6902538004045', '2021-01-01', 15),
+(2, '6902538005141', '2021-01-01', 18),
 (3, '6902538007367', '2021-01-01', 20),
 (4, '6902538007381', '2021-01-01', 22),
-(5, '6902538007862', '2021-01-25', 20),
+(5, '6902538007862', '2021-01-01', -3),
 (6, '6902538007886', '2021-01-01', 0),
-(7, '6931754804900', '2021-06-14', 300),
-(8, '6931754804917', '2021-01-01', 30),
+(7, '6931754804900', '2021-01-01', 0),
+(8, '6931754804917', '2021-01-01', 27),
 (9, '6931754804924', '2021-01-01', 23),
 (10, '6931754804931', '2021-01-01', 23),
 (11, '6931754805655', '2021-01-01', 14),
@@ -154,9 +166,9 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (23, '6935145343047', '2021-07-27', 20),
 (24, '6935145343061', '2021-07-27', 16),
 (25, '6935145343092', '2021-07-27', 20),
-(56, '6902538007862', '2021-01-01', 0),
+(56, '6902538007862', '2021-01-25', 20),
 (58, '6935145301016', '2021-01-07', 6),
-(59, '6931754804900', '2021-01-01', 20);
+(59, '6931754804900', '2021-06-14', 300);
 
 -- --------------------------------------------------------
 
@@ -168,26 +180,26 @@ DROP TABLE IF EXISTS `items`;
 CREATE TABLE IF NOT EXISTS `items` (
   `i_id` int(11) NOT NULL AUTO_INCREMENT,
   `i_name` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
-  `i_desc` varchar(3000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `i_desc` varchar(3000) COLLATE utf8_unicode_ci NOT NULL,
   `i_brand` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `i_origin` varchar(30) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `i_origin` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `i_property_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `i_is_listed` tinyint(1) NOT NULL DEFAULT '0',
   `i_image_count` int(11) NOT NULL,
   `i_view_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`i_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `items`
 --
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 1),
-(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 408),
-(3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 106),
-(4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 25),
-(5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 18);
+(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 14),
+(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 477),
+(3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 107),
+(4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 26),
+(5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 19);
 
 -- --------------------------------------------------------
 
@@ -221,7 +233,9 @@ INSERT INTO `orders` (`o_id`, `o_date_time`, `o_payment_method`, `o_note`, `o_de
 ('ECOLLA20210105110145', '2021-01-05 11:01:45', 'TnG', '', '', '已取消', 'Kee', '+60', '143892199', '10, Jalan Suasa 1', 'Perak', 'Kampar', '31900'),
 ('ECOLLA20210109083102', '2021-01-09 08:31:02', 'TnG', '', '', '待处理', '123', '+60', '1232131', 'KJL', 'Johor', 'Ayer Baloi', '82100'),
 ('ECOLLA20210111081323', '2021-01-11 08:13:23', 'TnG', '', 'ABCSDSDSD', '已出货', 'Alex Lee', '+60', '1232131', '122342', 'Kuala Lumpur', 'Ampang', '68000'),
-('ECOLLA20210112103353', '2021-01-12 10:33:53', 'TnG', '', NULL, '已退款', '123', '+60', '123123', 'dsfsf', 'Kuala Lumpur', 'Setapak', '53300');
+('ECOLLA20210112103353', '2021-01-12 10:33:53', 'TnG', '', NULL, '已退款', '123', '+60', '123123', 'dsfsf', 'Kuala Lumpur', 'Setapak', '53300'),
+('ECOLLA20210115120546', '2021-01-15 12:05:46', 'TnG', '', NULL, '待处理', 'Name is me', '+60', '123765', 'jgshdkfjhksf', 'Johor', 'Ayer Baloi', '82100'),
+('ECOLLA20210117154008', '2021-01-17 15:40:08', 'TnG', '', NULL, '待处理', 'Test Discount', '+60', '21345', 'kjlsdka', 'Perak', 'Ayer Tawar', '32400');
 
 -- --------------------------------------------------------
 
@@ -247,7 +261,12 @@ INSERT INTO `order_items` (`o_id`, `v_barcode`, `oi_quantity`, `oi_expire_date`)
 ('ECOLLA20210105110145', '6935145301016', 6, '2021-01-07'),
 ('ECOLLA20210109083102', '6935145301016', 4, '2021-01-21'),
 ('ECOLLA20210111081323', '6902538004045', 3, '2021-01-22'),
-('ECOLLA20210112103353', '6935145301047', 3, '2021-05-20');
+('ECOLLA20210112103353', '6935145301047', 3, '2021-05-20'),
+('ECOLLA20210115120546', '6902538004045', 1, '2021-01-01'),
+('ECOLLA20210117154008', '6902538005141', 2, '2021-01-01'),
+('ECOLLA20210117154008', '6902538007862', 3, '2021-01-01'),
+('ECOLLA20210117154008', '6931754804900', 35, '2021-01-01'),
+('ECOLLA20210117154008', '6931754804917', 3, '2021-01-01');
 
 -- --------------------------------------------------------
 
@@ -261,14 +280,15 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_name` varchar(20) NOT NULL,
   `user_password` varchar(250) NOT NULL,
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `user_password`) VALUES
-(4, 'ahming', '$2y$10$MRlh6g79a9c20u3zIwRdcONp9XhOoYJ.1ucT7AaMQazZ94y4u.ZtG');
+(4, 'ahming', '$2y$10$MRlh6g79a9c20u3zIwRdcONp9XhOoYJ.1ucT7AaMQazZ94y4u.ZtG'),
+(5, 'txe1', '$2y$10$XOC8AkdEmDSQ5.K7qJjvYO6OszzdpvSZfgZwCIobIagyqHqyKu2Bu');
 
 -- --------------------------------------------------------
 
@@ -294,13 +314,13 @@ CREATE TABLE IF NOT EXISTS `varieties` (
 
 INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_price`, `v_weight`, `v_discount_rate`, `i_id`) VALUES
 ('6902538004045', '青柠味600ml', 4.8, 0.6, 1, 1),
-('6902538005141', '水蜜桃味600ml', 4.8, 0.6, 1, 1),
+('6902538005141', '水蜜桃味600ml', 4.8, 0.6, 0.520833, 1),
 ('6902538007367', '芒果味600ml', 4.8, 0.6, 1, 1),
 ('6902538007381', '仙人掌青橘味600ml', 4.8, 0.6, 1, 1),
 ('6902538007862', '竹子青提味500ml', 4.8, 0.5, 1, 1),
 ('6902538007886', '卡曼橘味500ml', 4.8, 0.5, 1, 1),
 ('6931754804900', '香辣味26g', 1.5, 0.026, 1, 2),
-('6931754804917', '黑椒味26g', 1.5, 0.026, 1, 2),
+('6931754804917', '黑椒味26g', 1.5, 0.026, 0.8, 2),
 ('6931754804924', '山椒味26g', 1.5, 0.026, 1, 2),
 ('6931754804931', '烧烤味26g', 1.5, 0.026, 1, 2),
 ('6931754805655', '黑鸭味26g', 1.5, 0.026, 1, 2),
@@ -333,14 +353,17 @@ CREATE TABLE IF NOT EXISTS `wholesales` (
   `w_discount_rate` float NOT NULL,
   PRIMARY KEY (`w_id`),
   KEY `wholesales_FK_i_id` (`i_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `wholesales`
 --
 
 INSERT INTO `wholesales` (`w_id`, `i_id`, `w_min`, `w_max`, `w_discount_rate`) VALUES
-(1, 2, 20, NULL, 0.8);
+(28, 2, 30, 39, 0.866667),
+(29, 2, 40, 49, 0.8),
+(30, 2, 50, NULL, 0.733333),
+(31, 2, 20, 29, 0.933333);
 
 --
 -- Constraints for dumped tables
