@@ -16,18 +16,21 @@ $categories = $view->getCategoryList();
 // Calculate value for pagination
 $MAX_ITEMS = $view->getMaxItemsPerPage();
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
+$page = is_numeric($page) ? $page : 0 ; // Avoid non number value in url
 $start = ($page - 1) * $MAX_ITEMS;
 
-$itemCount = isset($_GET['category']) ? $view->getCategoryTotalCount($_GET['category']) : $view->getItemTotalCountListed();
+$categoryFilter = isset($_GET['category']) ? $_GET['category'] : "";
+$keywordSearch = isset($_GET['search']) ? $_GET['search'] : "";
+
+
+$names = $view->itemListFilter($keywordSearch, $categoryFilter, $page);
+$itemCount = sizeof($names);
 $totalPage = ceil($itemCount / $MAX_ITEMS);
 
-$items = isset($_GET['category']) ? $view->getItemWithSpecificCategory($_GET['category'], $start, $MAX_ITEMS) : $view->getItemsWithRange($start, $MAX_ITEMS);
-
-if(isset($_GET['search'])){
-    $names = $view->querySearch($_GET['search']);
-    $items = array();
-    foreach($names as $name){
-        $item = $view->getItem($name);
+$items = array();
+for($i = $start; $i < $start + $MAX_ITEMS; $i++){
+    if(isset($names[$i])){
+        $item = $view->getItem($names[$i]);
         $items[] = $item;
     }
 }
@@ -86,9 +89,7 @@ if(isset($_GET['search'])){
             <?php
             foreach($items as $item){
                 $i_id = $view->getItemId($item);
-                if($item->isListed()){
-                    include "assets/block-user-page/item-block.php";
-                }
+                include "assets/block-user-page/item-block.php";
             }
             ?>
         </div>
@@ -98,13 +99,15 @@ if(isset($_GET['search'])){
                 <nav>
                     <ul class="pagination justify-content-center">
                         <li class="page-item <?= $page == 1 ? "disabled" : ""; ?>">
-                            <a class="page-link" href="<?= isset($_GET['category']) ? $pageName . "?category=" . $_GET['category'] . "&page=" . ($page - 1) : $pageName . "?page=" . ($page - 1); ?>" id="previous-button" <?= $page == 1 ? "tabindex='1' aria-disabled='true'" : ""; ?>>上一页</a>
+                            <a class="page-link" id="previous-page-button" <?= $page == 1 ? "tabindex='1' aria-disabled='true'" : ""; ?>>上一页</a>
                         </li>
+
                         <?php for($i = 1; $i <= $totalPage; $i++) : ?>
-                            <li class="page-item <?= $page == $i ? "active" : ""; ?>"><a class="page-link" href="<?= isset($_GET['category']) ? $pageName . "?category=" . $_GET['category'] . "&page=" . $i : $pageName . "?page=" . $i; ?>"><?= $i; ?></a></li>
+                            <li class="page-item <?= $page == $i ? "active" : ""; ?>" value="<?= $i; ?>"><a class="page-link page-number-link"><?= $i; ?></a></li>
                         <?php endfor; ?>
+
                         <li class="page-item<?= $page == $totalPage ? " disabled" : ""; ?>">
-                            <a class="page-link" href="<?= isset($_GET['category']) ? $pageName . "?category=" . $_GET['category'] . "&page=" . ($page + 1) : $pageName . "?page=" . ($page + 1); ?>" id="next-button" <?= $page == $totalPage ? "tabindex='1' aria-disabled='true'" : ""; ?>>下一页</a>
+                            <a class="page-link" id="next-page-button" <?= $page == $totalPage ? "tabindex='1' aria-disabled='true'" : ""; ?>>下一页</a>
                         </li>
                     </ul>
                 </nav>
@@ -120,11 +123,23 @@ if(isset($_GET['search'])){
         // Category bar onchange bar
         $("#categorySelector").on("change", function(){
             if($("#categorySelector option:selected").val() !== ""){
-                window.location.href = "item-list.php?category=" + $("#categorySelector option:selected").val();
+                window.location.href = "item-list.php?<?= isset($_GET["search"]) ? "search=" . $_GET["search"] . "&" : ""; ?>category=" + $("#categorySelector option:selected").val();
             } else{
-                window.location.href = "item-list.php";
+                window.location.href = "item-list.php<?= isset($_GET["search"]) ? "?search=" . $_GET["search"] : ""; ?>";
             }
 
+        });
+
+        $("#previous-page-button").on("click", function(){
+            window.location.href = "item-list.php?<?= isset($_GET["search"]) ? "search=" . $_GET["search"] . "&" : ""; ?><?= isset($_GET["category"]) ? "category=" . $_GET["category"] . "&" : ""; ?>page=<?= ($page - 1) ?>";
+        });
+
+        $("#next-page-button").on("click", function(){
+            window.location.href = "item-list.php?<?= isset($_GET["search"]) ? "search=" . $_GET["search"] . "&" : ""; ?><?= isset($_GET["category"]) ? "category=" . $_GET["category"] . "&" : ""; ?>page=<?= ($page + 1) ?>";
+        });
+
+        $(".page-number-link").on("click", function(e){
+            window.location.href = "item-list.php?<?= isset($_GET["search"]) ? "search=" . $_GET["search"] . "&" : ""; ?><?= isset($_GET["category"]) ? "category=" . $_GET["category"] . "&" : ""; ?>page=" + $(this).parent().val();
         });
     });
 
