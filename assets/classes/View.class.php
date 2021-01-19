@@ -118,7 +118,7 @@ class View extends Model
     {
 
         // Get the item
-        // Query: SELECT * FROM items WHERE i_name = ? AND i_brand = ?
+        // Query: SELECT * FROM items WHERE i_name = ?
         $dbTable_items = $this->dbSelectRow("items", "i_name", $itemName);
         // Return null  if no item is found
         if ($dbTable_items == null) return null;
