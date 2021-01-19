@@ -23,8 +23,13 @@ $totalPage = ceil($itemCount / $MAX_ITEMS);
 
 $items = isset($_GET['category']) ? $view->getItemWithSpecificCategory($_GET['category'], $start, $MAX_ITEMS) : $view->getItemsWithRange($start, $MAX_ITEMS);
 
-if(isset($_GET['searching'])){
-    $items = $view->querySearch($_GET['searching']);
+if(isset($_GET['search'])){
+    $names = $view->querySearch($_GET['search']);
+    $items = array();
+    foreach($names as $name){
+        $item = $view->getItem($name);
+        $items[] = $item;
+    }
 }
 
 
@@ -51,10 +56,10 @@ if(isset($_GET['searching'])){
                     <div class="form-row">
                         <div class="col-10">
                             <!-- Item searching -->
-                            <input type="text" class="form-control" maxlength="20" name="searching" />
+                            <input type="text" class="form-control" maxlength="20" name="search" value="<?= isset($_GET["search"]) ? $_GET["search"] : ""; ?>" />
                         </div>
                         <div class="col-2">
-                            <input type="submit" class="btn btn-primary p-2 mt-0" name="searchButton" value="搜索"/>
+                            <input type="submit" class="btn btn-primary p-2 mt-0" value="搜索"/>
                         </div>
                     </div>
 
