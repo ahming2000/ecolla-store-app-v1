@@ -340,21 +340,33 @@ class Controller extends Model {
 
         foreach($order->getCart()->getCartItems() as $cartItem){
 
-            $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $cartItem->getBarcode());
-            $selected = $this->getEarliestInventory($cartItem->getBarcode());
-            $selectedInventoryExpireDate = $dbTable_inventories[$selected]['inv_expire_date'];
+            $dbTable_inventories = $this->dbQuery("SELECT * FROM inventories WHERE v_barcode = " . $cartItem->getBarcode() . " ORDER BY inv_expire_date");
+            $quantity = $cartItem->getQuantity();
 
-            $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode() , $cartItem->getQuantity(), $selectedInventoryExpireDate];
-            $this->dbInsert("order_items", $order_items_ready);
-
-            // Edit Inventory
-            $this->dbUpdate("inventories", "inv_quantity", $dbTable_inventories[$selected]['inv_quantity'] - $cartItem->getQuantity(), ["v_barcode", "inv_expire_date"], [$cartItem->getBarcode(), $selectedInventoryExpireDate]);
+            foreach($dbTable_inventories as $inv){
+                if($inv["inv_quantity"] - $quantity > 0){
+                    $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode(), $quantity, $inv["inv_expire_date"]];
+                    $this->dbInsert("order_items", $order_items_ready);
+                    // Edit Inventory
+                    $this->dbUpdate("inventories", "inv_quantity", $inv["inv_quantity"] - $quantity, ["v_barcode", "inv_expire_date"], [$cartItem->getBarcode(), $inv["inv_expire_date"]]);
+                    break;
+                } else{
+                    // First inventory dont have enough quantity to deduce
+                    if($inv["inv_quantity"] != 0){ // Skip modification when current iventory has 0 quantity
+                        $quantity = $quantity - $inv["inv_quantity"];
+                        $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode() , $quantity, $inv["inv_expire_date"]];
+                        $this->dbInsert("order_items", $order_items_ready);
+                        // Edit Inventory
+                        $this->dbUpdate("inventories", "inv_quantity", "0", ["v_barcode", "inv_expire_date"], [$cartItem->getBarcode(), $inv["inv_expire_date"]]);
+                    }
+                }
+            }
 
         }
 
     }
 
-    private function getEarliestInventory($barcode){
+    private function purchaseFromInventory($barcode, $quantity){
         $dbTable_inventories = $this->dbSelectRow("inventories", "v_barcode", $barcode);
 
         $selected = 0;
