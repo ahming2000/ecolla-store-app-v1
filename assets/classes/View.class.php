@@ -338,5 +338,22 @@ class View extends Model
         return $this->dbSelectAttribute("ecolla_website_config", "config_value_float", "config_name", "max_management_content");
     }
 
+    public function orderManagementFilter($date = ""){
+
+        $hasDateFilter = false;
+
+        if($date != "") $hasDateFilter = true;
+
+        if($hasDateFilter){
+            $sql = "SELECT o_id FROM orders WHERE o_date_time BETWEEN '$date 00:00' AND '$date 23:59' ORDER BY o_date_time DESC";
+        } else{
+            $sql = "SELECT o_id FROM orders ORDER BY o_date_time DESC";
+        }
+
+        $dbTable = $this->dbQuery($sql);
+        if($dbTable != 1) return array_column($dbTable, "o_id");
+        else return array();
+    }
+
 
 }
