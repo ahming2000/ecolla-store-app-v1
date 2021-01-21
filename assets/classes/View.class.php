@@ -290,7 +290,7 @@ class View extends Model
 
         if($hasSearch){
             $tableJoining = "(i.i_id = v.i_id AND class.i_id = i.i_id AND cat.cat_id = class.cat_id)";
-            $tableSearching = "(i.i_id LIKE '%$keyword%' OR i.i_brand LIKE '%$keyword%' OR i.i_desc LIKE '%$keyword%' OR i.i_origin LIKE '%$keyword%' OR v.v_barcode LIKE '%$keyword%' OR v.v_property LIKE '%$keyword%' OR cat.cat_name LIKE '%$keyword%')";
+            $tableSearching = "(i.i_name LIKE '%$keyword%' OR i.i_brand LIKE '%$keyword%' OR i.i_desc LIKE '%$keyword%' OR i.i_origin LIKE '%$keyword%' OR v.v_barcode LIKE '%$keyword%' OR v.v_property LIKE '%$keyword%' OR cat.cat_name LIKE '%$keyword%')";
         }
 
         if($hasCategoryFilter){
@@ -313,5 +313,30 @@ class View extends Model
         else return array();
     }
 
-    
+    public function itemManagementFilter($keyword = ""){
+        $hasSearch = false;
+
+        if($keyword != "") $hasSearch = true;
+
+        if($hasSearch){
+            $tableJoining = "(i.i_id = v.i_id OR class.i_id = i.i_id OR cat.cat_id = class.cat_id)";
+            $tableSearching = "(i.i_name LIKE '%$keyword%' OR i.i_brand LIKE '%$keyword%' OR i.i_desc LIKE '%$keyword%' OR i.i_origin LIKE '%$keyword%' OR v.v_barcode LIKE '%$keyword%' OR v.v_property LIKE '%$keyword%' OR cat.cat_name LIKE '%$keyword%')";
+        }
+
+        if($hasSearch){
+            $sql = "SELECT DISTINCT i.i_name FROM items i, varieties v, categories cat, classifications class WHERE $tableJoining AND $tableSearching";
+        } else{
+            $sql = "SELECT i_name FROM items";
+        }
+
+        $dbTable = $this->dbQuery($sql);
+        if($dbTable != 1) return array_column($dbTable, "i_name");
+        else return array();
+    }
+
+    public function getMaxManageContent(){
+        return $this->dbSelectAttribute("ecolla_website_config", "config_value_float", "config_name", "max_management_content");
+    }
+
+
 }
