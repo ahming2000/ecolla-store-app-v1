@@ -16,7 +16,24 @@ $view = new View();
 $controller = new Controller();
 
 //Get order information
-$orderList = $view->getAllOrders();
+// Calculate value for pagination
+$MAX_ITEMS = $view->getMaxManageContent();
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
+$page = is_numeric($page) ? $page : 0 ; // Avoid non number value in url
+$start = ($page - 1) * $MAX_ITEMS;
+
+//Get item information
+$date = isset($_GET['date']) ? $_GET['date'] : "";
+$ids = $view->orderManagementFilter($date);
+$itemCount = sizeof($ids);
+$totalPage = ceil($itemCount / $MAX_ITEMS);
+
+$orderList = array();
+for($i = $start; $i < $start + $MAX_ITEMS; $i++){
+    if(isset($ids[$i])){
+        $orderList[] = $view->getOrder($ids[$i]);
+    }
+}
 
 /* Operation */
 if (isset($_POST["updateDeliveryId"])) {
@@ -139,11 +156,45 @@ if (isset($_POST["adjustOrder"])) {
 
     <header><?php include "../assets/block-admin-page/header.php"; ?></header>
 
-    <div class="container">
-
-        <div style="margin-top: 100px;"></div>
+    <main class="container">
 
         <div class="h1">订单查看</div>
+
+        <div class="row mb-3">
+            <div class="col-6">
+                <form action="" method="get">
+
+                    <div class="form-row">
+                        <div class="col-10">
+                            <!-- Item searching -->
+                            <input type="date" class="form-control" maxlength="20" name="date" value="<?= isset($_GET["date"]) ? $_GET["date"] : ""; ?>" />
+                        </div>
+                        <div class="col-2">
+                            <input type="submit" class="btn btn-primary p-2 mt-0" value="搜索"/>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="col-6">
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item <?= $page == 1 ? "disabled" : ""; ?>">
+                            <a class="page-link" id="previous-page-button" <?= $page == 1 ? "tabindex='1' aria-disabled='true'" : ""; ?>>上一页</a>
+                        </li>
+
+                        <?php for($i = 1; $i <= $totalPage; $i++) : ?>
+                            <li class="page-item <?= $page == $i ? "active" : ""; ?>" value="<?= $i; ?>"><a class="page-link page-number-link"><?= $i; ?></a></li>
+                        <?php endfor; ?>
+
+                        <li class="page-item<?= $page == $totalPage ? " disabled" : ""; ?>">
+                            <a class="page-link" id="next-page-button" <?= $page == $totalPage ? "tabindex='1' aria-disabled='true'" : ""; ?>>下一页</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+        </div>
 
         <!--Details-->
         <div class="d-flex justify-content-end mt-2">
@@ -175,13 +226,28 @@ if (isset($_POST["adjustOrder"])) {
         </table>
 
 
-    </div>
+    </main>
 
     <script>
         function viewReceipt(source) {
             let url = source.value;
             window.open(url, 'Image', 'width=400px,height=400px,resizable=1');
         }
+
+        $(document).ready(function(){
+
+            $("#previous-page-button").on("click", function(){
+                window.location.href = "order-management.php?<?= isset($_GET["date"]) ? "date=" . $_GET["date"] . "&" : ""; ?>page=<?= ($page - 1) ?>";
+            });
+
+            $("#next-page-button").on("click", function(){
+                window.location.href = "order-management.php?<?= isset($_GET["date"]) ? "date=" . $_GET["date"] . "&" : ""; ?>page=<?= ($page + 1) ?>";
+            });
+
+            $(".page-number-link").on("click", function(e){
+                window.location.href = "order-management.php?<?= isset($_GET["date"]) ? "date=" . $_GET["date"] . "&" : ""; ?>page=" + $(this).parent().val();
+            });
+        });
     </script>
 </body>
 
