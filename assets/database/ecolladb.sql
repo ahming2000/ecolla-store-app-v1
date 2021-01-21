@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 18, 2021 at 04:08 AM
+-- Generation Time: Jan 21, 2021 at 09:11 AM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -117,6 +117,7 @@ CREATE TABLE IF NOT EXISTS `ecolla_website_config` (
 
 INSERT INTO `ecolla_website_config` (`config_name`, `config_value_text`, `config_value_float`, `config_info`) VALUES
 ('max_items_per_page', NULL, 8, 'The maximum number of items to show in each page of item-list.php'),
+('max_management_content', NULL, 5, 'Maximum content viewing at order-management.php and item-management.php page.'),
 ('shipping_fee_east_my', NULL, 5.66, 'Shipping Fee in RM (Malaysia Ringgit) per kilogram for east Malaysia'),
 ('shipping_fee_west_my', NULL, 4.77, 'Shipping Fee in RM (Malaysia Ringgit) per kilogram for west Malaysia');
 
@@ -188,15 +189,15 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_image_count` int(11) NOT NULL,
   `i_view_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`i_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `items`
 --
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 14),
-(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 477),
+(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 15),
+(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 478),
 (3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 107),
 (4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 26),
 (5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 19);
@@ -235,7 +236,7 @@ INSERT INTO `orders` (`o_id`, `o_date_time`, `o_payment_method`, `o_note`, `o_de
 ('ECOLLA20210111081323', '2021-01-11 08:13:23', 'TnG', '', 'ABCSDSDSD', '已出货', 'Alex Lee', '+60', '1232131', '122342', 'Kuala Lumpur', 'Ampang', '68000'),
 ('ECOLLA20210112103353', '2021-01-12 10:33:53', 'TnG', '', NULL, '已退款', '123', '+60', '123123', 'dsfsf', 'Kuala Lumpur', 'Setapak', '53300'),
 ('ECOLLA20210115120546', '2021-01-15 12:05:46', 'TnG', '', NULL, '待处理', 'Name is me', '+60', '123765', 'jgshdkfjhksf', 'Johor', 'Ayer Baloi', '82100'),
-('ECOLLA20210117154008', '2021-01-17 15:40:08', 'TnG', '', NULL, '待处理', 'Test Discount', '+60', '21345', 'kjlsdka', 'Perak', 'Ayer Tawar', '32400');
+('ECOLLA20210117154008', '2021-01-17 15:40:08', 'TnG', '', 'J&TABCD1234', '已出货', 'Test Discount', '+60', '21345', 'kjlsdka', 'Perak', 'Ayer Tawar', '32400');
 
 -- --------------------------------------------------------
 
