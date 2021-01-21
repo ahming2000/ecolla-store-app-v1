@@ -108,7 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                                 <!-- Submit button -->
                                 <div class="col-xs-12 col-sm-5 col-lg-6">
-                                    <button class="btn secondary-color" type="submit" id="add-to-cart-button">
+                                    <?php $isSoldOut = $item->getVarieties()[0]->getTotalQuantity() == 0 ? true : false; ?>
+                                    <button class="btn secondary-color" type="submit" id="add-to-cart-button" <?= $isSoldOut ? "disabled" : ""; ?>>
                                         加入购物车<i class="fas fa-shopping-cart ml-1"></i>
                                     </button>
                                 </div><!-- Submit button -->
