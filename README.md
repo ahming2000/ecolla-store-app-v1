@@ -37,11 +37,13 @@ Component used for this project:
 3. MySQL Setup
   - Edit `my.ini` by left clicking wamp64 icon and choose MySQL, `my.ini` to promt out the editor
   - Make sure `my.ini` file content element ```character-set-server=utf8``` below ```[mysqld]``` tag to make sure MySQL is running with `utf-8` natively
+  - Make sure `my.ini` file content element ```default-time-zone = "+08:00"``` below ```[mysqld]``` tag to make sure MySQL is running with time zone GMT+8 natively
   - Logon to `phpmyadmin` with `root` and password as blank. Make sure to create the the database named `ecolladb` before importing the database from `assets/database-backup/ecolladb.sql`
 4. PHP Setup
   - Edit `php.ini` by left clicking wamp64 icon and choose php, `php.ini` to promt out the editor
   - Make sure session.cache_expire has value 10080: `session.cache_expire = 10080`. Meaning: change the session expire time to 7 days (default is no session expire)
   - Make sure upload_max_filesize has value 10M: `upload_max_filesize = 10M`. Meaning: change the maximum file upload size (Dafault is 2M (2MB))
+  - Make sure date.timezone has value Asia/Kuala_Lumpur: `date.timezone ="Asia/Kuala_Lumpur"`. Meaning: Change the php time zone settings to Asia/Kuala Lumpur
   - Make sure `extension=gd2` is present
   - Make sure `extension=php_imagick.dll` is present
 5. Website setup
