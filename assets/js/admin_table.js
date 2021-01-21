@@ -6,8 +6,11 @@ function table_col_node(ind) {
     this.flag = true;
 }
 
-function get_table_col(startFrom = 0) {
-    let table_headers = document.querySelectorAll("thead>tr th"), table_col = {};
+function get_table_col(startFrom = 0, id_str = "") {
+    let query_str = id_str + "thead>tr th",
+        table_headers = document.querySelectorAll(query_str), 
+        table_col = {};
+
     for (let i = startFrom; i < table_headers.length; i++) {
         let str = table_headers[i].innerHTML;
         table_col[str] = new table_col_node(i + 1);
@@ -20,17 +23,20 @@ function generate_detail_row_html(str) {
 }
 
 function generate_detail_html(obj_arr) {
-    let str = "";
+    let str = "", h = Object.keys(obj_arr).length * 35;
     for (let key of Object.keys(obj_arr)) {
         str += generate_detail_row_html(key);
     }
     str = str.slice(0, -6);
+
+    $("#detail_board").css('height', `${h}px`);
     $("#detail_board").append(str);
 }
 
 //Show columns based on table column number
 function show_col(ind) {
-    $(`td:nth-child(${ind}),th:nth-child(${ind})`).show();
+    $(`td:nth-child(${ind})`).show();
+    $(`th:nth-child(${ind})`).show();
 }
 
 function show_col_all(table_col) {
@@ -45,7 +51,8 @@ function show_col_all(table_col) {
 
 //Hide columns based on table column number
 function hide_col(ind) {
-    $(`td:nth-child(${ind}),th:nth-child(${ind})`).hide();
+    $(`td:nth-child(${ind})`).hide();
+    $(`th:nth-child(${ind})`).hide();
 }
 
 function hide_col_full(str, table_col){

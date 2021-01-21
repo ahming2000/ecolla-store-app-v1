@@ -227,27 +227,29 @@ if (isset($_POST["report_date"])) {
 
         function hide_col_phone(table_col) {
             // To hide barcode column
-            hide_col_full('Barcode', table_col);
+            hide_col_full('规格货号', table_col);
             decrease_colspan();
 
             // To hide price Per Item column
-            hide_col_full('Price Per Item', table_col);
+            hide_col_full('单件商品价格', table_col);
             decrease_colspan();
 
             // To hide time purchased column
-            hide_col_full('Time Purchased', table_col);
+            hide_col_full('购买时间', table_col);
             decrease_colspan();
         }
 
         function hide_col_ipad(table_col) {
             // To hide barcode column
-            hide_col_full('Barcode', table_col);
+            hide_col_full('规格货号', table_col);
             decrease_colspan();
         }
 
         $(function() {
             let table_col = get_table_col(1);
             generate_detail_html(table_col);
+
+            console.log(table_col);
 
             if ($(window).width() <= 600) {
                 //For phone
