@@ -1,9 +1,6 @@
 <?php
 /* Authorization */
-if (isset($_COOKIE["username"])) {
-    // $message =  "<h3>登陆成功！</h3>" . "<br>" . "<a href=\"logout.php\">点击登出</a>";
-    $message =  "<a href=\"logout.php\">点击登出</a>";
-} else {
+if (!isset($_COOKIE["username"])) {
     header("location: login.php");
 }
 
@@ -341,7 +338,7 @@ if (isset($_POST["report_date"])) {
                         increase_colspan();
                     }
                 }
-                show_col_all(table_col); 
+                show_col_all(table_col);
 
                 if ($(window).width() <= 600) {
                     //For phone
@@ -389,7 +386,7 @@ if (isset($_POST["report_date"])) {
 
     <!--Daily report -->
     <div class="container">
-        <div class="bg-secondary h1 text-center" style="color: white;">Daily Sales Report</div>
+        <div class="bg-secondary h1 text-center" style="color: white;">每日销售报告</div>
         <hr style="height:2.5px;border:none;color:#333;background-color:#333;" />
 
         <form method="POST" action="../admin/index.php" id="form_report_date">
@@ -399,13 +396,13 @@ if (isset($_POST["report_date"])) {
     </div>
 
     <div class="container mt-2" id="pie_chart_table">
-        <div class="bg-success h1 text-center" style="color: white;">Pie Chart</div>
+        <div class="bg-success h1 text-center" style="color: white;">图表</div>
 
         <div id="pie_chart" style="width: 100%;"></div>
 
         <div class="d-flex justify-content-end mt-2">
             <div style="position: relative;">
-                <button id="detail_btn" class="btn-sm btn-danger">&#9660; Details</button>
+                <button id="detail_btn" class="btn-sm btn-danger">&#9660; 详情</button>
                 <div id="detail_board" style="height: 240px; width: 150px; background-color: white; display: none;position: absolute; z-index: 2; right: 0px;">
                 </div>
             </div>
@@ -415,13 +412,13 @@ if (isset($_POST["report_date"])) {
             <thead>
                 <tr class="bg-danger" style="color: white;">
                     <th></th>
-                    <th>Name</th>
-                    <th>Variety</th>
-                    <th>Barcode</th>
-                    <th>Count</th>
-                    <th>Price Per Item</th>
-                    <th>Total Price</th>
-                    <th>Time Purchased</th>
+                    <th>商品名称</th>
+                    <th>规格选择</th>
+                    <th>规格货号</th>
+                    <th>数量</th>
+                    <th>单件商品价格</th>
+                    <th>总价格</th>
+                    <th>购买时间</th>
                 </tr>
             </thead>
             <tbody>
@@ -453,23 +450,14 @@ if (isset($_POST["report_date"])) {
     </div>
 
     <div class="container" id="no_sales">
-        <div class="h2 text-center">Unfortunately, there are no sales transaction for today...</div>
+        <div class="h2 text-center">目前暂无任何销售...</div>
     </div>
 
-    <div class="container">
+    <div class="container mb-5">
         <div id="weekly_title_cnt"></div>
         <div id="line_chart" style="width: 100%;"></div>
     </div>
 
-    <div class="container">
-        <br>
-        <?php
-        if (isset($message)) {
-            echo $message;
-        }
-
-        ?>
-    </div>
 </body>
 
 </html>
