@@ -7,9 +7,9 @@
 function generate_report_info_desktop(date, price, sold){
     return `
         <div class="row text-center h5" id="in_form_">
-            <div class="col-4">Date: <input type="date" name="report_date" id="date_" max="${date}" /></div>
-            <div class="col-4">Total Sales Revenue: RM ${price}</div>
-            <div class="col-4">Total number of items sold: ${sold}</div>
+            <div class="col-4">日期: <input type="date" name="report_date" id="date_" max="${date}" /></div>
+            <div class="col-4">总业绩: RM ${price}</div>
+            <div class="col-4">总销售量: ${sold}</div>
         </div>
     `;
 }
@@ -18,15 +18,15 @@ function generate_report_info_ipad(date, price, sold){
     return `
         <div class="row text-center" id="in_form_">
             <div class="report_info_txt" style="width: 32%;">
-                <strong>Date: <input type="date" name="report_date" id="date_" max="${date}" /></strong>
+                <strong>日期: <input type="date" name="report_date" id="date_" max="${date}" /></strong>
             </div>
 
             <div class="report_info_txt" style="width: 32%;">
-                <strong>Total Sales Revenue: RM ${price}</strong>
+                <strong>总业绩: RM ${price}</strong>
             </div>
 
             <div class="report_info_txt" style="width: 36%;">
-                <strong>Total number of items sold: ${sold}</strong>
+                <strong>总销售量: ${sold}</strong>
             </div>
         </div>
     `;
@@ -36,9 +36,9 @@ function generate_report_info_phone(date, price, sold){
     return `
         <div class="row" id="in_form_">
             <div class="col">
-                <div><strong>Date: </strong><input type="date" name="report_date" id="date_" max="${date}" /></div>
-                <div><strong>Total Sales Revenue: RM ${price}</strong></div>
-                <div><strong>Total number of items sold: ${sold}</strong></div>
+                <div><strong>日期: </strong><input type="date" name="report_date" id="date_" max="${date}" /></div>
+                <div><strong>总业绩: RM ${price}</strong></div>
+                <div><strong>总销售量: ${sold}</strong></div>
             </div>
         </div>
     `;
