@@ -364,6 +364,7 @@ $(document).ready(function(){
     // Wholesale first w-min column auto sync
     $(".w-min").first().change(function(){
         $(this).parent().parent().first().find("input.w-max").attr("min", $(this).val()); // Set min value for w-max in same row
+        $(this).parent().parent().first().find("input.w-price").attr("max", $(".v-price").eq(0).val()); // Set value of first wholesale after w-max is modified from blank (Apply for item without wholesale at first)
     });
 
     // Wholesale settings
