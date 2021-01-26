@@ -102,22 +102,26 @@ function updateData($oldItem)
 
         $_POST["w"] = UsefulFunction::arrayIndexRearrage($_POST["w"]); //Rearrange array index for make sure all element is looped
 
-        // Set min using min from first row
-        $min = $_POST["w"][0]["w_min"] === null ? 0 : $_POST["w"][0]["w_min"];
 
-        for($i = 0; $i < sizeof($_POST["w"]); $i++){
-            if($_POST["w"][$i]["w_price"] != "" and isset($_POST["w"][$i]["w_price"]) and $_POST["w"][$i]["w_min"] != "" and isset($_POST["w"][$i]["w_min"])){
-                // Add wholesale to item
-                $discountRate = $_POST["w"][$i]["w_price"] / $_POST["v"][0]["v_price"];
-                $newItem->addWholesale(new Wholesale($min, array_key_exists("w_max", $_POST["w"][$i]) ? $_POST["w"][$i]["w_max"] : null, $discountRate));
+        if ($_POST["w"][0]["w_min"] != "" and isset($_POST["w"][0]["w_min"])){ // Make sure first min is not empty
 
-                if(!array_key_exists("w_max", $_POST["w"][$i])) break; // If the max is null, it will treat this as the last row to insert
+            // Set min using min from first row
+            $min = $_POST["w"][0]["w_min"];
 
-                // Update min with current min from current row
-                $min = $_POST["w"][$i]["w_max"] + 1;
+            for($i = 0; $i < sizeof($_POST["w"]); $i++){
+                if($_POST["w"][$i]["w_price"] != "" and isset($_POST["w"][$i]["w_price"])){
+                    // Add wholesale to item
+                    $discountRate = $_POST["w"][$i]["w_price"] / $_POST["v"][0]["v_price"];
+                    $newItem->addWholesale(new Wholesale($min, array_key_exists("w_max", $_POST["w"][$i]) ? $_POST["w"][$i]["w_max"] : null, $discountRate));
+
+                    if(!array_key_exists("w_max", $_POST["w"][$i])) break; // If the max is null, it will treat this as the last row to insert
+
+                    // Update min with current min from current row
+                    $min = $_POST["w"][$i]["w_max"] + 1;
+                }
             }
+            
         }
-
     }
 
     // Update data in database
@@ -155,7 +159,7 @@ if (isset($_POST["save"])) {
         $message = "保存成功！";
     }
     UsefulFunction::generateAlert($message);
-    header("refresh: 0"); //Refresh page immediately
+    //header("refresh: 0"); //Refresh page immediately
 }
 
 // Save and list
