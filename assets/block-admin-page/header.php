@@ -30,7 +30,6 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
             <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>admin/index.php">主页</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>admin/item-management.php">商品</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>admin/order-management.php">订单</a></li>
-            <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>admin/website-settings.php">网站设定</a></li>
             <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>admin/modify-history.php">历史修改记录</a></li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -38,10 +37,10 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
                 </a>
 
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="<?= $upperDirectory; ?>admin/account-settings.php">账号设置</a>
+                  <a class="dropdown-item" href="<?= $upperDirectory; ?>admin/settings.php">设置</a>
                   <a class="dropdown-item" href="<?= $upperDirectory; ?>admin/logout.php">登出</a>
-                  <a class="dropdown-item" href="#">Main: v0.2.0-alpha</a>
-                  <a class="dropdown-item" href="#">MVC: v0.3.1-alpha</a>
+                  <a class="dropdown-item" href="#">Core: v0.2.0-alpha</a>
+                  <a class="dropdown-item" href="#">Framework: v0.3.2-alpha</a>
                 </div>
             </li>
         </ul>
@@ -64,8 +63,6 @@ $(document).ready(function() {
         $(".navbar-nav li:nth-child(2)").addClass("active");
     } else if (getCurentFileName() === "order-management.php") {
         $(".navbar-nav li:nth-child(3)").addClass("active");
-    } else if (getCurentFileName() === "website-settings.php") {
-        $(".navbar-nav li:nth-child(4)").addClass("active");
     } else if (getCurentFileName() === "modify-history.php") {
         $(".navbar-nav li:nth-child(5)").addClass("active");
     }
