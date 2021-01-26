@@ -112,15 +112,27 @@ function updateData($oldItem)
                 if($_POST["w"][$i]["w_price"] != "" and isset($_POST["w"][$i]["w_price"])){
                     // Add wholesale to item
                     $discountRate = $_POST["w"][$i]["w_price"] / $_POST["v"][0]["v_price"];
-                    $newItem->addWholesale(new Wholesale($min, array_key_exists("w_max", $_POST["w"][$i]) ? $_POST["w"][$i]["w_max"] : null, $discountRate));
+                    $max = null;
+                    if(array_key_exists("w_max", $_POST["w"][$i])){
+                        if($_POST["w"][$i]["w_max"] != "" and $i != sizeof($_POST["w"])){
+                            $max = $_POST["w"][$i]["w_max"];
+                        }
+                    }
+                    $newItem->addWholesale(new Wholesale($min, $max, $discountRate));
 
-                    if(!array_key_exists("w_max", $_POST["w"][$i])) break; // If the max is null, it will treat this as the last row to insert
+                    if(array_key_exists("w_max", $_POST["w"][$i])){
+                        if($_POST["w"][$i]["w_max"] == ""){
+                            break; // If the max is null, it will treat this as the last row to insert
+                        }
+                    } else{
+                        break; // If the max is existed in the row, it will treat this as the last row to insert
+                    }
 
                     // Update min with current min from current row
                     $min = $_POST["w"][$i]["w_max"] + 1;
                 }
             }
-            
+
         }
     }
 
