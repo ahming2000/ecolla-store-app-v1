@@ -98,24 +98,26 @@ function updateData($oldItem)
     // Declare into wholesales array
     if(isset($_POST["w"]) and isset($_POST["v"]) and $hasSamePrice) {
 
+
+
         $_POST["w"] = UsefulFunction::arrayIndexRearrage($_POST["w"]); //Rearrange array index for make sure all element is looped
 
         // Set min using min from first row
-        $min = $_POST["w"][0]["w_min"];
+        $min = $_POST["w"][0]["w_min"] === null ? 0 : $_POST["w"][0]["w_min"];
 
         for($i = 0; $i < sizeof($_POST["w"]); $i++){
-            if($_POST["w"][$i]["w_price"] != "" and isset($_POST["w"][$i]["w_price"])){
-
+            if($_POST["w"][$i]["w_price"] != "" and isset($_POST["w"][$i]["w_price"]) and $_POST["w"][$i]["w_min"] != "" and isset($_POST["w"][$i]["w_min"])){
                 // Add wholesale to item
                 $discountRate = $_POST["w"][$i]["w_price"] / $_POST["v"][0]["v_price"];
-                $newItem->addWholesale(new Wholesale($min, $_POST["w"][$i]["w_max"], $discountRate));
+                $newItem->addWholesale(new Wholesale($min, array_key_exists("w_max", $_POST["w"][$i]) ? $_POST["w"][$i]["w_max"] : null, $discountRate));
 
-                if($_POST["w"][$i]["w_max"] == null) break; // If the max is null, it will treat this as the last row to insert
+                if(!array_key_exists("w_max", $_POST["w"][$i])) break; // If the max is null, it will treat this as the last row to insert
 
                 // Update min with current min from current row
                 $min = $_POST["w"][$i]["w_max"] + 1;
             }
         }
+
     }
 
     // Update data in database
@@ -460,7 +462,7 @@ if (isset($_POST["reset-view-count-button"])) {
                                     <?php if ($wholesaleCount == 0) : ?>
                                         <tr>
                                             <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[0][w_min]" aria-describedby="w-min"/></td>
-                                            <td><input type="number" class="form-control mb-1 w-max" min="1" name="w[0][w_max]" aria-describedby="w-max"/></td>
+                                            <td><input type="number" class="form-control mb-1 w-max" min="1" name="w[0][w_max]" aria-describedby="w-max" disabled/></td>
                                             <td><input type="number" class="form-control mb-1 w-price" step="0.01" min="0.01" name="w[0][w_price]" aria-describedby="w-price"/></td>
                                             <td><button type="button" class="btn default-color white-text btn-sm remove-button wholesale-remove-button px-3 py-1">X</button></td>
                                         </tr>
