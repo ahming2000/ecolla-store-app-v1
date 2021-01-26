@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 21, 2021 at 09:11 AM
+-- Generation Time: Jan 26, 2021 at 04:40 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -118,6 +118,7 @@ CREATE TABLE IF NOT EXISTS `ecolla_website_config` (
 INSERT INTO `ecolla_website_config` (`config_name`, `config_value_text`, `config_value_float`, `config_info`) VALUES
 ('max_items_per_page', NULL, 8, 'The maximum number of items to show in each page of item-list.php'),
 ('max_management_content', NULL, 5, 'Maximum content viewing at order-management.php and item-management.php page.'),
+('order_id_prefix', 'ECOLLA', NULL, 'Order ID prefix which used for the order to have special id.'),
 ('shipping_fee_east_my', NULL, 5.66, 'Shipping Fee in RM (Malaysia Ringgit) per kilogram for east Malaysia'),
 ('shipping_fee_west_my', NULL, 4.77, 'Shipping Fee in RM (Malaysia Ringgit) per kilogram for west Malaysia');
 
@@ -135,18 +136,18 @@ CREATE TABLE IF NOT EXISTS `inventories` (
   `inv_quantity` int(11) NOT NULL,
   PRIMARY KEY (`inv_id`),
   KEY `inventories_FK_v_barcode` (`v_barcode`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `inventories`
 --
 
 INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quantity`) VALUES
-(1, '6902538004045', '2021-01-01', 15),
+(1, '6902538004045', '2021-01-01', 0),
 (2, '6902538005141', '2021-01-01', 18),
 (3, '6902538007367', '2021-01-01', 20),
 (4, '6902538007381', '2021-01-01', 22),
-(5, '6902538007862', '2021-01-01', -3),
+(5, '6902538007862', '2021-01-01', 0),
 (6, '6902538007886', '2021-01-01', 0),
 (7, '6931754804900', '2021-01-01', 0),
 (8, '6931754804917', '2021-01-01', 27),
@@ -157,7 +158,7 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (13, '6941025700138', '2021-01-01', 12),
 (14, '6941025701074', '2021-01-01', 14),
 (15, '6941025702019', '2021-01-01', 19),
-(16, '6902538004045', '2021-03-05', 30),
+(16, '6902538004045', '2021-03-05', 0),
 (17, '6935145301016', '2021-05-20', 10),
 (18, '6935145301030', '2021-05-20', 20),
 (19, '6935145301047', '2021-05-20', 9),
@@ -168,8 +169,9 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (24, '6935145343061', '2021-07-27', 16),
 (25, '6935145343092', '2021-07-27', 20),
 (56, '6902538007862', '2021-01-25', 20),
-(58, '6935145301016', '2021-01-07', 6),
-(59, '6931754804900', '2021-06-14', 300);
+(58, '6935145301016', '2021-01-07', 5),
+(59, '6931754804900', '2021-06-14', 300),
+(60, '6902538004045', '2021-04-21', 0);
 
 -- --------------------------------------------------------
 
@@ -189,17 +191,17 @@ CREATE TABLE IF NOT EXISTS `items` (
   `i_image_count` int(11) NOT NULL,
   `i_view_count` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`i_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `items`
 --
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 15),
+(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 40),
 (2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 478),
 (3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 107),
-(4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 26),
+(4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 28),
 (5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 19);
 
 -- --------------------------------------------------------
@@ -236,7 +238,8 @@ INSERT INTO `orders` (`o_id`, `o_date_time`, `o_payment_method`, `o_note`, `o_de
 ('ECOLLA20210111081323', '2021-01-11 08:13:23', 'TnG', '', 'ABCSDSDSD', '已出货', 'Alex Lee', '+60', '1232131', '122342', 'Kuala Lumpur', 'Ampang', '68000'),
 ('ECOLLA20210112103353', '2021-01-12 10:33:53', 'TnG', '', NULL, '已退款', '123', '+60', '123123', 'dsfsf', 'Kuala Lumpur', 'Setapak', '53300'),
 ('ECOLLA20210115120546', '2021-01-15 12:05:46', 'TnG', '', NULL, '待处理', 'Name is me', '+60', '123765', 'jgshdkfjhksf', 'Johor', 'Ayer Baloi', '82100'),
-('ECOLLA20210117154008', '2021-01-17 15:40:08', 'TnG', '', 'J&TABCD1234', '已出货', 'Test Discount', '+60', '21345', 'kjlsdka', 'Perak', 'Ayer Tawar', '32400');
+('ECOLLA20210117154008', '2021-01-17 15:40:08', 'TnG', '', 'J&TABCD1234', '已出货', 'Test Discount', '+60', '21345', 'kjlsdka', 'Perak', 'Ayer Tawar', '32400'),
+('SUNDAY20210125185038', '2021-01-25 18:50:38', 'TnG', '', NULL, '待处理', 'Alex Lee', '+60', '1232131', 'klshbdjc', 'Johor', 'Ayer Baloi', '82100');
 
 -- --------------------------------------------------------
 
@@ -250,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `order_items` (
   `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `oi_quantity` int(11) NOT NULL DEFAULT '0',
   `oi_expire_date` date NOT NULL,
-  PRIMARY KEY (`o_id`,`v_barcode`),
+  PRIMARY KEY (`o_id`,`v_barcode`,`oi_expire_date`) USING BTREE,
   KEY `order_items_FK_v_barcode` (`v_barcode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -267,7 +270,8 @@ INSERT INTO `order_items` (`o_id`, `v_barcode`, `oi_quantity`, `oi_expire_date`)
 ('ECOLLA20210117154008', '6902538005141', 2, '2021-01-01'),
 ('ECOLLA20210117154008', '6902538007862', 3, '2021-01-01'),
 ('ECOLLA20210117154008', '6931754804900', 35, '2021-01-01'),
-('ECOLLA20210117154008', '6931754804917', 3, '2021-01-01');
+('ECOLLA20210117154008', '6931754804917', 3, '2021-01-01'),
+('SUNDAY20210125185038', '6935145301016', 1, '2021-01-07');
 
 -- --------------------------------------------------------
 
@@ -288,7 +292,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_name`, `user_password`) VALUES
-(4, 'ahming', '$2y$10$MRlh6g79a9c20u3zIwRdcONp9XhOoYJ.1ucT7AaMQazZ94y4u.ZtG'),
+(4, 'ahming', '$2y$10$jzQhJUHEwCmhnuPY1Gp0bOjLf3vW3SWTNmt/H/ieBBu8lr59vl56i'),
 (5, 'txe1', '$2y$10$XOC8AkdEmDSQ5.K7qJjvYO6OszzdpvSZfgZwCIobIagyqHqyKu2Bu');
 
 -- --------------------------------------------------------
