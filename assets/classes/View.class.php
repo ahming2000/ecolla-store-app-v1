@@ -355,5 +355,9 @@ class View extends Model
         else return array();
     }
 
+    public function getOrderIdPrefix(){
+        return $this->dbSelectAttribute("ecolla_website_config", "config_value_text", "config_name", "order_id_prefix");
+    }
+
 
 }

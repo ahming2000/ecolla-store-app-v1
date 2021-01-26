@@ -18,7 +18,9 @@ class Order {
 
     public function orderNow($cart, $paymentMethod){
         $this->dateTime = date("Y-m-d H:i:s");
-        $this->orderId = "ECOLLA".date_format(date_create($this->dateTime), "YmdHis");
+        $view = new View();
+        $prefix = $view->getOrderIdPrefix();
+        $this->orderId = $prefix . date_format(date_create($this->dateTime), "YmdHis");
         $this->cart = $cart;
         $this->paymentMethod = $paymentMethod;
     }

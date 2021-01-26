@@ -536,6 +536,18 @@ class Controller extends Model {
         $this->dbDelete("orders", "o_id", $orderId);
     }
 
+    public function setOrderIdPrefix($prefix){
+        $this->dbUpdate("ecolla_website_config", "config_value_text", $prefix, "config_name", "order_id_prefix");
+    }
+
+    public function changePassword($username, $newPassword){
+        $user_id = $this->dbSelectAttribute("users", "user_id", "user_name", $username);
+        if($user_id == null) return false;
+
+        $this->dbUpdate("users", "user_password", password_hash($newPassword, PASSWORD_BCRYPT), "user_id", $user_id);
+        return true;
+    }
+
 
 
 
