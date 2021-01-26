@@ -548,6 +548,11 @@ class Controller extends Model {
         return true;
     }
 
+    public function updateDeleveryRate($west, $east){
+        $this->dbUpdate("ecolla_website_config", "config_value_float", $west, "config_name", "shipping_fee_west_my");
+        $this->dbUpdate("ecolla_website_config", "config_value_float", $east, "config_name", "shipping_fee_east_my");
+    }
+
 
 
 

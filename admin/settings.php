@@ -39,6 +39,12 @@ if(isset($_POST["change-password"])){
     header("refresh: 0"); //Refresh page immediately
 }
 
+if(isset($_POST["change-delivery-rate"])){
+    $controller->updateDeleveryRate($_POST["west-delivery"], $_POST["east-delivery"]);
+    UsefulFunction::generateAlert("邮寄价钱更新！");
+    header("refresh: 0"); //Refresh page immediately
+}
+
 ?>
 
 
@@ -110,13 +116,44 @@ if(isset($_POST["change-password"])){
                         <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
                             <input type="text" class="form-control" name="order-id-prefix" maxlength="10" value="<?= $view->getOrderIdPrefix(); ?>" required />
                         </div>
+                    </div>
 
+                    <div class="form-row">
                         <div class="col-12 text-center">
                             <button type="submit" class="btn btn-primary" name="save-order-id-prefix">保存订单开头</button>
                         </div>
                     </div>
                 </form>
 
+
+                <div class="h3">邮寄设定</div>
+                <form action="" method="post">
+                    <div class="form-row">
+                        <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                            <label>西马邮寄价钱（RM/1KG）：</label>
+                        </div>
+
+                        <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                            <input type="number" min="0.01" step="0.01" class="form-control" name="west-delivery" maxlength="10" value="<?= $view->getShippingFeeRate(true); ?>" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-xs-2 col-sm-4 col-md-3 col-lg-4 text-sm-left text-md-right mb-3">
+                            <label>东马邮寄价钱（RM/1KG）：</label>
+                        </div>
+
+                        <div class="col-xs-10 col-sm-8 col-md-9 col-lg-8 mb-3 text-center">
+                            <input type="text" min="0.01" step="0.01" class="form-control" name="east-delivery" maxlength="10" value="<?= $view->getShippingFeeRate(false); ?>" required />
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary" name="change-delivery-rate">更改邮寄价钱</button>
+                        </div>
+                    </div>
+                </form>
 
 
 
