@@ -51,7 +51,7 @@ $message = "";
                 <div class="row mb-3">
                     <div class="col-12 text-center">
                         下单成功<br>
-                        <span class="text-muted">我们会在三天之内出货</span><br>
+                        <span class="text-muted">谢谢您的支持！<br>我们会尽快完成您的订单！</span><br>
                     </div>
                 </div>
 

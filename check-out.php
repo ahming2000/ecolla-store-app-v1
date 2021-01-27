@@ -199,7 +199,7 @@ if (isset($_POST["submit"])) {
                     <!-- Make Payment -->
                     <div class="form-row mb-3 p-3">
                         <div class="col-12">
-                            <div class="row">
+                            <div class="row mb-3">
                                 <input type="text" name="o_payment_method" id="selected-payment-method" value="TnG" hidden />
                                 <div class="col-12"><label><strong>请点击付款方式进行付款</strong></label></div>
                                 <div class="d-flex justify-content-center align-items-center img-payment view zoom payment-method active">
@@ -214,6 +214,9 @@ if (isset($_POST["submit"])) {
                                     <input type="text" value="Bank Transfer" hidden />
                                     <img class="img-fluid" src="assets/images/payment/bank-transfer.png" alt="image">
                                 </div>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-12"><span class="orange-text" style="font-size: 25px;"><strong>请在付款之后载图您的收据并上传！</strong></span></div>
                             </div>
                         </div>
                     </div><!-- Make Payment -->
