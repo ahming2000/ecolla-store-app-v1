@@ -49,7 +49,7 @@ function updateData($oldItem)
         $_POST["v"] = UsefulFunction::arrayIndexRearrage($_POST["v"]); //Rearrange array index for make sure all element is looped
         for ($i = 0; $i < sizeof($_POST["v"]); $i++) {
 
-            if (isset($_POST["v"][$i]["v_property"]) and $_POST["v"][$i]["v_property"] != "") {
+            if (isset($_POST["v"][$i]["v_property"]) and $_POST["v"][$i]["v_property"] != "" and isset($_POST["v"][$i]["v_barcode"]) and $_POST["v"][$i]["v_barcode"] != "") {
 
                 $price = $_POST["v"][$i]["v_price"] == null ? 0.0 : $_POST["v"][$i]["v_price"];
                 $discountedPrice = $_POST['v'][$i]["v_discounted_price"] == null ? $price : $_POST['v'][$i]["v_discounted_price"];
@@ -72,9 +72,10 @@ function updateData($oldItem)
             }
         }
 
+        $hasSamePrice = true;
+
         if (isset($_POST["v"][0]["v_property"]) and $_POST["v"][0]["v_property"] != ""){
             // Check all variety has same price
-            $hasSamePrice = true;
             $firstPrice = $newItem->getVarieties()[0]->getPrice();
             foreach($newItem->getVarieties() as $v){
                 if($v->getPrice() != $firstPrice){
@@ -168,7 +169,7 @@ if (isset($_POST["save"])) {
         $message = "保存成功！";
     }
     UsefulFunction::generateAlert($message);
-    header("refresh: 0"); //Refresh page immediately
+    //header("refresh: 0"); //Refresh page immediately
 }
 
 // Save and list
