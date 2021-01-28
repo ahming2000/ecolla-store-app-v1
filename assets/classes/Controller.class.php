@@ -343,6 +343,17 @@ class Controller extends Model {
             $dbTable_inventories = $this->dbQuery("SELECT * FROM inventories WHERE v_barcode = " . $cartItem->getBarcode() . " ORDER BY inv_expire_date");
             $quantity = $cartItem->getQuantity();
 
+            // Get total quantity from inventory database
+            $total = 0;
+            foreach($dbTable_inventories as $inv){
+                $total += $inv["inv_quantity"];
+            }
+
+            // Return false if the current quantity request exceed the inventory (Caused by late check out or someone purchase same item at the same time and make the inventory < quantity)
+            if($total - $quantity < 0){
+                return false;
+            }
+
             foreach($dbTable_inventories as $inv){
                 if($inv["inv_quantity"] - $quantity >= 0){
                     $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode(), $quantity, $inv["inv_expire_date"]];
@@ -365,7 +376,7 @@ class Controller extends Model {
             }
 
         }
-
+        return true;
     }
 
     private function purchaseFromInventory($barcode, $quantity){

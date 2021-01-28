@@ -27,13 +27,20 @@ if (isset($_POST["submit"])) {
     $imageFileHandler->uploadReceipt($order->getOrderId());
 
     // Insert order
-    $controller->insertNewOrder($order);
+    if($controller->insertNewOrder($order)){
+        // Reset cart
+        $cart->resetCart();
 
-    // Reset cart
-    $cart->resetCart();
+        // Redirect to order successful page
+        header("location: order-successfully.php?orderId=" . $order->getOrderId());
+    } else{
+        // Reset cart
+        $cart->resetCart();
+        UsefulFunction::generateAlert("仓库的数量少于您要下单的数量！请重新把商品加入购物车！");
+        echo "<script>window.location.href = 'item-list.php';</script>";
+    }
 
-    // Redirect to order successful page
-    header("location: order-successfully.php?orderId=" . $order->getOrderId());
+
 }
 ?>
 
@@ -256,7 +263,7 @@ if (isset($_POST["submit"])) {
                         </div>
                     </div><!-- Upload Receipt -->
 
-                    <div class="text-center"><input class="btn btn-primary" type="submit" value="提交" name="submit" style="width: 200px;"></div>
+                    <div class="text-center"><input class="btn btn-primary" type="submit" value="提交" name="submit" style="width: 200px;" <?= empty($cart->getCartItems()) ? "disabled" : ""; ?>></div>
 
                 </form>
             </div>
