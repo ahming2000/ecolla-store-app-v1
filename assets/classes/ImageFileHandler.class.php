@@ -165,7 +165,7 @@ class ImageFileHandler{
         $fullPath = $path . "/" . $fileName . "." . $extension;
         $binary = imagecreatefromstring(file_get_contents($fullPath));
         imageJpeg($binary, $path . $fileName . '.jpg', $imageQuality);
-        unlink($fullPath);
+        if($extension != "jpg") unlink($fullPath);
     }
 
     private function optimizeImageJPG($path, $fileName){ // Only accept jpg format // Old version backup
