@@ -205,26 +205,27 @@ if (isset($_POST["adjustOrder"])) {
             </div>
         </div>
 
-        <table class="table table-bordered mt-2">
-            <thead>
-                <tr>
-                    <th scope="col">订单详情</th>
-                    <th scope="col">运送ID</th>
-                    <th scope="col">顾客资料</th>
-                    <th scope="col">订单物品</th>
-                    <th scope="col">销售额</th>
-                    <th scope="col">操作</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                foreach ($orderList as $order) {
-                    include "../assets/block-admin-page/manage-order-block.php";
-                }
-                ?>
-            </tbody>
-        </table>
-
+        <div style="overflow-x: auto;">
+            <table class="table table-bordered mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">订单详情</th>
+                        <th scope="col">运送ID</th>
+                        <th scope="col">顾客资料</th>
+                        <th scope="col">订单物品</th>
+                        <th scope="col">销售额</th>
+                        <th scope="col">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($orderList as $order) {
+                        include "../assets/block-admin-page/manage-order-block.php";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
 
     </main>
 
