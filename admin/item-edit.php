@@ -112,19 +112,16 @@ function updateData($oldItem)
                 if($_POST["w"][$i]["w_price"] != "" and isset($_POST["w"][$i]["w_price"])){
                     // Add wholesale to item
                     $discountRate = $_POST["w"][$i]["w_price"] / $_POST["v"][0]["v_price"];
-                    $max = null;
-                    if(array_key_exists("w_max", $_POST["w"][$i])){
-                        if($_POST["w"][$i]["w_max"] != "" and $i != sizeof($_POST["w"])){
-                            $max = $_POST["w"][$i]["w_max"];
-                        }
-                    }
-                    $newItem->addWholesale(new Wholesale($min, $max, $discountRate));
 
                     if(array_key_exists("w_max", $_POST["w"][$i])){
-                        if($_POST["w"][$i]["w_max"] == ""){
+                        if($_POST["w"][$i]["w_max"] == "" or $i == sizeof($_POST["w"])){
+                            $newItem->addWholesale(new Wholesale($min, null, $discountRate));
                             break; // If the max is null, it will treat this as the last row to insert
+                        } else{
+                            $newItem->addWholesale(new Wholesale($min, $_POST["w"][$i]["w_max"], $discountRate));
                         }
                     } else{
+                        $newItem->addWholesale(new Wholesale($min, null, $discountRate));
                         break; // If the max is existed in the row, it will treat this as the last row to insert
                     }
 
@@ -171,7 +168,7 @@ if (isset($_POST["save"])) {
         $message = "保存成功！";
     }
     UsefulFunction::generateAlert($message);
-    //header("refresh: 0"); //Refresh page immediately
+    header("refresh: 0"); //Refresh page immediately
 }
 
 // Save and list
