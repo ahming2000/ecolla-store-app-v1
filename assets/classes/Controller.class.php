@@ -70,7 +70,7 @@ class Controller extends Model {
             if ($oldItem->getPropertyName() != $newItem->getPropertyName()) $this->dbUpdate("items", "i_property_name", $newItem->getPropertyName(), "i_id", $i_id);
 
             // Item image count
-            if ($oldItem->getImgCount() != $newItem->getImgCount()) $this->dbUpdate("items", "i_image_count", $newItem->getImgCount(), "i_id", $i_id);
+            if ($oldItem->getImgCount() != $newItem->getImgCount()) $this->dbUpdate("items", "i_image_count", number_format($newItem->getImgCount()), "i_id", $i_id);
 
             /* Category */
             $categoryToRemove = array_diff($oldItem->getCategories(), $newItem->getCategories());
