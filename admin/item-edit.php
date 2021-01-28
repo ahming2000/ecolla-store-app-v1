@@ -387,9 +387,9 @@ if (isset($_POST["reset-view-count-button"])) {
                                             <tr>
                                                 <td><input type="text" class="form-control v-property-view" value="<?= $item->getVarieties()[$i]->getProperty(); ?>" disabled /></td>
                                                 <td><input type="text" class="form-control" name="v[<?= $i; ?>][v_barcode]" aria-describedby="v-barcode" maxlength="20" value="<?= $item->getVarieties()[$i]->getBarcode(); ?>" /></td>
-                                                <td><input type="number" step="0.01" min="0" class="form-control v-price" name="v[<?= $i; ?>][v_price]" aria-describedby="v-price" value="<?= $item->getVarieties()[$i]->getPrice(); ?>" /></td>
-                                                <td><input type="number" step="0.001" min="0" class="form-control" name="v[<?= $i; ?>][v_weight]" aria-describedby="v-weight" value="<?= $item->getVarieties()[$i]->getWeight(); ?>" /></td>
-                                                <td><input type="number" step="0.01" min="0" max="<?= $item->getVarieties()[$i]->getPrice(); ?>" class="form-control v-discounted-price" name="v[<?= $i; ?>][v_discounted_price]" aria-describedby="v-discounted-price" value="<?= number_format($item->getVarieties()[$i]->getPrice() * $item->getVarieties()[$i]->getDiscountRate(), 2); ?>" /></td>
+                                                <td><input type="number" step="0.01" min="0" class="form-control v-price" name="v[<?= $i; ?>][v_price]" aria-describedby="v-price" value="<?= number_format($item->getVarieties()[$i]->getPrice(), 2, '.', ''); ?>" /></td>
+                                                <td><input type="number" step="0.001" min="0" class="form-control" name="v[<?= $i; ?>][v_weight]" aria-describedby="v-weight" value="<?=  number_format($item->getVarieties()[$i]->getWeight(), 3, '.', ''); ?>" /></td>
+                                                <td><input type="number" step="0.01" min="0" max="<?= $item->getVarieties()[$i]->getPrice(); ?>" class="form-control v-discounted-price" name="v[<?= $i; ?>][v_discounted_price]" aria-describedby="v-discounted-price" value="<?= number_format($item->getVarieties()[$i]->getPrice() * $item->getVarieties()[$i]->getDiscountRate(), 2, '.', ''); ?>" /></td>
                                             </tr>
                                         <?php endfor; ?>
                                     <?php endif; ?>
@@ -483,7 +483,7 @@ if (isset($_POST["reset-view-count-button"])) {
                                     <?php else : ?>
                                         <?php $maxPrice = $item->getVarieties()[0]->getPrice(); ?>
                                         <?php for($i = 0; $i < $wholesaleCount; $i++) : ?>
-                                            <?php $discountedPrice = number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2); ?>
+                                            <?php $discountedPrice = number_format($item->getVarieties()[0]->getPrice() * $item->getWholesales()[$i]->getDiscountRate(), 2, '.', ''); ?>
                                             <tr>
                                                 <td><input type="number" class="form-control mb-1 w-min" min="1" name="w[<?= $i; ?>][w_min]" aria-describedby="w-min" value="<?= $item->getWholesales()[$i]->getMin(); ?>" <?= $i != 0 ? "disabled" : ""; ?>/></td>
                                                 <td><input type="number" class="form-control mb-1 w-max" min="<?= $item->getWholesales()[$i]->getMin(); ?>" name="w[<?= $i; ?>][w_max]" aria-describedby="w-max" value="<?= $item->getWholesales()[$i]->getMax(); ?>" <?= ($i == ($wholesaleCount - 1)) ? "disabled" : ""; ?>/></td>
