@@ -440,8 +440,8 @@ if (isset($_POST["report_date"])) {
                             "<td>" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty()  . "</td>" .
                             "<td>" . $cartItem->getBarcode() . "</td>" .
                             "<td>" . $cartItem->getQuantity() . "</td>" .
-                            "<td>" . "RM" . number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate(), 2) . "</td>" .
-                            "<td>" . "RM" . number_format($cartItem->getSubPrice(), 2) . "</td>" .
+                            "<td>" . "RM" . number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate(), 2, '.', '') . "</td>" .
+                            "<td>" . "RM" . number_format($cartItem->getSubPrice(), 2, '.', '') . "</td>" .
                             "<td>" . explode(" ", $o->getDateTime())[1] . "</td>" .
                             "</tr>";
                     }

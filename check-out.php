@@ -155,7 +155,7 @@ if (isset($_POST["submit"])) {
                                         <div class='cl3 text-center'><b class='item_txt2'>" . $cartItem->getQuantity() . "</b></div>
                                         <div class='cl3 text-center'><b class='item_txt2'>*</b></div>
                                         <div class='cl4 text-center'><b class='item_txt2'>RM" . $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() . " =</b></div>
-                                        <div class=\"cl4 text-right\"><b class='item_txt2'>RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
+                                        <div class=\"cl4 text-right\"><b class='item_txt2'>RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2, '.', '') . "</span></b></div>
                                         </div>";
 
                                     //backup
@@ -168,7 +168,7 @@ if (isset($_POST["submit"])) {
                                     //     <div class=\"col-1 pt-3\"></div>
 
                                     //     <div class=\"col-3 pt-3\"><b style=\"font-size: 32px; float: right;\">" . $cartItem->getQuantity() . " * RM" . $subPrice . " = </b></div>
-                                    //     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2) . "</span></b></div>
+                                    //     <div class=\"col-2 pt-3\"><b style=\"font-size: 32px;float: right;\">RM<span id=\"t_price\">" . number_format($cartItem->getSubPrice(), 2, '.', '') . "</span></b></div>
                                     // </div>";
                                 }
                                 ?>
@@ -176,19 +176,19 @@ if (isset($_POST["submit"])) {
                             <div class="row">
                                 <div style="width: 55%"></div>
                                 <div class="cl11 text-center"><b class='item_txt3'>小计</b></div>
-                                <div class="cl12 text-center"><b class='item_txt3' style="float: right;">RM<span id="t_price"><?php echo number_format($cart->getSubtotal(), 2)  ?></span></b></div>
+                                <div class="cl12 text-center"><b class='item_txt3' style="float: right;">RM<span id="t_price"><?php echo number_format($cart->getSubtotal(), 2, '.', '')  ?></span></b></div>
                             </div>
                             <div class="row">
                                 <div style="width: 55%"></div>
                                 <div class="cl11 text-center"><b class='item_txt3'>邮费 </b></div>
-                                <div class="cl12 text-center"><b class='item_txt3' style="float: right;">RM<span id="t_price"><?php echo number_format($cart->getShippingFee(), 2)  ?></span></b></div>
+                                <div class="cl12 text-center"><b class='item_txt3' style="float: right;">RM<span id="t_price"><?php echo number_format($cart->getShippingFee(), 2, '.', '')  ?></span></b></div>
                             </div>
                             <div class="row" style="width:auto;height:5px;background-color: black;"></div>
                             <div class="row">
                                 <div style="width: 55%"></div>
                                 <div class="cl11 text-center"><b class='item_txt3'>总计 </b></div>
                                 <div class="cl12 text-center"><b class='item_txt3' style="float: right;">RM<span id="t_price"><?php $total = $cart->getSubtotal() + $cart->getShippingFee();
-                                                                                                                                echo number_format($total, 2); ?></span></b></div>
+                                                                                                                                echo number_format($total, 2, '.', ''); ?></span></b></div>
                             </div>
                         </div>
                     </div>

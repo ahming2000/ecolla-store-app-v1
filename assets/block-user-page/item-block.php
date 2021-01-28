@@ -8,7 +8,7 @@
             <span style="color: brown;">
                 <?php
                     $price = $item->getVarieties()[0]->getPrice() * $item->getVarieties()[0]->getDiscountRate();
-                    echo "RM".number_format($price, 2);
+                    echo "RM".number_format($price, 2, '.', '');
                 ?>
             </span>
             <div class="row">

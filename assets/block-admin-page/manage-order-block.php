@@ -27,9 +27,9 @@
         echo "商品 ".$count."：".$cartItem->getItem()->getName()." ";
         echo $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getProperty()."<br>";
         if(!empty($cartItem->getItem()->getWholesales()) and $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate() == 1.0){
-            echo "价钱：RM".number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getWholesalesDiscountRate($cartItem->getQuantity()), 2);
+            echo "价钱：RM".number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getWholesalesDiscountRate($cartItem->getQuantity()), 2, '.', '');
         } else{
-            echo "价钱：RM".number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate(), 2);
+            echo "价钱：RM".number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate(), 2, '.', '');
         }
         echo " x ".$cartItem->getQuantity()."<br>";
         $count++;
@@ -37,8 +37,8 @@
     ?></td>
 
     <td>
-        <?= "付款：RM" . number_format($order->getCart()->getSubtotal(), 2); ?><br>
-        <?= "运费：RM" . number_format($order->getCart()->getShippingFee(), 2); ?>
+        <?= "付款：RM" . number_format($order->getCart()->getSubtotal(), 2, '.', ''); ?><br>
+        <?= "运费：RM" . number_format($order->getCart()->getShippingFee(), 2, '.', ''); ?>
     </td>
 
     <td>

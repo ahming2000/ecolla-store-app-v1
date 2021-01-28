@@ -45,25 +45,25 @@
                 <?php if (!empty($cartItem->getItem()->getWholesales()) and $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate() == 1.0) : ?>
                     <?php if($cartItem->getItem()->getWholesalesDiscountRate($cartItem->getQuantity()) != 1.0) : ?>
                         <div>
-                            <span class="grey-text mr-1" style="font-size: 15px"><del>RM<?= number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getQuantity(), 2); ?></del></span>
-                            <span>RM<?= number_format($cartItem->getSubPrice(), 2); ?></span>
-                            <span class="badge badge-warning mr-1"><?= number_format((1 - $cartItem->getItem()->getWholesalesDiscountRate($cartItem->getQuantity())) * 100, 0) ?>% OFF</span>
+                            <span class="grey-text mr-1" style="font-size: 15px"><del>RM<?= number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getQuantity(), 2, '.', ''); ?></del></span>
+                            <span>RM<?= number_format($cartItem->getSubPrice(), 2, '.', ''); ?></span>
+                            <span class="badge badge-warning mr-1"><?= number_format((1 - $cartItem->getItem()->getWholesalesDiscountRate($cartItem->getQuantity())) * 100, 0, '.', '') ?>% OFF</span>
                         </div>
                     <?php else : ?>
                         <div>
-                            <span>RM<?= number_format($cartItem->getSubPrice(), 2); ?></span>
+                            <span>RM<?= number_format($cartItem->getSubPrice(), 2, '.', ''); ?></span>
                         </div>
                     <?php endif; ?>
                 <?php else : ?>
                     <?php if($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate() != 1.0) : ?>
                         <div>
-                            <span class="grey-text mr-1" style="font-size: 15px"><del>RM<?= number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getQuantity(), 2); ?></del></span>
-                            <span>RM<?= number_format($cartItem->getSubPrice(), 2); ?></span>
-                            <span class="badge badge-danger mr-1"><?= number_format((1 - $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate()) * 100, 0) ?>% OFF</span>
+                            <span class="grey-text mr-1" style="font-size: 15px"><del>RM<?= number_format($cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getPrice() * $cartItem->getQuantity(), 2, '.', ''); ?></del></span>
+                            <span>RM<?= number_format($cartItem->getSubPrice(), 2, '.', ''); ?></span>
+                            <span class="badge badge-danger mr-1"><?= number_format((1 - $cartItem->getItem()->getVarieties()[$cartItem->getVarietyIndex()]->getDiscountRate()) * 100, 0, '.', '') ?>% OFF</span>
                         </div>
                     <?php else : ?>
                         <div>
-                            <span>RM<?= number_format($cartItem->getSubPrice(), 2); ?></span>
+                            <span>RM<?= number_format($cartItem->getSubPrice(), 2, '.', ''); ?></span>
                         </div>
                     <?php endif; ?>
                 <?php endif; ?>

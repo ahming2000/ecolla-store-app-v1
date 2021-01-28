@@ -20,7 +20,7 @@
 
     <td><?php
     foreach($item->getVarieties() as $variety){
-        echo "RM".number_format($variety->getPrice() * $variety->getDiscountRate(), 2)."<br>";
+        echo "RM".number_format($variety->getPrice() * $variety->getDiscountRate(), 2, '.', '')."<br>";
     }
     ?></td>
 
