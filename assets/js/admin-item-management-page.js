@@ -348,17 +348,23 @@ $(document).ready(function(){
 
     // Extra wholesale
     $("#extra-wholesale-button").on("click", function(){
+        var min = parseInt($("#wholesale-table-section tr").last().find("input.w-min").val());
         var max = parseInt($("#wholesale-table-section tr").last().find("input.w-max").val()) + 1;
         var price = $("#wholesale-table-section tr").last().find("input.w-price").val();
-        $("#wholesale-table-section").append(getExtraWholesaleTableRowHTML(getWholesaleCount(), max, price));
+        if(price != "" && min != "" && max != ""){
+            $("#wholesale-table-section").append(getExtraWholesaleTableRowHTML(getWholesaleCount(), max, price));
 
-        // Last romove button of wholesale table will always enable and the rest will be disabled
-        $("#wholesale-table-section").find(".remove-button").attr("disabled", "disabled");
-        $("#wholesale-table-section").find(".remove-button").last().removeAttr("disabled");
+            // Last romove button of wholesale table will always enable and the rest will be disabled
+            $("#wholesale-table-section").find(".remove-button").attr("disabled", "disabled");
+            $("#wholesale-table-section").find(".remove-button").last().removeAttr("disabled");
 
-        // Last max column will always disabled and the rest will be enabled
-        $(".w-max").removeAttr("disabled");
-        $(".w-max").last().attr("disabled", "disabled");
+            // Last max column will always disabled and the rest will be enabled
+            $(".w-max").removeAttr("disabled");
+            $(".w-max").last().attr("disabled", "disabled");
+        } else{
+            alert("请填写最后一行的所以信息！");
+        }
+
     });
 
     // Wholesale first w-min column auto sync
