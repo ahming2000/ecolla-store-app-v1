@@ -70,7 +70,7 @@ class Controller extends Model {
             if ($oldItem->getPropertyName() != $newItem->getPropertyName()) $this->dbUpdate("items", "i_property_name", $newItem->getPropertyName(), "i_id", $i_id);
 
             // Item image count
-            if ($oldItem->getImgCount() != $newItem->getImgCount()) $this->dbUpdate("items", "i_image_count", number_format($newItem->getImgCount()), "i_id", $i_id);
+            if ($oldItem->getImgCount() != $newItem->getImgCount()) $this->dbUpdate("items", "i_image_count", number_format($newItem->getImgCount(), 0, '.', ''), "i_id", $i_id);
 
             /* Category */
             $categoryToRemove = array_diff($oldItem->getCategories(), $newItem->getCategories());
@@ -344,11 +344,13 @@ class Controller extends Model {
             $quantity = $cartItem->getQuantity();
 
             foreach($dbTable_inventories as $inv){
-                if($inv["inv_quantity"] - $quantity > 0){
+                if($inv["inv_quantity"] - $quantity >= 0){
                     $order_items_ready = [$order->getOrderId(), $cartItem->getBarcode(), $quantity, $inv["inv_expire_date"]];
                     $this->dbInsert("order_items", $order_items_ready);
+
                     // Edit Inventory
-                    $this->dbUpdate("inventories", "inv_quantity", $inv["inv_quantity"] - $quantity, ["v_barcode", "inv_expire_date"], [$cartItem->getBarcode(), $inv["inv_expire_date"]]);
+                    $finalQuantity = $inv["inv_quantity"] - $quantity;
+                    $this->dbUpdate("inventories", "inv_quantity", "$finalQuantity", ["v_barcode", "inv_expire_date"], [$cartItem->getBarcode(), $inv["inv_expire_date"]]);
                     break;
                 } else{
                     // First inventory dont have enough quantity to deduce
