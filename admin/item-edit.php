@@ -52,8 +52,8 @@ function updateData($oldItem)
             if (isset($_POST["v"][$i]["v_property"]) and $_POST["v"][$i]["v_property"] != "") {
 
                 $price = $_POST["v"][$i]["v_price"] == null ? 0.0 : $_POST["v"][$i]["v_price"];
-                $discountedPrice = $_POST['v'][$i]["v_discounted_price"] == null ? 1.00 : $_POST['v'][$i]["v_discounted_price"];
-                $discountRate = $price == 0.0 ? 1.0 : $discountedPrice / $price;
+                $discountedPrice = $_POST['v'][$i]["v_discounted_price"] == null ? $price : $_POST['v'][$i]["v_discounted_price"];
+                $discountRate = $discountedPrice / $price ;
 
                 $variety = new Variety($_POST["v"][$i]["v_barcode"], $_POST['v'][$i]['v_property'], $price, $_POST["v"][$i]["v_weight"] == null ? 0.0 : $_POST["v"][$i]["v_weight"], $discountRate);
 
