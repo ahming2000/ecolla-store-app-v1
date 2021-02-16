@@ -44,8 +44,8 @@
     <td>
         <form action="" method="post">
             <input type="text" name="orderId" value="<?= $order->getOrderId(); ?>" hidden/>
-            <button type="submit" class="btn btn-outline-secondary p-2 m-1" style="width: 70px;" name="refund">退款</button><br>
-            <button type="submit" class="btn btn-outline-secondary p-2 m-1" style="width: 70px;" name="unbuy">反结账</button><br>
+            <button type="submit" class="btn btn-outline-secondary p-2 m-1" style="width: 90px;" name="refundDestroy">退款并报销</button><br>
+            <button type="submit" class="btn btn-outline-secondary p-2 m-1" style="width: 90px;" name="refundOnly">退款</button><br>
             <!-- <button type="submit" class="btn btn-outline-secondary p-2 m-1" name="adjustOrder">调整订单</button><br> -->
         </form>
     </td>
