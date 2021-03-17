@@ -88,6 +88,12 @@ class UsefulFunction{
         echo "<script type='text/javascript'>alert('$msg');</script>";
     }
 
+    public static function getCurrentURL(){
+        $url = dirname($_SERVER['PHP_SELF']);
+        $url = str_replace("\\", "/", $url);
+        return $url;
+    }
+
 }
 
 ?>

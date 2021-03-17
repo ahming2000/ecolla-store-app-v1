@@ -89,12 +89,7 @@ class UsefulFunction{
     }
 
     public static function getCurrentURL(){
-        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')
-        $header = "https://";
-   else
-        $header = "http://";
-
-        $url = $header . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
+        $url = dirname($_SERVER['PHP_SELF']);
         $url = str_replace("\\", "/", $url);
         return $url;
     }
