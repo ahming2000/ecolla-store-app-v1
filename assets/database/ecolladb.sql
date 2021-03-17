@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jan 26, 2021 at 04:40 PM
+-- Generation Time: Mar 17, 2021 at 02:49 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -31,6 +31,7 @@ DROP TABLE IF EXISTS `categories`;
 CREATE TABLE IF NOT EXISTS `categories` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
   `cat_name` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `cat_name_en` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`cat_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -38,16 +39,16 @@ CREATE TABLE IF NOT EXISTS `categories` (
 -- Dumping data for table `categories`
 --
 
-INSERT INTO `categories` (`cat_id`, `cat_name`) VALUES
-(1, '饮料'),
-(2, '零食'),
-(3, '素食'),
-(4, '小零食'),
-(5, '能量饮品'),
-(6, '中国出产'),
-(7, '酒精饮品'),
-(8, '热卖'),
-(9, '新品');
+INSERT INTO `categories` (`cat_id`, `cat_name`, `cat_name_en`) VALUES
+(1, '饮料', 'Drinks'),
+(2, '零食', 'Snacks'),
+(3, '素食', 'Vegetarian Friendly'),
+(4, '小零食', 'Small Snacks'),
+(5, '能量饮品', 'Energy Drinks'),
+(6, '中国出产', 'Made in China'),
+(7, '酒精饮品', 'Alcohol'),
+(8, '热卖', 'Hot Selling'),
+(9, '新品', 'New Product');
 
 -- --------------------------------------------------------
 
@@ -154,7 +155,7 @@ INSERT INTO `inventories` (`inv_id`, `v_barcode`, `inv_expire_date`, `inv_quanti
 (9, '6931754804924', '2021-01-01', 23),
 (10, '6931754804931', '2021-01-01', 23),
 (11, '6931754805655', '2021-01-01', 14),
-(12, '6941025700084', '2021-01-01', 22),
+(12, '6941025700084', '2021-01-01', 21),
 (13, '6941025700138', '2021-01-01', 12),
 (14, '6941025701074', '2021-01-01', 14),
 (15, '6941025702019', '2021-01-01', 19),
@@ -183,10 +184,14 @@ DROP TABLE IF EXISTS `items`;
 CREATE TABLE IF NOT EXISTS `items` (
   `i_id` int(11) NOT NULL AUTO_INCREMENT,
   `i_name` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
+  `i_name_en` varchar(250) COLLATE utf8_unicode_ci NOT NULL,
   `i_desc` varchar(3000) COLLATE utf8_unicode_ci NOT NULL,
   `i_brand` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `i_brand_en` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `i_origin` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `i_origin_en` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `i_property_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `i_property_name_en` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `i_is_listed` tinyint(1) NOT NULL DEFAULT '0',
   `i_image_count` int(11) NOT NULL,
   `i_view_count` int(11) NOT NULL DEFAULT '0',
@@ -197,12 +202,12 @@ CREATE TABLE IF NOT EXISTS `items` (
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`i_id`, `i_name`, `i_desc`, `i_brand`, `i_origin`, `i_property_name`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '脉动维生素功能饮料', '好喝的饮料', '脉动', '中国', '口味', 1, 4, 40),
-(2, '好味屋手撕素肉排', '面筋制品', '好味屋', '中国', '口味', 1, 5, 478),
-(3, '湖湘贡鹌鹑蛋', '风味鸳鸯蛋', '湖湘贡', '中国', '口味', 1, 5, 107),
-(4, 'RIO鸡尾酒', '精美玻璃，漂亮的颜色的鸡尾酒', 'RIO', '中国', '口味', 1, 3, 28),
-(5, 'RIO微醺鸡尾酒', '来一杯，享受好时光', 'RIO', '中国', '口味', 1, 1, 19);
+INSERT INTO `items` (`i_id`, `i_name`, `i_name_en`, `i_desc`, `i_brand`, `i_brand_en`, `i_origin`, `i_origin_en`, `i_property_name`, `i_property_name_en`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
+(1, '脉动维生素功能饮料', 'MaiDong Energy Drink', '好喝的饮料\r\nDelicious Drink', '脉动', 'Mai Dong', '中国', 'China', '口味', 'Flavour', 1, 4, 42),
+(2, '好味屋手撕素肉排', 'Hao Wei Wu Vege Steak', '面筋制品\r\nMade from bean', '好味屋', 'Hao Wei Wu', '中国', 'China', '口味', 'Flavour', 1, 5, 479),
+(3, '湖湘贡鹌鹑蛋', 'Huxiang Gong Quail Eggs', '风味鸳鸯蛋\r\nFlavored quail eggs', '湖湘贡', 'Huxiang Gong', '中国', 'China', '口味', 'Flavour', 1, 5, 110),
+(4, 'RIO鸡尾酒', 'RIO Cocktail', '精美玻璃，漂亮的颜色的鸡尾酒\r\nBeautiful Bottle', 'RIO', 'RIO', '中国', 'China', '口味', 'Flavour', 1, 3, 28),
+(5, 'RIO微醺鸡尾酒', 'RIO Cocktail Tin', '来一杯，享受好时光\r\nEnjoy life', 'RIO', 'RIO', '中国', 'China', '口味', 'Flavour', 1, 1, 19);
 
 -- --------------------------------------------------------
 
@@ -239,6 +244,7 @@ INSERT INTO `orders` (`o_id`, `o_date_time`, `o_payment_method`, `o_note`, `o_de
 ('ECOLLA20210112103353', '2021-01-12 10:33:53', 'TnG', '', NULL, '已退款', '123', '+60', '123123', 'dsfsf', 'Kuala Lumpur', 'Setapak', '53300'),
 ('ECOLLA20210115120546', '2021-01-15 12:05:46', 'TnG', '', NULL, '待处理', 'Name is me', '+60', '123765', 'jgshdkfjhksf', 'Johor', 'Ayer Baloi', '82100'),
 ('ECOLLA20210117154008', '2021-01-17 15:40:08', 'TnG', '', 'J&TABCD1234', '已出货', 'Test Discount', '+60', '21345', 'kjlsdka', 'Perak', 'Ayer Tawar', '32400'),
+('ECOLLA20210317143138', '2021-03-17 14:31:38', 'TnG', '', NULL, '待处理', 'Alex Lee', '+60', '1232131', '12312', 'Kedah', 'Alor Setar', '5050'),
 ('SUNDAY20210125185038', '2021-01-25 18:50:38', 'TnG', '', NULL, '待处理', 'Alex Lee', '+60', '1232131', 'klshbdjc', 'Johor', 'Ayer Baloi', '82100');
 
 -- --------------------------------------------------------
@@ -271,6 +277,7 @@ INSERT INTO `order_items` (`o_id`, `v_barcode`, `oi_quantity`, `oi_expire_date`)
 ('ECOLLA20210117154008', '6902538007862', 3, '2021-01-01'),
 ('ECOLLA20210117154008', '6931754804900', 35, '2021-01-01'),
 ('ECOLLA20210117154008', '6931754804917', 3, '2021-01-01'),
+('ECOLLA20210317143138', '6941025700084', 1, '2021-01-01'),
 ('SUNDAY20210125185038', '6935145301016', 1, '2021-01-07');
 
 -- --------------------------------------------------------
@@ -305,6 +312,7 @@ DROP TABLE IF EXISTS `varieties`;
 CREATE TABLE IF NOT EXISTS `varieties` (
   `v_barcode` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
   `v_property` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `v_property_en` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `v_price` float NOT NULL COMMENT 'Default currency unit is Ringgit Malaysia',
   `v_weight` float NOT NULL COMMENT 'Format in kilogram',
   `v_discount_rate` float NOT NULL DEFAULT '1',
@@ -317,31 +325,31 @@ CREATE TABLE IF NOT EXISTS `varieties` (
 -- Dumping data for table `varieties`
 --
 
-INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_price`, `v_weight`, `v_discount_rate`, `i_id`) VALUES
-('6902538004045', '青柠味600ml', 4.8, 0.6, 1, 1),
-('6902538005141', '水蜜桃味600ml', 4.8, 0.6, 0.520833, 1),
-('6902538007367', '芒果味600ml', 4.8, 0.6, 1, 1),
-('6902538007381', '仙人掌青橘味600ml', 4.8, 0.6, 1, 1),
-('6902538007862', '竹子青提味500ml', 4.8, 0.5, 1, 1),
-('6902538007886', '卡曼橘味500ml', 4.8, 0.5, 1, 1),
-('6931754804900', '香辣味26g', 1.5, 0.026, 1, 2),
-('6931754804917', '黑椒味26g', 1.5, 0.026, 0.8, 2),
-('6931754804924', '山椒味26g', 1.5, 0.026, 1, 2),
-('6931754804931', '烧烤味26g', 1.5, 0.026, 1, 2),
-('6931754805655', '黑鸭味26g', 1.5, 0.026, 1, 2),
-('6935145301016', '青柠275ml', 11.5, 0.275, 1, 4),
-('6935145301030', '水蜜桃275ml', 11.5, 0.275, 1, 4),
-('6935145301047', '蓝玫瑰275ml', 11.5, 0.275, 1, 4),
-('6935145301061', '混合水果275ml', 11.5, 0.275, 1, 4),
-('6935145301078', '紫葡萄275ml', 11.5, 0.275, 1, 4),
-('6935145343030', '白桃+白兰地330ml', 8.8, 0.33, 0.58, 5),
-('6935145343047', '葡萄+白兰地330ml', 8.8, 0.33, 1, 5),
-('6935145343061', '玫瑰+荔枝330ml', 8.8, 0.33, 1, 5),
-('6935145343092', '果茶乐橘乌龙330ml', 8.8, 0.33, 1, 5),
-('6941025700084', '香辣味20g', 1.2, 0.02, 1, 3),
-('6941025700138', '盐焗味20g', 1.2, 0.02, 1, 3),
-('6941025701074', '卤蛋味20g', 1.2, 0.02, 1, 3),
-('6941025702019', '泡辣味20g', 1.2, 0.02, 1, 3);
+INSERT INTO `varieties` (`v_barcode`, `v_property`, `v_property_en`, `v_price`, `v_weight`, `v_discount_rate`, `i_id`) VALUES
+('6902538004045', '青柠味600ml', 'Lime 600ml', 4.8, 0.6, 1, 1),
+('6902538005141', '水蜜桃味600ml', 'Peace 600ml', 4.8, 0.6, 0.520833, 1),
+('6902538007367', '芒果味600ml', 'Mango 600ml', 4.8, 0.6, 1, 1),
+('6902538007381', '仙人掌青橘味600ml', 'Cactus green orange 600ml', 4.8, 0.6, 1, 1),
+('6902538007862', '竹子青提味500ml', 'Bamboo green tea 500ml', 4.8, 0.5, 1, 1),
+('6902538007886', '卡曼橘味500ml', 'Orange 500ml', 4.8, 0.5, 1, 1),
+('6931754804900', '香辣味26g', 'Spicy 26g', 1.5, 0.026, 1, 2),
+('6931754804917', '黑椒味26g', 'Black Pepper 26g', 1.5, 0.026, 0.8, 2),
+('6931754804924', '山椒味26g', 'Shasho 26g', 1.5, 0.026, 1, 2),
+('6931754804931', '烧烤味26g', 'BBQ 26g', 1.5, 0.026, 1, 2),
+('6931754805655', '黑鸭味26g', 'Duck flavour 26g', 1.5, 0.026, 1, 2),
+('6935145301016', '青柠275ml', 'Green tea 275ml', 11.5, 0.275, 1, 4),
+('6935145301030', '水蜜桃275ml', 'Peace 275ml', 11.5, 0.275, 1, 4),
+('6935145301047', '蓝玫瑰275ml', 'Blue Rose 275ml', 11.5, 0.275, 1, 4),
+('6935145301061', '混合水果275ml', 'Mix Fruit 275ml', 11.5, 0.275, 1, 4),
+('6935145301078', '紫葡萄275ml', 'Purple grape 275ml', 11.5, 0.275, 1, 4),
+('6935145343030', '白桃+白兰地330ml', 'White Peach + Brandy 330ml', 8.8, 0.33, 0.58, 5),
+('6935145343047', '葡萄+白兰地330ml', 'Grape + Brandy 330ml', 8.8, 0.33, 1, 5),
+('6935145343061', '玫瑰+荔枝330ml', 'Rose + Lychee 330ml', 8.8, 0.33, 1, 5),
+('6935145343092', '果茶乐橘乌龙330ml', 'Nectar Orange Oolong 330ml', 8.8, 0.33, 1, 5),
+('6941025700084', '香辣味20g', 'Spicy 20g', 1.2, 0.02, 1, 3),
+('6941025700138', '盐焗味20g', 'Salt baked 20g', 1.2, 0.02, 1, 3),
+('6941025701074', '卤蛋味20g', 'Marinated egg flavor 20g', 1.2, 0.02, 1, 3),
+('6941025702019', '泡辣味20g', 'Foam flavor 20g', 1.2, 0.02, 1, 3);
 
 -- --------------------------------------------------------
 
