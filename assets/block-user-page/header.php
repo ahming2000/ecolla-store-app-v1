@@ -34,6 +34,17 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
                 <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>about-us.php">关于我们</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>order-tracking.php">订单追踪</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= $upperDirectory; ?>cart.php"><i class="icofont-shopping-cart mx-1"></i><span><?= $cart->getCartCount(); ?></span></a></li>
+                <?php if(UsefulFunction::getCurrentURL() !== "/EcollaWebsite/items") : ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            CH
+                        </a>
+
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <a class="dropdown-item" href="<?= "en/" . substr($_SERVER['PHP_SELF'], 15, strlen($_SERVER['PHP_SELF'])) ?>">EN</a>
+                        </div>
+                    </li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>
