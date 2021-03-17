@@ -1,0 +1,156 @@
+/* Input arrow disable */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Item page */
+.slider-control-prev, .slider-nav-control-prev, .slider-control-next, .slider-nav-control-next {
+  position: absolute;
+  background-color: rgba(211,211,211, 0.5);
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.slider-control-prev, .slider-control-next{
+    top: 45%;
+}
+
+.slider-nav-control-prev, .slider-nav-control-next{
+    top: 20%;
+}
+
+.slider-control-prev, .slider-nav-control-prev{
+    right: 87%;
+    margin-left: 17px;
+}
+
+.slider-control-next, .slider-nav-control-next {
+    left: 87%;
+    margin-right: 17px;
+}
+
+.breadcrumb {
+    background-color: white;
+}
+
+/* Check out */
+div.payment-method.active {
+    border:2px solid #00BFFF;
+}
+
+/*header.php*/
+.navbar{
+    background-color:#303136;
+    transition: background-color 0.5s;
+}
+.navbar-change{
+    background-color: #3c3e44;
+    transition: background-color 0.5s;
+}
+.navbar-custom .navbar-brand{
+    color: white;
+}
+.navbar-custom .navbar-nav .nav-link, .navbar-custom .fa-bars{
+    color: white;
+}
+.navbar .nav-item.active .nav-link,
+.navbar .nav-item:hover .nav-link,
+.navbar a.navbar-brand:hover{
+    color: hotpink;
+}
+.strip-header{
+    background-color:#3c3e44;
+    height: 60px;
+}
+
+/*footer.php*/
+.fab{
+    font-size: 20px;
+}
+.font-color{
+    color: white;
+}
+.footer-hr{
+    border: 0;
+    border-top: 2px solid hotpink;
+    width: 90px;
+    margin: 0;
+    margin-bottom: 20px;
+}
+.logo-bt{
+    background-color:#303136;
+}
+
+/*index.php*/
+.headtext{
+    background-image: url('../images/ads/index-shop-bg.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 200px;
+    color: white;
+    font-size: 50px;
+    height: 60vh;
+    text-align: center;
+}
+.headtext1{
+    color: hotpink;
+    display: inline;
+}
+
+/*about-us,php*/
+.about,.us{
+display: inline;
+}
+.us{
+    color: hotpink;
+}
+
+/*item-carousel,php*/
+.carousel-inner.vv-3 .carousel-item.active,
+.carousel-inner.vv-3 .carousel-item-next,
+.carousel-inner.vv-3 .carousel-item-prev {
+  display: flex;
+}
+
+.carousel-inner.vv-3 .carousel-item-right.active,
+.carousel-inner.vv-3 .carousel-item-next {
+  transform: translateX(17%);
+}
+
+.carousel-inner.vv-3 .carousel-item-left.active,
+.carousel-inner.vv-3 .carousel-item-prev {
+  transform: translateX(-17%);
+}
+
+.carousel-inner.vv-3 .carousel-item-right,
+.carousel-inner.vv-3 .carousel-item-left {
+  transform: translateX(0);
+}
+
+/* Global css*/
+
+/* help on html bookmark jumping to make sure the target is visible below the navbar */
+html {
+  scroll-padding-top: 65px; /* height of sticky header */
+}
+
+/* Space between header and content */
+body main {
+    margin-top: 90px;
+}
+
+/* Global background color */
+body {
+     background-color: #EEEEEE;
+ }
