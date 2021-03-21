@@ -15,6 +15,11 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
     $upperDirectory = $upperDirectory.$SYMBOL;
 }
 
+if (isset($_POST['changeLang'])){
+    $cart->resetCart();
+    header("location: " . $_POST['redirectLink']);
+}
+
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow">
@@ -41,7 +46,10 @@ for($i = 0; $i < $upperDirectoryCount; $i++){
                         </a>
 
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="<?= "en/" . substr($_SERVER['PHP_SELF'], 15, strlen($_SERVER['PHP_SELF'])) ?>">EN</a>
+                            <form action="" method="post">
+                                <input type="text" name="redirectLink" value="<?= "en/" . substr($_SERVER['PHP_SELF'], 15, strlen($_SERVER['PHP_SELF'])) ?>" hidden/>
+                                <input type="submit" name="changeLang" value="EN" class="dropdown-item"/>
+                            </form>
                         </div>
                     </li>
                 <?php endif; ?>
