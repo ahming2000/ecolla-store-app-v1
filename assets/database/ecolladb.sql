@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Mar 17, 2021 at 02:49 PM
+-- Generation Time: Mar 26, 2021 at 02:51 PM
 -- Server version: 5.7.31
 -- PHP Version: 7.4.9
 
@@ -203,8 +203,8 @@ CREATE TABLE IF NOT EXISTS `items` (
 --
 
 INSERT INTO `items` (`i_id`, `i_name`, `i_name_en`, `i_desc`, `i_brand`, `i_brand_en`, `i_origin`, `i_origin_en`, `i_property_name`, `i_property_name_en`, `i_is_listed`, `i_image_count`, `i_view_count`) VALUES
-(1, '脉动维生素功能饮料', 'MaiDong Energy Drink', '好喝的饮料\r\nDelicious Drink', '脉动', 'Mai Dong', '中国', 'China', '口味', 'Flavour', 1, 4, 42),
-(2, '好味屋手撕素肉排', 'Hao Wei Wu Vege Steak', '面筋制品\r\nMade from bean', '好味屋', 'Hao Wei Wu', '中国', 'China', '口味', 'Flavour', 1, 5, 479),
+(1, '脉动维生素功能饮料', 'MaiDong Energy Drink', '好喝的饮料\r\nDelicious Drink', '脉动', 'Mai Dong', '中国', 'China', '口味', 'Flavour', 1, 4, 64),
+(2, '好味屋手撕素肉排', 'Hao Wei Wu Vege Steak', '面筋制品\r\nMade from bean', '好味屋', 'Hao Wei Wu', '中国', 'China', '口味', 'Flavour', 1, 5, 483),
 (3, '湖湘贡鹌鹑蛋', 'Huxiang Gong Quail Eggs', '风味鸳鸯蛋\r\nFlavored quail eggs', '湖湘贡', 'Huxiang Gong', '中国', 'China', '口味', 'Flavour', 1, 5, 110),
 (4, 'RIO鸡尾酒', 'RIO Cocktail', '精美玻璃，漂亮的颜色的鸡尾酒\r\nBeautiful Bottle', 'RIO', 'RIO', '中国', 'China', '口味', 'Flavour', 1, 3, 28),
 (5, 'RIO微醺鸡尾酒', 'RIO Cocktail Tin', '来一杯，享受好时光\r\nEnjoy life', 'RIO', 'RIO', '中国', 'China', '口味', 'Flavour', 1, 1, 19);
@@ -244,7 +244,7 @@ INSERT INTO `orders` (`o_id`, `o_date_time`, `o_payment_method`, `o_note`, `o_de
 ('ECOLLA20210112103353', '2021-01-12 10:33:53', 'TnG', '', NULL, '已退款', '123', '+60', '123123', 'dsfsf', 'Kuala Lumpur', 'Setapak', '53300'),
 ('ECOLLA20210115120546', '2021-01-15 12:05:46', 'TnG', '', NULL, '待处理', 'Name is me', '+60', '123765', 'jgshdkfjhksf', 'Johor', 'Ayer Baloi', '82100'),
 ('ECOLLA20210117154008', '2021-01-17 15:40:08', 'TnG', '', 'J&TABCD1234', '已出货', 'Test Discount', '+60', '21345', 'kjlsdka', 'Perak', 'Ayer Tawar', '32400'),
-('ECOLLA20210317143138', '2021-03-17 14:31:38', 'TnG', '', NULL, '待处理', 'Alex Lee', '+60', '1232131', '12312', 'Kedah', 'Alor Setar', '5050'),
+('ECOLLA20210317143138', '2021-03-17 14:31:38', 'TnG', '', 'J&TABCD1234', '已出货', 'Alex Lee', '+60', '1232131', '12312', 'Kedah', 'Alor Setar', '5050'),
 ('SUNDAY20210125185038', '2021-01-25 18:50:38', 'TnG', '', NULL, '待处理', 'Alex Lee', '+60', '1232131', 'klshbdjc', 'Johor', 'Ayer Baloi', '82100');
 
 -- --------------------------------------------------------
