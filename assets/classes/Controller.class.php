@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__."/../database/Model.class.php";
-require_once __DIR__."/../classes/UsefulFunction.class.php";
 
 class Controller extends Model {
 
