@@ -1,5 +1,12 @@
 # Ecolla Product Listing Website (Without payment API or function)
 
+## THIS PROJECT HAD STOPPED DEVELOPMENT AND MOVE TO LARAVEL FRAMEWORK
+New Project Repo:
+
+Client: https://github.com/ahming2000/EcollaClient
+
+Management: https://github.com/ahming2000/EcollaManagement
+
 ## Description
 
 A product listing and ordering website which designed for Ecolla Enterprise.
